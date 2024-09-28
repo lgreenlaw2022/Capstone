@@ -11,13 +11,11 @@ class TimePeriodType(Enum):
     DAILY = "daily"
     MONTHLY = "monthly"
 
-# Python Enum for quiz types
 class QuizType(Enum):
     PYTHON = "python"
     RECOGNITION = "recognition"
     CONCEPT = "concept"
 
-# Enum for module types
 class ModuleType(Enum):
     STUDY_GUIDE = "study_guide"
     PYTHON_GUIDE = "python_guide"
