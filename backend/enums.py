@@ -1,0 +1,27 @@
+from enum import Enum
+
+class MetricType(Enum):
+    COMPLETE_MODULES = "complete_modules"
+    EARN_GEMS = "earn_gems"
+    EXTEND_STREAK = "streak_length"
+    # Add more metrics as needed
+    # consider: goals completed
+
+class TimePeriodType(Enum):
+    DAILY = "daily"
+    MONTHLY = "monthly"
+
+# Python Enum for quiz types
+class QuizType(Enum):
+    PYTHON = "python"
+    RECOGNITION = "recognition"
+    CONCEPT = "concept"
+
+# Enum for module types
+class ModuleType(Enum):
+    STUDY_GUIDE = "study_guide"
+    PYTHON_GUIDE = "python_guide"
+    RECOGNITION_GUIDE = "recognition_guide"
+    QUIZ = "quiz"
+    CHALLENGE = "challenge"
+    CHALLENGE_SOLUTION = "solution_guide"
