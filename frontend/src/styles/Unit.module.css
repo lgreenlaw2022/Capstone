@@ -1,0 +1,47 @@
+.unitContainer {
+    padding: 50px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 7px;
+
+}
+
+.unitHeader {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.unitTitle {
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 500;
+}
+
+.unitCompletion {
+    color: #777;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.reviewButton {
+    color: white;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+
+    cursor: pointer;
+    padding: 4px 14px;
+    border-radius: 4px;
+    border: none;
+    background: #3C4DFF;
+}
+
+.reviewButton:hover {
+    background-color: #005bb5;
+}
