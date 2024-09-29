@@ -1,8 +1,8 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, date, timezone
-from .enums import MetricType, TimePeriodType, ModuleType, QuizType
+from enums import MetricType, TimePeriodType, ModuleType, QuizType
 
-# Initialize SQLAlchemy for database operations
+# Initialize SQLAlchemy for database operationspip install flask_sqlalchemy
 db = SQLAlchemy()
 
 class User(db.Model):
@@ -190,12 +190,16 @@ class Hint(db.Model):
     module = db.relationship("Module", back_populates="hints")
 
     # Check constraint ensuring that the associated module is of type 'CHALLENGE'
-    __table_args__ = (
-        db.CheckConstraint(
-            "module_id IN (SELECT id FROM modules WHERE module_type = 'challenge')",
-            name="check_hint_module_is_challenge",
-        ),
-    )
+    def __init__(self, text, order, module_id):
+        self.text = text
+        self.order = order
+        self.module_id = module_id
+        self.validate_module_type()
+
+    def validate_module_type(self):
+        module = Module.query.get(self.module_id)
+        if module and module.module_type != 'challenge':
+            raise ValueError("Associated module must be of type 'challenge'")
 
 class DailyUserActivity(db.Model):
     __tablename__ = "daily_user_activity"
