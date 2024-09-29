@@ -33,8 +33,8 @@ export default function App({ Component, pageProps }: AppProps) {
 			<div className="main-layout">
 				<Sidebar />
 				<Component {...pageProps} />
+				<Footer />
 			</div>
-			<Footer />
 		</>
 	);
 }

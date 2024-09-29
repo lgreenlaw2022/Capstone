@@ -1,9 +1,14 @@
 .footer {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    padding: 16px;
-    background-color: #c1dccb;
-    border-bottom: 1px solid darkgrey;
+    padding: 8px;
+    gap: 28px;
     margin-top: auto; /* put footer at the bottom */
+    font-size: 13px;
+    color: #777;
+}
+
+.link {
+    cursor: pointer;
 }
