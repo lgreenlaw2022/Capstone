@@ -3,13 +3,14 @@ import Unit from '../components/Unit';
 
 // Define the type for the unit data
 interface UnitData {
+    id: number;
     title: string;
     completion: number;
     //   TODO: extend to the props I need
 }
 
 export default function Learn() {
-    const [units, setUnits] = useState<UnitData[]>([{ title: 'Hash Tables', completion: 0 }]);
+    const [units, setUnits] = useState<UnitData[]>([{ id: 1, title: 'Hash Tables', completion: 0 }]);
 
     // Waiting for the API to be ready
     //   useEffect(() => {
@@ -23,7 +24,7 @@ export default function Learn() {
     return (
         <div>
             {units.map((unit, index) => (
-                <Unit key={index} title={unit.title} completion={unit.completion} />
+                <Unit key={index} unitId={unit.id}title={unit.title} completion={unit.completion} />
             ))}
         </div>
     );

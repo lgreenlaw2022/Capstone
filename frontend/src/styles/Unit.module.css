@@ -1,12 +1,15 @@
 .unitContainer {
     padding: 50px;
+    display: flex;
+    flex-direction: row;
+    gap: 80px;
+}
 
+.unitTitleContainer {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: flex-start;
     gap: 7px;
-
 }
 
 .unitHeader {
@@ -43,5 +46,12 @@
 }
 
 .reviewButton:hover {
-    background-color: #005bb5;
+    background-color: #2636e8;
+}
+
+.unitModules {
+    padding-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
