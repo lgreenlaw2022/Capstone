@@ -5,6 +5,9 @@ from enums import MetricType, TimePeriodType, ModuleType, QuizType
 # Initialize SQLAlchemy for database operationspip install flask_sqlalchemy
 db = SQLAlchemy()
 
+def current_time():
+    return datetime.now(timezone.utc)
+
 class User(db.Model):
     __tablename__ = "users"
 
@@ -12,7 +15,7 @@ class User(db.Model):
     username = db.Column(db.String(40), nullable=False, unique=True)
     password = db.Column(db.String(100), nullable=False)  # hashed passwords
     email = db.Column(db.String(100), nullable=False, unique=True)
-    created_date = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))  # Set upon creation
+    created_date = db.Column(db.DateTime, default=current_time)  # Set upon creation
     # TODO: monitor if this is redundant with the DailyUserActivity table
     # TODO: monitor if I want to index these
     streak = db.Column(db.Integer, default=0)
@@ -48,7 +51,7 @@ class UserBadge(db.Model):
 
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), primary_key=True)
     badge_id = db.Column(db.Integer, db.ForeignKey("badges.id"), primary_key=True)
-    date_earned = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
+    date_earned = db.Column(db.DateTime, default=current_time, nullable=False)
 
     user = db.relationship("User", back_populates="badges")
     badge = db.relationship("Badge", back_populates="users")
@@ -74,7 +77,7 @@ class UserGoal(db.Model):
     # TODO: when developing queries, check if these columns are in the right tables for efficiency
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), primary_key=True)
     goal_id = db.Column(db.Integer, db.ForeignKey("goals.id"), primary_key=True)
-    date_assigned = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
+    date_assigned = db.Column(db.DateTime, default=current_time, nullable=False)
     date_completed = db.Column(db.DateTime, nullable=True)
 
     user = db.relationship("User", back_populates="goals")
@@ -159,7 +162,7 @@ class QuizQuestionOption(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     question_id = db.Column(db.Integer, db.ForeignKey("quiz_questions.id"), index=True, nullable=False)
-    # TODO: can the code text be stored in a Text column?
+    # TODO: check how code snippets should be stored
     option_text = db.Column(db.Text, nullable=False)
     is_correct = db.Column(db.Boolean, nullable=False, default=False)
     # TODO: should this be stored in QuizQuestion
@@ -185,7 +188,7 @@ class Hint(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.Text, nullable=False)
     order = db.Column(db.Integer, nullable=False) # order in which hints appear
-    module_id = db.Column(db.Integer, db.ForeignKey("modules.id"))
+    module_id = db.Column(db.Integer, db.ForeignKey("modules.id"), nullable=False)
 
     module = db.relationship("Module", back_populates="hints")
 
@@ -203,12 +206,11 @@ class Hint(db.Model):
 
 class DailyUserActivity(db.Model):
     __tablename__ = "daily_user_activity"
-
+    
     # these values are used to help with assessing goal completion
     # values will be regularly reaped for storage
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
-    date = db.Column(db.Date, default=lambda: datetime.now(timezone.utc))
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), primary_key=True)
+    date = db.Column(db.Date, default=current_time, primary_key=True)
     gems_earned = db.Column(db.Integer, default=0) # gems earned on this day, not total
     modules_completed = db.Column(db.Integer, default=0)
 
