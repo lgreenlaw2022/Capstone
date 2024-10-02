@@ -1,8 +1,8 @@
 import React from 'react';
-import Image from 'next/image';
 import styles from '../styles/Unit.module.css';
 import useUserModules from '../hooks/useUserModules';
 import Module from './Module';
+import { UserModule, ModuleType } from '../types/ModuleTypes';
 
 // TODO: decide if I want to only declare this once
 interface UnitProps {
@@ -15,9 +15,19 @@ interface Module {
     id: string;
 }
 
-export default function Unit({ unitId, title, completion }: UnitProps) {
-    const { userModules, loading, error } = useUserModules(unitId);
+const defaultUserModules: UserModule[] = [
+    { moduleId: '1', isOpen: true, type: ModuleType.CONCEPT_GUIDE },
+    { moduleId: '2', isOpen: true, type: ModuleType.PYTHON_GUIDE },
+    { moduleId: '3', isOpen: false, type: ModuleType.RECOGNITION_GUIDE },
+    { moduleId: '4', isOpen: false, type: ModuleType.QUIZ },
+    { moduleId: '5', isOpen: false, type: ModuleType.CHALLENGE },
+];
 
+export default function Unit({ unitId, title, completion }: UnitProps) {
+    // const { userModules, loading, error } = useUserModules(unitId);
+    const userModules = defaultUserModules; // Use default data for now
+
+    // TODO: update the routing here for click
     const handleModuleClick = async (moduleId: string) => {
         console.log(`Module ${moduleId} clicked`);
     };
@@ -31,16 +41,11 @@ export default function Unit({ unitId, title, completion }: UnitProps) {
                     {/* <Image src="/opened-carrot.svg" alt="Hash Tables" width={14} height={14} /> */}
                 </div>
                 <div className={styles.unitCompletion}>{completion}% completed</div>
-                <button className={styles.reviewButton}>Review</button>
+                {completion === 100 &&
+                    <button className={styles.reviewButton}>Review</button>
+                }
             </div>
             <div className={styles.unitModules}>
-                {/* Info that modules need:
-                    - module type
-                    - open status
-                    - needs to be a button
-                    - need to be able to route the button on click
-                        - how am I going to do this?
-                */}
                 {userModules.map(module => (
                     <Module
                         key={module.moduleId}

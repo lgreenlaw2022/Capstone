@@ -32,8 +32,10 @@ export default function App({ Component, pageProps }: AppProps) {
 			<Header />
 			<div className="main-layout">
 				<Sidebar />
-				<Component {...pageProps} />
-				<Footer />
+				<div className="main-content">
+					<Component {...pageProps} />
+					<Footer />
+				</div>
 			</div>
 		</>
 	);

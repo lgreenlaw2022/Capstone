@@ -29,6 +29,15 @@ body {
   flex: 1;
 }
 
+.main-content {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  /* this additional right offset accounts for the sidebar throwing off centering*/
+  padding-right: 220px;
+  width: 100vw;
+}
+
 a {
   color: inherit;
   text-decoration: none;

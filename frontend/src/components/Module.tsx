@@ -1,8 +1,9 @@
 import React from 'react';
 import Image from 'next/image';
-import { UserModule, ModuleType } from '../hooks/useUserModules';
+import { UserModule, ModuleType } from '../types/ModuleTypes';
+import styles from '../styles/Module.module.css';
 
-interface ModuleItemProps {
+interface ModuleProps {
     module: UserModule;
     onClick: () => void;
 }
@@ -26,17 +27,12 @@ const getModuleIcon = (type: ModuleType, isOpen: boolean) => {
     }
 };
 
-const ModuleItem: React.FC<ModuleItemProps> = ({ module, onClick }) => {
+export default function Module({ module, onClick }: ModuleProps) {
     const iconSrc = getModuleIcon(module.type, module.isOpen);
 
     return (
-        <div
-            className={`unitModule ${module.isOpen ? 'open' : 'closed'}`}
-            onClick={onClick}
-        >
+        <div className={styles.module} onClick={onClick}>
             <Image src={iconSrc} alt={module.type} width={69} height={65} />
         </div>
     );
-};
-
-export default ModuleItem;
+}

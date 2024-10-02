@@ -1,0 +1,9 @@
+.module {
+    display: inline-block;
+    transition: transform 0.2s ease-in-out;
+}
+
+.module:hover {
+    cursor: pointer;
+    transform: scale(0.95);
+}
