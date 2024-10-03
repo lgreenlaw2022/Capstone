@@ -24,7 +24,9 @@ CORS(app)
 db.init_app(app)
 
 # Create all database tables within the application context
+# TODO: switch out for migrations later in development
 with app.app_context():
+    db.drop_all()
     db.create_all()
 
 @app.route('/')
