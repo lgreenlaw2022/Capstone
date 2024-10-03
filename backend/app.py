@@ -3,6 +3,7 @@ from flask import Flask
 from flask_cors import CORS
 from models import db
 import os
+from routes import user_routes as user_bp
 
 # Load environment variables from .env file
 # from dotenv import load_dotenv
@@ -19,6 +20,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('SQLALCHEMY_DATABASE_URI'
 
 # Enable Cross-Origin Resource Sharing (CORS) for the app
 CORS(app)
+
+app.register_blueprint(user_bp, url_prefix='/user')
 
 # Initialize database and migration functionalities with the app
 db.init_app(app)
