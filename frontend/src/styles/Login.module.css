@@ -1,8 +1,9 @@
-.container {
+.loginContainer {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 167px; 
+    padding: 50px;
     background-color: #3C4DFF;
     height: 100vh;
 }
