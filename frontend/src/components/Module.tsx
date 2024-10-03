@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import Image from 'next/image';
 import { UserModule, ModuleType } from '../types/ModuleTypes';
 import styles from '../styles/Module.module.css';
@@ -28,11 +28,12 @@ const getModuleIcon = (type: ModuleType, isOpen: boolean) => {
 };
 
 export default function Module({ module, onClick }: ModuleProps) {
-    const iconSrc = getModuleIcon(module.type, module.isOpen);
+    const iconSrc = useMemo(() => getModuleIcon(module.type, module.isOpen), [module.type, module.isOpen]);
+
 
     return (
-        <div className={styles.module} onClick={onClick}>
-            <Image src={iconSrc} alt={module.type} width={69} height={65} />
+        <div className={styles.module} >
+            <Image src={iconSrc} alt={`${module.type.replace('_', ' ')} icon`} width={69} height={65} onClick={onClick} role="button"/>
         </div>
     );
 }
