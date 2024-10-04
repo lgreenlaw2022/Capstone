@@ -38,6 +38,7 @@ export default function LoginForm() {
         return isValid;
     };
 
+    // override submission and check for empty inputs first
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (validateForm()) {
@@ -51,11 +52,11 @@ export default function LoginForm() {
             <div className={styles.title}>Sign in</div>
             <form className={styles.formFields} onSubmit={handleSubmit}>
                 <div className={styles.formGroup}>
+                    <label htmlFor="username" className={styles.label}>Username or Email</label>
                     <input
                         type="text"
                         id="usernameOrEmail"
                         name="usernameOrEmail"
-                        placeholder="Username or Email"
                         value={formData.usernameOrEmail}
                         onChange={handleChange}
                         className={styles.input}
@@ -68,11 +69,11 @@ export default function LoginForm() {
                 </div>
 
                 <div className={styles.formGroup}>
+                    <label htmlFor="password" className={styles.label}>Password</label>
                     <input
                         type="password"
                         id="password"
                         name="password"
-                        placeholder="Password"
                         value={formData.password}
                         onChange={handleChange}
                         className={styles.input}

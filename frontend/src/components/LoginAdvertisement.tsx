@@ -4,7 +4,6 @@ import styles from "../styles/LoginAdvertisement.module.css";
 export default function LoginAdvertisement() {
     return (
         <div className={styles.advertisementContainer}>
-            {/* TODO: switch divs to text tags */}
             <div className={styles.title}>AlgoArena</div>
             <Image src="/assets/logo-white.svg" alt="logo" height={206} width={187} />
             {/* Marketing taglines */}

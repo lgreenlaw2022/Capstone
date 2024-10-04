@@ -55,14 +55,14 @@
 }
 
 .submitButton {
-    padding: 6px 14px;
+    padding: 6px 14px;    
+    margin-top: 8px;
     justify-content: center;
     align-items: center;
     border-radius: 4px;
     background: #3C4DFF;
     color: white;
     border: none;
-    margin-top: 8px;
     cursor: pointer;
 
     font-size: 18px;
