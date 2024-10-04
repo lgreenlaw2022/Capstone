@@ -1,0 +1,91 @@
+import React, { useState, useEffect } from 'react';
+import styles from '../styles/Form.module.css';
+
+export default function LoginForm() {
+    const [formData, setFormData] = useState({
+        usernameOrEmail: '',
+        password: '',
+    });
+
+    const [errors, setErrors] = useState({
+        usernameOrEmail: '',
+        password: '',
+    });
+
+    // handle form input changes and update the component state
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+        // clear the error when the user types again
+        setErrors({ ...errors, [name]: '' });
+    };
+
+    const validateForm = () => {
+        const newErrors = { ...errors };
+        let isValid = true;
+
+        if (!formData.usernameOrEmail) {
+            newErrors.usernameOrEmail = 'Username or Email is required';
+            isValid = false;
+        }
+
+        if (!formData.password) {
+            newErrors.password = 'Password is required';
+            isValid = false;
+        }
+
+        setErrors(newErrors);
+        return isValid;
+    };
+
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        if (validateForm()) {
+            // TODO: Handle form submission
+            console.log('Form submitted', formData);
+        }
+    };
+
+    return (
+        <div className={styles.form}>
+            <div className={styles.title}>Sign in</div>
+            <form className={styles.formFields} onSubmit={handleSubmit}>
+                <div className={styles.formGroup}>
+                    <input
+                        type="text"
+                        id="usernameOrEmail"
+                        name="usernameOrEmail"
+                        placeholder="Username or Email"
+                        value={formData.usernameOrEmail}
+                        onChange={handleChange}
+                        className={styles.input}
+                    />
+                    {errors.usernameOrEmail && (
+                        <span className={styles.error}>
+                            {errors.usernameOrEmail}
+                        </span>
+                    )}
+                </div>
+
+                <div className={styles.formGroup}>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Password"
+                        value={formData.password}
+                        onChange={handleChange}
+                        className={styles.input}
+                    />
+                    {errors.password && (
+                        <span className={styles.error}>
+                            {errors.password}
+                        </span>
+                    )}
+                </div>
+
+                <button type="submit" className={styles.submitButton}>Login</button>
+            </form>
+        </div>
+    );
+}
