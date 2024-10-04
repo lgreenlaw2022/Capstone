@@ -3,6 +3,7 @@ from models import db, User  # Adjust the import based on your project structure
 
 user_bp = Blueprint('user', __name__)
 
+# Retrieve streak and gem counts for a user
 @user_bp.route('/<int:user_id>/stats', methods=['GET'])
 def get_user_stats(user_id):
     user = User.query.get(user_id)

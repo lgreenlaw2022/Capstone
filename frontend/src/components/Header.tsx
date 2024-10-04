@@ -3,24 +3,42 @@ import styles from '@/styles/Header.module.css';
 import Image from 'next/image';
 import Link from 'next/link';
 
+import { getUserStats } from '@/api/api';
+
 interface UserData {
+    userId: number;
     username: string;
     streakCount: number;
     gemCount: number;
 }
 
 export default function Header() {
-    const [userData, setUserData] = useState<UserData | null>({ username: 'Libby Green', streakCount: 1, gemCount: 233 });
+    const [userData, setUserData] = useState<UserData | null>({ userId: 1, username: 'Libby Green', streakCount: 1, gemCount: 233 });
 
-    // TODO: update with actual API call
     // TODO: will need to make sure it is called whenever values change
-    // useEffect(() => {
-    //     // Fetch user data from the API
-    //     fetch('/api/user')
-    //         .then(response => response.json())
-    //         .then(data => setUserData(data))
-    //         .catch(error => console.error('Error fetching user data:', error));
-    // }, []);
+    useEffect(() => {
+        const fetchUserStats = async () => {
+            try {
+                // In the case where no userId is provided, resort to old data
+                if (userData?.userId === undefined) {return userData;}
+                const stats = await getUserStats(userData?.userId);
+                setUserData((prevData) => {
+                    if (prevData) {
+                        return {
+                            ...prevData,
+                            streakCount: stats.streak,
+                            gemCount: stats.gems,
+                        };
+                    }
+                    return prevData; // or handle the null case appropriately
+                });
+            } catch (error) {
+                console.error('Error fetching user stats:', error);
+            }
+        };
+
+        fetchUserStats();
+    }, [userData?.userId]);
 
     // TODO: switch to a custom spinner component
     if (!userData) {
@@ -34,7 +52,6 @@ export default function Header() {
                 <h1>AlgoArena</h1>
             </div>
             <div className={styles.stats}>
-                {/* Add calls or props to retrieve values -- likely useEffect */}
                 <div className={styles.statItem}>
                     <Image src="/assets/flame.svg" height={26} width={26} alt="streak flame" />
                     <h3>{userData.streakCount}</h3>

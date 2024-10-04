@@ -1,6 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, date, timezone
 from enums import MetricType, TimePeriodType, ModuleType, QuizType
+from werzeug.security import generate_password_hash, check_password_hash
 
 # Initialize SQLAlchemy for database operationspip install flask_sqlalchemy
 db = SQLAlchemy()
@@ -34,6 +35,13 @@ class User(db.Model):
     units = db.relationship('UserUnit', back_populates='user', cascade='all, delete-orphan')
     modules = db.relationship('UserModule', back_populates='user', cascade='all, delete-orphan')
     quiz_questions = db.relationship('UserQuizQuestion', back_populates='user', cascade='all, delete-orphan')
+
+    # Set and check for password using Werkzeug functions.
+    def set_password(self, password):
+        self.password = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password, password)
 
 
 class Badge(db.Model):
