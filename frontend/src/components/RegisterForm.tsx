@@ -1,20 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import styles from '../styles/Form.module.css';
 
+interface FormData {
+    username: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+}
+
+interface Errors {
+    username?: string;
+    email?: string;
+    password?: string;
+    confirmPassword?: string;
+}
+
 export default function RegisterForm() {
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<FormData>({
         username: '',
         email: '',
         password: '',
         confirmPassword: '',
     });
 
-    const [errors, setErrors] = useState({
-        username: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
-    });
+    const [errors, setErrors] = useState<Errors>({});
 
     // handle form input changes and update the component state
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -44,8 +53,9 @@ export default function RegisterForm() {
         return emailRegex.test(email);
     };
 
+    // check and set errors for each field
     const validateForm = () => {
-        const newErrors = { ...errors };
+        const newErrors: Errors = {};
         let isValid = true;
 
         if (!formData.username) {
@@ -56,7 +66,6 @@ export default function RegisterForm() {
             isValid = false;
         }
 
-        // TODO: the email will need to be unique
         if (!formData.email) {
             newErrors.email = 'Email is required';
             isValid = false;

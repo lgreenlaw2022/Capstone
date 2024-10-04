@@ -1,16 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import styles from '../styles/Form.module.css';
 
+interface FormData {
+    usernameOrEmail: string;
+    password: string;
+}
+
+interface Errors {
+    usernameOrEmail?: string;
+    password?: string;
+}
+
 export default function LoginForm() {
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<FormData>({
         usernameOrEmail: '',
         password: '',
     });
 
-    const [errors, setErrors] = useState({
-        usernameOrEmail: '',
-        password: '',
-    });
+    const [errors, setErrors] = useState<Errors>({});
 
     // handle form input changes and update the component state
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -20,8 +27,8 @@ export default function LoginForm() {
         setErrors({ ...errors, [name]: '' });
     };
 
-    const validateForm = () => {
-        const newErrors = { ...errors };
+    const validateForm = (): boolean => {
+        const newErrors: Errors = {}; // Reset errors to an empty object
         let isValid = true;
 
         if (!formData.usernameOrEmail) {
@@ -52,7 +59,7 @@ export default function LoginForm() {
             <div className={styles.title}>Sign in</div>
             <form className={styles.formFields} onSubmit={handleSubmit}>
                 <div className={styles.formGroup}>
-                    <label htmlFor="username" className={styles.label}>Username or Email</label>
+                    <label htmlFor="usernameOrEmail" className={styles.label}>Username or Email</label>
                     <input
                         type="text"
                         id="usernameOrEmail"

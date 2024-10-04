@@ -34,7 +34,7 @@ export default function App({ Component, pageProps }: AppProps) {
 				<meta name="description" content="EdTech app for technical interview preparation" />
 				<meta name="viewport" content="width=device-width, initial-scale=1" />
 			</Head>
-			<Header isLoginPage={isLoginPage} isRegisterPage={isRegisterPage} />
+			<Header showSignUpButton={isLoginPage} showSignInButton={isRegisterPage} />
 			<div className="main-layout">
 				{isLoginPage || isRegisterPage ? null : <Sidebar />}
 				<div className={isLoginPage || isRegisterPage ? 'auth-layout' : 'main-content'}>
