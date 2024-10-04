@@ -51,3 +51,18 @@
 .profileLink:hover {
     color: #3C4DFF;
 }
+
+.button {
+    color: #FFF;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 700;
+    border-radius: 4px;
+    background: #3C4DFF;
+    padding: 4px 14px;
+    border: none;
+}
+
+.button:hover {
+    background-color: #2636e8;
+}

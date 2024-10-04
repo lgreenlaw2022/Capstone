@@ -6,6 +6,7 @@ import { Roboto } from 'next/font/google';
 import { Roboto_Condensed } from 'next/font/google';
 import type { AppProps } from "next/app";
 import Head from "next/head";
+import { useRouter } from "next/router";
 
 const roboto = Roboto({
 	weight: ['400', '500', '700', '900'],
@@ -22,6 +23,10 @@ const robotoCondensed = Roboto_Condensed({
 });
 
 export default function App({ Component, pageProps }: AppProps) {
+	const router = useRouter();
+	const isLoginPage = router.pathname === '/login';
+	const isRegisterPage = router.pathname === '/register';
+
 	return (
 		<>
 			<Head>
@@ -29,10 +34,10 @@ export default function App({ Component, pageProps }: AppProps) {
 				<meta name="description" content="EdTech app for technical interview preparation" />
 				<meta name="viewport" content="width=device-width, initial-scale=1" />
 			</Head>
-			<Header />
+			<Header showSignUpButton={isLoginPage} showSignInButton={isRegisterPage} />
 			<div className="main-layout">
-				<Sidebar />
-				<div className="main-content">
+				{isLoginPage || isRegisterPage ? null : <Sidebar />}
+				<div className={isLoginPage || isRegisterPage ? 'auth-layout' : 'main-content'}>
 					<Component {...pageProps} />
 					<Footer />
 				</div>

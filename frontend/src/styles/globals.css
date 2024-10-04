@@ -38,6 +38,10 @@ body {
   width: 100vw;
 }
 
+.auth-layout {
+  width: 100vw;
+}
+
 a {
   color: inherit;
   text-decoration: none;
