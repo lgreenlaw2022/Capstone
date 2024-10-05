@@ -13,12 +13,13 @@ interface UserData {
 }
 
 interface HeaderProps {
+    userId?: number;
     showSignUpButton?: boolean;
     showSignInButton?: boolean;
 }
-
-export default function Header({ showSignUpButton = false, showSignInButton = false }) {
-    const [userData, setUserData] = useState<UserData | null>({ userId: 1, username: 'Libby Green', streakCount: 1, gemCount: 233 });
+// userId could also be fetched here if I have a way to access the authed user
+export default function Header({ userId = 1, showSignUpButton = false, showSignInButton = false }: HeaderProps) {
+    const [userData, setUserData] = useState<UserData | null>({ userId, username: 'Libby Green', streakCount: 1, gemCount: 233 });
 
     // TODO: will need to make sure it is called whenever values change
     useEffect(() => {

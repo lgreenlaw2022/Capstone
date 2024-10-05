@@ -26,6 +26,7 @@ export default function App({ Component, pageProps }: AppProps) {
 	const router = useRouter();
 	const isLoginPage = router.pathname === '/login';
 	const isRegisterPage = router.pathname === '/register';
+	// TODO: I need to evaluate auth and userId somewhere
 
 	return (
 		<>
