@@ -6,7 +6,6 @@ interface UnitData {
     id: number;
     title: string;
     completion: number;
-    //   TODO: extend to the props I need
 }
 
 export default function Learn() {

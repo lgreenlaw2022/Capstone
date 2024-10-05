@@ -8,15 +8,7 @@ const ConceptGuidePage = () => {
     const { moduleId } = router.query;
     const [content, setContent] = useState<string | null>(null);
 
-    // useEffect(() => {
-    //     if (moduleId) {
-    //         // Fetch the concept guide content based on the moduleId
-    //         fetch(`/api/concept-guide/${moduleId}`)
-    //             .then((response) => response.json())
-    //             .then((data) => setContent(data.content))
-    //             .catch((error) => console.error('Error fetching concept guide:', error));
-    //     }
-    // }, [moduleId]);
+    // TODO: add api call to get content based on moduleId
 
     useEffect(() => {
         if (moduleId) {

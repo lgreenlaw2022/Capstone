@@ -28,6 +28,7 @@ export default function Unit({ unitId, title, completion }: UnitProps) {
     // const { userModules, loading, error } = useUserModules(unitId);
     const userModules = defaultUserModules; // Use default data for now
 
+    // redirect to module page based on module type
     const handleModuleClick = (moduleId: string, moduleType: ModuleType) => {
         switch (moduleType) {
             case ModuleType.CONCEPT_GUIDE:
@@ -59,7 +60,6 @@ export default function Unit({ unitId, title, completion }: UnitProps) {
                 <div className={styles.unitHeader}>
                     {/* TODO: designate h1, h2 stylings */}
                     <h2 className={styles.unitTitle}>{title}</h2>
-                    {/* <Image src="/opened-carrot.svg" alt="Hash Tables" width={14} height={14} /> */}
                 </div>
                 <div className={styles.unitCompletion}>{completion}% completed</div>
                 {completion === 100 &&
