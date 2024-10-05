@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from '../styles/Unit.module.css';
+import router from 'next/router';
 import useUserModules from '../hooks/useUserModules';
 import Module from './Module';
 import { UserModule, ModuleType } from '../types/ModuleTypes';
@@ -27,9 +28,29 @@ export default function Unit({ unitId, title, completion }: UnitProps) {
     // const { userModules, loading, error } = useUserModules(unitId);
     const userModules = defaultUserModules; // Use default data for now
 
-    // TODO: update the routing here for click
-    const handleModuleClick = async (moduleId: string) => {
-        console.log(`Module ${moduleId} clicked`);
+    const handleModuleClick = (moduleId: string, moduleType: ModuleType) => {
+        switch (moduleType) {
+            case ModuleType.CONCEPT_GUIDE:
+                router.push(`/learn/concept-guide/${moduleId}`);
+                break;
+            case ModuleType.PYTHON_GUIDE:
+                router.push(`/learn/python-guide/${moduleId}`);
+                break;
+            case ModuleType.RECOGNITION_GUIDE:
+                router.push(`/learn/recognition-guide/${moduleId}`);
+                break;
+            case ModuleType.QUIZ:
+                router.push(`/learn/quiz/${moduleId}`);
+                break;
+            case ModuleType.CHALLENGE:
+                router.push(`/learn/challenge/${moduleId}`);
+                break;
+            case ModuleType.CHALLENGE_SOLUTION:
+                router.push(`/learn/challenge-solution/${moduleId}`);
+                break;
+            default:
+                console.error('Unknown module type:', moduleType);
+        }
     };
 
     return (
@@ -50,7 +71,7 @@ export default function Unit({ unitId, title, completion }: UnitProps) {
                     <Module
                         key={module.moduleId}
                         module={module}
-                        onClick={() => handleModuleClick(module.moduleId)}
+                        onClick={() => handleModuleClick(module.moduleId, module.type)}
                     />
                 ))}
             </div>

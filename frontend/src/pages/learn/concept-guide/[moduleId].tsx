@@ -1,0 +1,68 @@
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import styles from '../../../styles/ConceptGuide.module.css';
+
+
+const ConceptGuidePage = () => {
+    const router = useRouter();
+    const { moduleId } = router.query;
+    const [content, setContent] = useState<string | null>(null);
+
+    // useEffect(() => {
+    //     if (moduleId) {
+    //         // Fetch the concept guide content based on the moduleId
+    //         fetch(`/api/concept-guide/${moduleId}`)
+    //             .then((response) => response.json())
+    //             .then((data) => setContent(data.content))
+    //             .catch((error) => console.error('Error fetching concept guide:', error));
+    //     }
+    // }, [moduleId]);
+
+    useEffect(() => {
+        if (moduleId) {
+            // Set the default content directly
+            setContent(`
+                <div class="${styles.guideContainer}">
+                <h1 class="${styles.h1}">Concept Guide: Hash Maps</h1>
+                <p>
+                    Hash tables are one of the most frequently used data structures in technical interviews. Always consider them when first analyzing a question.
+                </p>
+                <p>
+                    A hash table is a data structure that allows you to store data and access it using a key. The key and the data can be any data structure.
+                </p>
+                <p class=${styles.boldPoint}>A Hash table contains sets of key value pairs.</h2>
+                <p>
+                    At a high level, a hash table utilizes an array. Each key corresponds to an index in the array where the data is stored. The hash function is responsible for converting the key into the index.
+                </p>
+                <p class=${styles.highlight}>A Hash Table has 2 parts, an array and a hash function</p>
+                <p> 
+                    The array stores the data, and the hash function tells us as what index to store it and, later, at what index we can access it.
+                </p>
+                <h2>Hash Functions</h2>
+                <p>A hash function creates the mapping between a key and a value. It takes the value as an input, places it in the array, and returns the key to access it. Let's make a key distinction here: the key for a value is not the same as its index in the array. Different hash functions are different mapping algorithms.
+                </p>
+                <p> We pass the key, and the hash function maps from the key to what's called a hash code and from the hash code to the index in the array.
+                </p>
+                <p>
+                If a value with the same key is placed at an index, we simply update the existing value for that key to match the new one.
+                </p>
+                <p class=${styles.boldPoint}>Ultimately, the usability of a hash table to solve a store and look-up problem hinges on how good of a hash function the hash table has.</p> 
+                </div>
+            `);
+        }
+    }, [moduleId]);
+
+    return (
+        <div>
+            <div>
+                {content ? (
+                    <div dangerouslySetInnerHTML={{ __html: content }} />
+                ) : (
+                    <p>Loading...</p>
+                )}
+            </div>
+        </div>
+    );
+};
+
+export default ConceptGuidePage;

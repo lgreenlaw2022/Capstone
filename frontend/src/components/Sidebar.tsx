@@ -17,7 +17,7 @@ export default function Sidebar() {
             {menuItems.map((item) => (
                 <div
                     key={item.name}
-                    className={`${styles.menuItem} ${router.pathname === item.path ? styles.active : ''}`}
+                    className={`${styles.menuItem} ${router.pathname.startsWith(item.path) ? styles.active : ''}`}
                     onClick={() => router.push(item.path)}
                 >
                     {item.name}
