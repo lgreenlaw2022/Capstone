@@ -29,7 +29,7 @@ const getModuleIcon = (type: ModuleType, isOpen: boolean) => {
 };
 
 export default function Module({ module, onClick }: ModuleProps) {
-    const iconSrc = useMemo(() => getModuleIcon(module.type, module.isOpen), [module.type, module.isOpen]);
+    const iconSrc = getModuleIcon(module.type, module.isOpen);
 
     // only allow click if module is open
     const handleClick = () => {

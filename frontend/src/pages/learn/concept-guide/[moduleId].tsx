@@ -22,7 +22,7 @@ const ConceptGuidePage = () => {
                 <p>
                     A hash table is a data structure that allows you to store data and access it using a key. The key and the data can be any data structure.
                 </p>
-                <p class=${styles.boldPoint}>A Hash table contains sets of key value pairs.</h2>
+                <p class=${styles.boldPoint}>A Hash table contains sets of key value pairs.</p>
                 <p>
                     At a high level, a hash table utilizes an array. Each key corresponds to an index in the array where the data is stored. The hash function is responsible for converting the key into the index.
                 </p>
