@@ -5,6 +5,7 @@ from models import db
 import os
 from routes import user_info as user_bp
 from routes import auth as auth_bp
+from flask_jwt_extended import JWTManager
 
 # Load environment variables from .env file
 # from dotenv import load_dotenv
@@ -18,9 +19,13 @@ app = Flask(__name__)
 # Configure the app with necessary settings
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'default_secret_key')
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('SQLALCHEMY_DATABASE_URI', 'sqlite:///site.db')
+app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY', 'default_jwt_secret_key')  # TODO Change this to a random secret key
 
 # Enable Cross-Origin Resource Sharing (CORS) for the app
 CORS(app)
+
+# Initialize JWT Manager
+jwt = JWTManager(app)
 
 #register blueprints
 app.register_blueprint(user_bp, url_prefix='/user')
