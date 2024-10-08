@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import {useRouter} from 'next/router';
 import styles from '../styles/Form.module.css';
+
+import { loginUser } from '../api/api';
 
 interface FormData {
     usernameOrEmail: string;
@@ -9,9 +12,11 @@ interface FormData {
 interface Errors {
     usernameOrEmail?: string;
     password?: string;
+    form?: string;
 }
 
 export default function LoginForm() {
+    const router = useRouter();
     const [formData, setFormData] = useState<FormData>({
         usernameOrEmail: '',
         password: '',
@@ -46,11 +51,17 @@ export default function LoginForm() {
     };
 
     // override submission and check for empty inputs first
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (validateForm()) {
-            // TODO: Handle form submission
-            console.log('Form submitted', formData);
+            try {
+                const data = await loginUser(formData.usernameOrEmail, formData.password);
+                console.log('User logged in:', data);
+                router.push('/learn')
+            } catch (error) {
+                console.error('Login failed:', error);
+                setErrors({ ...errors, form: 'Login failed. Please check your credentials and try again.' });
+            }
         }
     };
 
@@ -91,7 +102,7 @@ export default function LoginForm() {
                         </span>
                     )}
                 </div>
-
+                {errors.form && <div className={styles.error}>{errors.form}</div>}
                 <button type="submit" className={styles.submitButton}>Login</button>
             </form>
         </div>

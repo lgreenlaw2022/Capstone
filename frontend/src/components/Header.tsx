@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import styles from '@/styles/Header.module.css';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 import { getUserStats } from '@/api/api';
 
@@ -20,13 +21,21 @@ interface HeaderProps {
 // userId could also be fetched here if I have a way to access the authed user
 export default function Header({ userId = 1, showSignUpButton = false, showSignInButton = false }: HeaderProps) {
     const [userData, setUserData] = useState<UserData | null>({ userId, username: 'Libby Green', streakCount: 1, gemCount: 233 });
+    const router = useRouter();
 
+    const handleSignUpClick = () => {
+        router.push('/register'); // Adjust the path as needed
+    };
+
+    const handleSignInClick = () => {
+        router.push('/login'); // Adjust the path as needed
+    };
     // TODO: will need to make sure it is called whenever values change
     useEffect(() => {
         const fetchUserStats = async () => {
             try {
                 // In the case where no userId is provided, resort to old data
-                if (userData?.userId === undefined) {return userData;}
+                if (userData?.userId === undefined) { return userData; }
                 const stats = await getUserStats(userData?.userId);
                 setUserData((prevData) => {
                     if (prevData) {
@@ -59,9 +68,13 @@ export default function Header({ userId = 1, showSignUpButton = false, showSignI
             </div>
             {/* Show auth buttons instead of user stats on login and register pages */}
             {showSignUpButton ? (
-                <button className={styles.button}>Sign Up</button>
+                <button className={styles.button} onClick={handleSignUpClick}>
+                    Sign Up
+                </button>
             ) : showSignInButton ? (
-                <button className={styles.button}>Sign in</button>
+                <button className={styles.button} onClick={handleSignInClick}>
+                    Sign in
+                </button>
             ) : (
                 <div className={styles.stats}>
                     <div className={styles.statItem}>

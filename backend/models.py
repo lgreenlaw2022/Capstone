@@ -1,9 +1,8 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, date, timezone
 from enums import MetricType, TimePeriodType, ModuleType, QuizType
-from werzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 
-# Initialize SQLAlchemy for database operationspip install flask_sqlalchemy
 db = SQLAlchemy()
 
 def current_time():
@@ -138,7 +137,7 @@ class Module(db.Model):
     quiz_questions = db.relationship("QuizQuestion", back_populates="module", cascade="all, delete-orphan")
     # TODO: work on how to handle hints
     hints = db.relationship(
-        "Hint", back_populates="modules", cascade="all, delete-orphan"
+        "Hint", back_populates="module", cascade="all, delete-orphan"
     )  # Cascade delete
 
 class UserModule(db.Model):
@@ -160,7 +159,7 @@ class QuizQuestion(db.Model):
     module = db.relationship("Module", back_populates="quiz_questions")
     users = db.relationship("UserQuizQuestion", back_populates="quiz_question", cascade="all, delete-orphan")
     options = db.relationship(
-        "QuizQuestionOption", back_populates="quiz_question", cascade="all, delete-orphan"
+        "QuizQuestionOption", back_populates="question", cascade="all, delete-orphan"
     )
 
 class QuizQuestionOption(db.Model):
@@ -188,7 +187,7 @@ class UserQuizQuestion(db.Model):
     last_practiced_date = db.Column(db.DateTime)
 
     user = db.relationship("User", back_populates="quiz_questions")
-    question = db.relationship("QuizQuestion", back_populates="users")
+    quiz_question = db.relationship("QuizQuestion", back_populates="users")
 
 class Hint(db.Model):
     __tablename__ = "hints"

@@ -7,10 +7,11 @@ from flask_jwt_extended import (
     get_jwt_identity,
     unset_jwt_cookies,
 )
-from app import db, User
+
+from app import db
+from models import User
 
 auth_bp = Blueprint("auth", __name__)
-
 
 @auth_bp.route("/register", methods=["POST"])
 def register():
@@ -49,12 +50,12 @@ def login():
     data = request.get_json()
 
     # Validate input data
-    if not data or not data.get("username") or not data.get("password"):
+    if not data or not data.get("userIdentifier") or not data.get("password"):
         return jsonify({"error": "Missing required fields"}), 400
 
     # Find the user by username or email
     user = User.query.filter(
-        (User.username == data["name"]) | (User.email == data["name"])
+        (User.username == data["userIdentifier"]) | (User.email == data["userIdentifier"])
     ).first()
 
     # Check if the user exists and the password is correct
@@ -79,4 +80,4 @@ def logout():
 def protected():
     current_user_id = get_jwt_identity()
     user = User.query.get(current_user_id)
-    return jsonify({'username': user.username, 'email': user.email}), 200
+    return jsonify({'id': user.id, 'username': user.username}), 200
