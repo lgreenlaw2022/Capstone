@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import Unit from '../components/Unit';
+import Unit from '../../components/Unit';
 
 // Define the type for the unit data
 interface UnitData {
     id: number;
     title: string;
     completion: number;
-    //   TODO: extend to the props I need
 }
 
 export default function Learn() {
