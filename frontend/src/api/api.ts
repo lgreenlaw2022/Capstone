@@ -1,9 +1,14 @@
 import axiosInstance from './axiosInstance';
 
 // Function to get user stats
-export const getUserStats = async (userId: number) => {
+export const getUserStats = async () => {
     try {
-        const response = await axiosInstance.get(`/user/${userId}/stats`);
+        const token = localStorage.getItem('access_token');
+        const response = await axiosInstance.get(`/user/stats`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
         return response.data;
     } catch (error) {
         if (error instanceof Error) {

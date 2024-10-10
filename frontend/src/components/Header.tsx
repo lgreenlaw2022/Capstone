@@ -8,20 +8,18 @@ import HeaderDropdownMenu from './HeaderDropdownMenu'
 import { getUserStats } from '@/api/api';
 
 interface UserData {
-    userId: number;
     username: string;
-    streakCount: number;
-    gemCount: number;
+    streak: number;
+    gems: number;
 }
 
 interface HeaderProps {
-    userId?: number;
     showSignUpButton?: boolean;
     showSignInButton?: boolean;
 }
-// userId could also be fetched here if I have a way to access the authed user
-export default function Header({ userId = 1, showSignUpButton = false, showSignInButton = false }: HeaderProps) {
-    const [userData, setUserData] = useState<UserData | null>({ userId, username: 'Libby Green', streakCount: 1, gemCount: 233 });
+
+export default function Header({ showSignUpButton = false, showSignInButton = false }: HeaderProps) {
+    const [userData, setUserData] = useState<UserData | null>(null);
     const router = useRouter();
     const [dropdownVisible, setDropdownVisible] = useState(false);
 
@@ -30,41 +28,25 @@ export default function Header({ userId = 1, showSignUpButton = false, showSignI
     };
 
     const handleSignUpClick = () => {
-        router.push('/register'); // Adjust the path as needed
+        router.push('/register');
     };
 
     const handleSignInClick = () => {
-        router.push('/login'); // Adjust the path as needed
+        router.push('/login');
     };
-    // TODO: will need to make sure it is called whenever values change
+
     useEffect(() => {
         const fetchUserStats = async () => {
             try {
-                // In the case where no userId is provided, resort to old data
-                if (userData?.userId === undefined) { return userData; }
-                const stats = await getUserStats(userData?.userId);
-                setUserData((prevData) => {
-                    if (prevData) {
-                        return {
-                            ...prevData,
-                            streakCount: stats.streak,
-                            gemCount: stats.gems,
-                        };
-                    }
-                    return prevData; // or handle the null case appropriately
-                });
+                const data = await getUserStats();
+                setUserData(data);
             } catch (error) {
-                console.error('Error fetching user stats:', error);
+                console.error('Error fetching user data:', error);
             }
         };
 
         fetchUserStats();
-    }, [userData?.userId]);
-
-    // TODO: switch to a custom spinner component
-    if (!userData) {
-        return <div>Loading...</div>;
-    }
+    }, []);
 
     return (
         <div className={styles.header}>
@@ -85,16 +67,16 @@ export default function Header({ userId = 1, showSignUpButton = false, showSignI
                 <div className={styles.stats}>
                     <div className={styles.statItem}>
                         <Image src="/assets/flame.svg" height={26} width={26} alt="streak flame" />
-                        <h3>{userData.streakCount}</h3>
+                        <h3>{userData?.streak}</h3>
                     </div>
                     <div className={styles.statItem}>
                         <Image src="/assets/gem.svg" height={26} width={26} alt="gem" />
-                        <h3>{userData.gemCount}</h3>
+                        <h3>{userData?.gems}</h3>
                     </div>
                     {/* add prop to import userId */}
                     <div className={styles.profileContainer}>
                         <h3 className={styles.profileLink} onClick={toggleDropdown}>
-                            {userData.username}
+                            {userData?.username}
                         </h3>
                         {dropdownVisible && (
                             <HeaderDropdownMenu onClose={() => setDropdownVisible(false)} />
