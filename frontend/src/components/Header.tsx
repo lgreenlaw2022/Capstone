@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import styles from '@/styles/Header.module.css';
 import Image from 'next/image';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-import { getUserStats, logoutUser } from '@/api/api';
+import HeaderDropdownMenu from './HeaderDropdownMenu'
+
+import { getUserStats } from '@/api/api';
 
 interface UserData {
     userId: number;
@@ -26,12 +27,6 @@ export default function Header({ userId = 1, showSignUpButton = false, showSignI
 
     const toggleDropdown = () => {
         setDropdownVisible(!dropdownVisible);
-    };
-
-    const handleLogout = async () => {
-        await logoutUser();
-        setDropdownVisible(false);
-        router.push('/login');
     };
 
     const handleSignUpClick = () => {
@@ -102,16 +97,7 @@ export default function Header({ userId = 1, showSignUpButton = false, showSignI
                             {userData.username}
                         </h3>
                         {dropdownVisible && (
-                            <div className={styles.dropdownMenu}>
-                                <Link href="/profile">
-                                    <button className={styles.dropdownItem} onClick={() => setDropdownVisible(false)}>
-                                        Profile
-                                    </button>
-                                </Link>
-                                <button className={styles.dropdownItem} onClick={handleLogout}>
-                                    Logout
-                                </button>
-                            </div>
+                            <HeaderDropdownMenu onClose={() => setDropdownVisible(false)} />
                         )}
                     </div>
                 </div>
