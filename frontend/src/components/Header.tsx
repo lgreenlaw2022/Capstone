@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-import { getUserStats } from '@/api/api';
+import { getUserStats, logoutUser } from '@/api/api';
 
 interface UserData {
     userId: number;
@@ -22,6 +22,17 @@ interface HeaderProps {
 export default function Header({ userId = 1, showSignUpButton = false, showSignInButton = false }: HeaderProps) {
     const [userData, setUserData] = useState<UserData | null>({ userId, username: 'Libby Green', streakCount: 1, gemCount: 233 });
     const router = useRouter();
+    const [dropdownVisible, setDropdownVisible] = useState(false);
+
+    const toggleDropdown = () => {
+        setDropdownVisible(!dropdownVisible);
+    };
+
+    const handleLogout = async () => {
+        await logoutUser();
+        setDropdownVisible(false);
+        router.push('/login');
+    };
 
     const handleSignUpClick = () => {
         router.push('/register'); // Adjust the path as needed
@@ -86,9 +97,23 @@ export default function Header({ userId = 1, showSignUpButton = false, showSignI
                         <h3>{userData.gemCount}</h3>
                     </div>
                     {/* add prop to import userId */}
-                    <Link href="/profile">
-                        <h3 className={styles.profileLink}>{userData.username}</h3>
-                    </Link>
+                    <div className={styles.profileContainer}>
+                        <h3 className={styles.profileLink} onClick={toggleDropdown}>
+                            {userData.username}
+                        </h3>
+                        {dropdownVisible && (
+                            <div className={styles.dropdownMenu}>
+                                <Link href="/profile">
+                                    <button className={styles.dropdownItem} onClick={() => setDropdownVisible(false)}>
+                                        Profile
+                                    </button>
+                                </Link>
+                                <button className={styles.dropdownItem} onClick={handleLogout}>
+                                    Logout
+                                </button>
+                            </div>
+                        )}
+                    </div>
                 </div>
             )}
         </div>

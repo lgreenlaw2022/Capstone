@@ -48,7 +48,17 @@ export const loginUser = async (userIdentifier: string, password: string) => {
 // Function to logout a user
 export const logoutUser = async () => {
     try {
-        const response = await axiosInstance.post('/auth/logout');
+        const token = localStorage.getItem('access_token');
+        if (!token) {
+            throw new Error('No access token found');
+        }
+
+        const response = await axiosInstance.post('/auth/logout', {}, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
         localStorage.removeItem('access_token');
         return response.data;
     } catch (error) {
