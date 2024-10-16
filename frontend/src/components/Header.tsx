@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import styles from '@/styles/Header.module.css';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
@@ -22,10 +22,25 @@ export default function Header({ showSignUpButton = false, showSignInButton = fa
     const [userData, setUserData] = useState<UserData | null>(null);
     const router = useRouter();
     const [dropdownVisible, setDropdownVisible] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
 
     const toggleDropdown = () => {
         setDropdownVisible(!dropdownVisible);
     };
+
+    const handleClickOutside = (event: MouseEvent) => {
+        if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+            setDropdownVisible(false);
+        }
+    };
+
+    // register click outside event listener for the dropdown
+    useEffect(() => {
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
 
     const handleSignUpClick = () => {
         router.push('/register');
@@ -73,13 +88,13 @@ export default function Header({ showSignUpButton = false, showSignInButton = fa
                         <Image src="/assets/gem.svg" height={26} width={26} alt="gem" />
                         <h3>{userData?.gems}</h3>
                     </div>
-                    {/* add prop to import userId */}
-                    <div className={styles.profileContainer}>
+                    {/* Not sure if this is the best div to add the ref too */}
+                    <div className={styles.profileContainer} ref={dropdownRef}>
                         <h3 className={styles.profileLink} onClick={toggleDropdown}>
                             {userData?.username}
                         </h3>
                         {dropdownVisible && (
-                            <HeaderDropdownMenu onClose={() => setDropdownVisible(false)} />
+                            <HeaderDropdownMenu />
                         )}
                     </div>
                 </div>
