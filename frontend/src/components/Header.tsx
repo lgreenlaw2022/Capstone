@@ -35,6 +35,8 @@ export default function Header({ showSignUpButton = false, showSignInButton = fa
         router.push('/login');
     };
 
+    // This isn't being called
+    // I have to reload the page after I log in for it to populate the userData
     useEffect(() => {
         const fetchUserStats = async () => {
             try {
@@ -56,11 +58,11 @@ export default function Header({ showSignUpButton = false, showSignInButton = fa
             </div>
             {/* Show auth buttons instead of user stats on login and register pages */}
             {showSignUpButton ? (
-                <button className={styles.button} onClick={handleSignUpClick}>
+                <button className={styles.authButton} onClick={handleSignUpClick}>
                     Sign Up
                 </button>
             ) : showSignInButton ? (
-                <button className={styles.button} onClick={handleSignInClick}>
+                <button className={styles.authButton} onClick={handleSignInClick}>
                     Sign in
                 </button>
             ) : (

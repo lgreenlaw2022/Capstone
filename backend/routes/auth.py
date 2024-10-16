@@ -13,6 +13,7 @@ from models import User
 
 auth_bp = Blueprint("auth", __name__)
 
+
 @auth_bp.route("/register", methods=["POST"])
 def register():
     data = request.get_json()
@@ -52,10 +53,11 @@ def login():
     # Validate input data
     if not data or not data.get("userIdentifier") or not data.get("password"):
         return jsonify({"error": "Missing required fields"}), 400
-
     # Find the user by username or email
+    # TODO: this isn't actually allowing either or
     user = User.query.filter(
-        (User.username == data["userIdentifier"]) | (User.email == data["userIdentifier"])
+        (User.username == data["userIdentifier"])
+        or (User.email == data["userIdentifier"])
     ).first()
 
     # Check if the user exists and the password is correct
@@ -68,16 +70,38 @@ def login():
     else:
         return jsonify({"error": "Invalid username or password"}), 401
 
-@auth_bp.route('/logout', methods=['POST'])
+
+@auth_bp.route("/logout", methods=["POST"])
 @jwt_required()
 def logout():
-    response = jsonify({'message': 'Logout successful'})
+    response = jsonify({"message": "Logout successful"})
     unset_jwt_cookies(response)
     return response, 200
 
-@auth_bp.route('/protected', methods=['GET'])
+
+# delete user
+@auth_bp.route("/delete", methods=["POST"])
+@jwt_required()
+def delete_user():
+    user_id = get_jwt_identity()
+
+    user = User.query.get(user_id)
+
+    if user is None:
+        return jsonify({"error": "User not found"}), 404
+
+    try:
+        db.session.delete(user)
+        db.session.commit()
+        return jsonify({"message": "User deleted"}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": "Error deleting user"}), 500
+
+
+@auth_bp.route("/protected", methods=["GET"])
 @jwt_required()
 def protected():
     current_user_id = get_jwt_identity()
     user = User.query.get(current_user_id)
-    return jsonify({'id': user.id, 'username': user.username}), 200
+    return jsonify({"id": user.id, "username": user.username}), 200
