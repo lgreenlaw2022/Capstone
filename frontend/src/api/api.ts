@@ -1,4 +1,5 @@
 import axiosInstance from './axiosInstance';
+import axios from 'axios';
 
 // Function to get user stats
 export const getUserStats = async () => {
@@ -25,12 +26,13 @@ export const registerUser = async (username: string, email: string, password: st
         const response = await axiosInstance.post('/auth/register', { username, email, password });
         return response.data;
     } catch (error) {
-        if (error instanceof Error) {
-            console.error('Error registering user:', error.message);
+        if (axios.isAxiosError(error) && error.response) {
+            // throw the error message if the backend returns a known 400 error
+            throw new Error(error.response.data.error);
         } else {
-            console.error('Unknown error registering user:', error);
+            console.error('Unknown error registering user.', error);
+            return { error: 'Unknown error occurred' };
         }
-        throw error;
     }
 };
 
@@ -75,5 +77,3 @@ export const logoutUser = async () => {
         throw error;
     }
 };
-
-export default axiosInstance;
