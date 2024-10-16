@@ -7,6 +7,7 @@ import { Roboto_Condensed } from 'next/font/google';
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 
 const roboto = Roboto({
 	weight: ['400', '500', '700', '900'],
@@ -26,6 +27,26 @@ export default function App({ Component, pageProps }: AppProps) {
 	const router = useRouter();
 	const isLoginPage = router.pathname === '/login';
 	const isRegisterPage = router.pathname === '/register';
+    const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+
+    // Ensure user is logged in before redirecting to any page except login and register
+    useEffect(() => {
+        const token = localStorage.getItem('access_token');
+        if (token) {
+            setIsAuthenticated(true);
+        } else {
+            if (router.pathname !== '/login' && router.pathname !== '/register') {
+                router.push('/login');
+            } else {
+                setIsAuthenticated(false);
+            }
+        }
+    }, [router]);
+
+    // don't change anything until auth check is complete
+    if (isAuthenticated === null) {
+        return;
+    }
 
 	return (
 		<>
