@@ -4,12 +4,7 @@ import axios from 'axios';
 
 export const getUserBioData = async () => {
     try {
-        const token = localStorage.getItem('access_token');
-        const response = await axiosInstance.get(`/user/bio_data`, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
+        const response = await axiosInstance.get('/user/bio-data');
         return response.data;
     } catch (error) {
         if (error instanceof Error) {
@@ -96,11 +91,7 @@ export const deleteUser = async () => {
             throw new Error('No access token found');
         }
 
-        const response = await axiosInstance.post('/auth/delete', {}, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
+        const response = await axiosInstance.post('/auth/delete');
 
         localStorage.removeItem('access_token');
         return response.data;
