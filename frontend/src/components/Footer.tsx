@@ -4,7 +4,7 @@ import Image from 'next/image';
 export default function Footer() {
     return (
         <div className={styles.footer}>
-            <p>About</p>
+            About
             <a
                 href="https://www.linkedin.com/in/libby-greenlaw/"
                 target="_blank"
@@ -13,7 +13,7 @@ export default function Footer() {
             >
                 <Image src="/assets/linkedIn-icon.svg" height={14} width={14} alt="linkedIn" />
             </a>
-            <p>Copyright @ 2024 AlgoArena. All Rights Reserved.</p>
+            Copyright @ 2024 AlgoArena. All Rights Reserved.
         </div>
     )
 }

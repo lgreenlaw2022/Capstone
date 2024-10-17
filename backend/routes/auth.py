@@ -1,7 +1,5 @@
 from flask import Blueprint, request, jsonify
-from werkzeug.security import generate_password_hash
 from flask_jwt_extended import (
-    JWTManager,
     create_access_token,
     jwt_required,
     get_jwt_identity,
@@ -57,7 +55,7 @@ def login():
     # TODO: this isn't actually allowing either or
     user = User.query.filter(
         (User.username == data["userIdentifier"])
-        or (User.email == data["userIdentifier"])
+        | (User.email == data["userIdentifier"])
     ).first()
 
     # Check if the user exists and the password is correct
@@ -72,7 +70,6 @@ def login():
 
 
 @auth_bp.route("/logout", methods=["POST"])
-@jwt_required()
 def logout():
     response = jsonify({"message": "Logout successful"})
     unset_jwt_cookies(response)
@@ -104,4 +101,6 @@ def delete_user():
 def protected():
     current_user_id = get_jwt_identity()
     user = User.query.get(current_user_id)
+    if not user:
+        return jsonify({"error": "User not found"}), 404
     return jsonify({"id": user.id, "username": user.username}), 200

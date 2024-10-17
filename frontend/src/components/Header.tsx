@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import styles from '@/styles/Header.module.css';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 import HeaderDropdownMenu from './HeaderDropdownMenu'
 
@@ -22,18 +23,25 @@ export default function Header({ showSignUpButton = false, showSignInButton = fa
     const [userData, setUserData] = useState<UserData | null>(null);
     const router = useRouter();
     const [dropdownVisible, setDropdownVisible] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
 
     const toggleDropdown = () => {
         setDropdownVisible(!dropdownVisible);
     };
 
-    const handleSignUpClick = () => {
-        router.push('/register');
+    const handleClickOutside = (event: MouseEvent) => {
+        if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+            setDropdownVisible(false);
+        }
     };
 
-    const handleSignInClick = () => {
-        router.push('/login');
-    };
+    // register click outside event listener for the dropdown
+    useEffect(() => {
+        document.addEventListener('click', handleClickOutside);
+        return () => {
+            document.removeEventListener('click', handleClickOutside);
+        };
+    }, []);
 
     // This isn't being called
     // I have to reload the page after I log in for it to populate the userData
@@ -48,7 +56,9 @@ export default function Header({ showSignUpButton = false, showSignInButton = fa
         };
 
         fetchUserStats();
-    }, []);
+        // triggering based on router is an imperfect solution, 
+        // revisit as I build use cases for fetching user stats
+    }, [router]);
 
     return (
         <div className={styles.header}>
@@ -58,13 +68,13 @@ export default function Header({ showSignUpButton = false, showSignInButton = fa
             </div>
             {/* Show auth buttons instead of user stats on login and register pages */}
             {showSignUpButton ? (
-                <button className={styles.authButton} onClick={handleSignUpClick}>
+                <Link href="/register" className={styles.authButton}>
                     Sign Up
-                </button>
+                </Link>
             ) : showSignInButton ? (
-                <button className={styles.authButton} onClick={handleSignInClick}>
+                <Link href="/login" className={styles.authButton}>
                     Sign in
-                </button>
+                </Link>
             ) : (
                 <div className={styles.stats}>
                     <div className={styles.statItem}>
@@ -75,13 +85,14 @@ export default function Header({ showSignUpButton = false, showSignInButton = fa
                         <Image src="/assets/gem.svg" height={26} width={26} alt="gem" />
                         <h3>{userData?.gems}</h3>
                     </div>
-                    {/* add prop to import userId */}
-                    <div className={styles.profileContainer}>
+                    {/* Not sure if this is the best div to add the ref too */}
+                    <div className={styles.profileContainer} ref={dropdownRef}>
                         <h3 className={styles.profileLink} onClick={toggleDropdown}>
                             {userData?.username}
                         </h3>
+                        {/* TODO: fix dropdown being open on first learn page load */}
                         {dropdownVisible && (
-                            <HeaderDropdownMenu onClose={() => setDropdownVisible(false)} />
+                            <HeaderDropdownMenu />
                         )}
                     </div>
                 </div>

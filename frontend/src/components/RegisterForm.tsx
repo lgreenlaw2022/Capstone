@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {useRouter} from 'next/router';
+import { useRouter } from 'next/router';
 import styles from '../styles/Form.module.css';
 
 import { registerUser } from '../api/api';
@@ -105,8 +105,11 @@ export default function RegisterForm() {
                 console.log('User registered:', data);
                 router.push('/login');
             } catch (error) {
-                console.error('Registration failed:', error);
-                setErrors({ ...errors, form: 'Registration failed. Please try again.' });
+                if (error instanceof Error) {
+                    setErrors({ ...errors, form: `${error.message}` });
+                } else {
+                    setErrors({ ...errors, form: 'An unexpected error occurred. Please try again.' });
+                }
             }
         }
     };

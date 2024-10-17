@@ -3,7 +3,12 @@
     transition: transform 0.2s ease-in-out;
 }
 
-.module:hover {
+.module.open:hover {
     cursor: pointer;
     transform: scale(0.95);
+}
+
+.module.closed {
+    cursor: default;
+    pointer-events: none;
 }
