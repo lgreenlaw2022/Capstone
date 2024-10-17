@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import styles from '@/styles/Header.module.css';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 import HeaderDropdownMenu from './HeaderDropdownMenu'
 
@@ -42,14 +43,6 @@ export default function Header({ showSignUpButton = false, showSignInButton = fa
         };
     }, []);
 
-    const handleSignUpClick = () => {
-        router.push('/register');
-    };
-
-    const handleSignInClick = () => {
-        router.push('/login');
-    };
-
     useEffect(() => {
         const fetchUserStats = async () => {
             try {
@@ -61,7 +54,9 @@ export default function Header({ showSignUpButton = false, showSignInButton = fa
         };
 
         fetchUserStats();
-    }, []);
+        // triggering based on router is an imperfect solution, 
+        // revisit as I build use cases for fetching user stats
+    }, [router]);
 
     return (
         <div className={styles.header}>
@@ -71,13 +66,13 @@ export default function Header({ showSignUpButton = false, showSignInButton = fa
             </div>
             {/* Show auth buttons instead of user stats on login and register pages */}
             {showSignUpButton ? (
-                <button className={styles.button} onClick={handleSignUpClick}>
+                <Link href="/register" className={styles.button}>
                     Sign Up
-                </button>
+                </Link>
             ) : showSignInButton ? (
-                <button className={styles.button} onClick={handleSignInClick}>
+                <Link href="/login" className={styles.button}>
                     Sign in
-                </button>
+                </Link>
             ) : (
                 <div className={styles.stats}>
                     <div className={styles.statItem}>
@@ -93,6 +88,7 @@ export default function Header({ showSignUpButton = false, showSignInButton = fa
                         <h3 className={styles.profileLink} onClick={toggleDropdown}>
                             {userData?.username}
                         </h3>
+                        {/* TODO: fix dropdown being open on first learn page load */}
                         {dropdownVisible && (
                             <HeaderDropdownMenu />
                         )}
