@@ -4,12 +4,7 @@ import axios from 'axios';
 // Function to get user stats
 export const getUserStats = async () => {
     try {
-        const token = localStorage.getItem('access_token');
-        const response = await axiosInstance.get(`/user/stats`, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
+        const response = await axiosInstance.get('/user/stats');
         return response.data;
     } catch (error) {
         if (error instanceof Error) {
@@ -23,6 +18,7 @@ export const getUserStats = async () => {
 
 export const registerUser = async (username: string, email: string, password: string) => {
     try {
+        await logoutUser(); // Ensure users are logged out before registering
         const response = await axiosInstance.post('/auth/register', { username, email, password });
         return response.data;
     } catch (error) {
@@ -38,6 +34,7 @@ export const registerUser = async (username: string, email: string, password: st
 
 export const loginUser = async (userIdentifier: string, password: string) => {
     try {
+        await logoutUser(); // Ensure no user is logged in already
         const response = await axiosInstance.post('/auth/login', { userIdentifier, password });
         const data = response.data;
         localStorage.setItem('access_token', data.access_token);
@@ -57,15 +54,11 @@ export const logoutUser = async () => {
     try {
         const token = localStorage.getItem('access_token');
         if (!token) {
-            throw new Error('No access token found');
+            console.log('No access token found, user is already logged out');
+            return;
         }
 
-        const response = await axiosInstance.post('/auth/logout', {}, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
-
+        const response = await axiosInstance.post('/auth/logout');
         localStorage.removeItem('access_token');
         return response.data;
     } catch (error) {
