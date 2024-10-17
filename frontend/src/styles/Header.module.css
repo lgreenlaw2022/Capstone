@@ -50,6 +50,12 @@
 
 .profileLink:hover {
     color: #3C4DFF;
+    cursor: pointer;
+}
+
+.profileContainer {
+    position: relative;
+    display: flex;
 }
 
 .button {
@@ -66,3 +72,4 @@
 .button:hover {
     background-color: #2636e8;
 }
+

@@ -1,12 +1,17 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import styles from '@/styles/Header.module.css';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 import Link from 'next/link';
+
+import HeaderDropdownMenu from './HeaderDropdownMenu'
+
+import { getUserStats } from '@/api/api';
 
 interface UserData {
     username: string;
-    streakCount: number;
-    gemCount: number;
+    streak: number;
+    gems: number;
 }
 
 interface HeaderProps {
@@ -14,23 +19,44 @@ interface HeaderProps {
     showSignInButton?: boolean;
 }
 
-export default function Header({ showSignUpButton = false, showSignInButton = false }) {
-    const [userData, setUserData] = useState<UserData | null>({ username: 'Libby Green', streakCount: 1, gemCount: 233 });
+export default function Header({ showSignUpButton = false, showSignInButton = false }: HeaderProps) {
+    const [userData, setUserData] = useState<UserData | null>(null);
+    const router = useRouter();
+    const [dropdownVisible, setDropdownVisible] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
 
-    // TODO: update with actual API call
-    // TODO: will need to make sure it is called whenever values change
-    // useEffect(() => {
-    //     // Fetch user data from the API
-    //     fetch('/api/user')
-    //         .then(response => response.json())
-    //         .then(data => setUserData(data))
-    //         .catch(error => console.error('Error fetching user data:', error));
-    // }, []);
+    const toggleDropdown = () => {
+        setDropdownVisible(!dropdownVisible);
+    };
 
-    // TODO: switch to a custom spinner component
-    if (!userData) {
-        return <div>Loading...</div>;
-    }
+    const handleClickOutside = (event: MouseEvent) => {
+        if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+            setDropdownVisible(false);
+        }
+    };
+
+    // register click outside event listener for the dropdown
+    useEffect(() => {
+        document.addEventListener('click', handleClickOutside);
+        return () => {
+            document.removeEventListener('click', handleClickOutside);
+        };
+    }, []);
+
+    useEffect(() => {
+        const fetchUserStats = async () => {
+            try {
+                const data = await getUserStats();
+                setUserData(data);
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+            }
+        };
+
+        fetchUserStats();
+        // triggering based on router is an imperfect solution, 
+        // revisit as I build use cases for fetching user stats
+    }, [router]);
 
     return (
         <div className={styles.header}>
@@ -40,24 +66,33 @@ export default function Header({ showSignUpButton = false, showSignInButton = fa
             </div>
             {/* Show auth buttons instead of user stats on login and register pages */}
             {showSignUpButton ? (
-                <button className={styles.button}>Sign Up</button>
+                <Link href="/register" className={styles.button}>
+                    Sign Up
+                </Link>
             ) : showSignInButton ? (
-                <button className={styles.button}>Sign in</button>
+                <Link href="/login" className={styles.button}>
+                    Sign in
+                </Link>
             ) : (
                 <div className={styles.stats}>
-                    {/* Add calls or props to retrieve values -- likely useEffect */}
                     <div className={styles.statItem}>
                         <Image src="/assets/flame.svg" height={26} width={26} alt="streak flame" />
-                        <h3>{userData.streakCount}</h3>
+                        <h3>{userData?.streak}</h3>
                     </div>
                     <div className={styles.statItem}>
                         <Image src="/assets/gem.svg" height={26} width={26} alt="gem" />
-                        <h3>{userData.gemCount}</h3>
+                        <h3>{userData?.gems}</h3>
                     </div>
-                    {/* add prop to import userId */}
-                    <Link href="/profile">
-                        <h3 className={styles.profileLink}>{userData.username}</h3>
-                    </Link>
+                    {/* Not sure if this is the best div to add the ref too */}
+                    <div className={styles.profileContainer} ref={dropdownRef}>
+                        <h3 className={styles.profileLink} onClick={toggleDropdown}>
+                            {userData?.username}
+                        </h3>
+                        {/* TODO: fix dropdown being open on first learn page load */}
+                        {dropdownVisible && (
+                            <HeaderDropdownMenu />
+                        )}
+                    </div>
                 </div>
             )}
         </div>

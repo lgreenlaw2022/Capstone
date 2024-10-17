@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import styles from '../styles/Form.module.css';
+
+import { registerUser } from '../api/api';
 
 interface FormData {
     username: string;
@@ -13,9 +16,11 @@ interface Errors {
     email?: string;
     password?: string;
     confirmPassword?: string;
+    form?: string;
 }
 
 export default function RegisterForm() {
+    const router = useRouter();
     const [formData, setFormData] = useState<FormData>({
         username: '',
         email: '',
@@ -91,12 +96,21 @@ export default function RegisterForm() {
         return isValid;
     };
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         // Intercept submission and validate inputs before submitting
         e.preventDefault();
         if (validateForm()) {
-            // TODO: Handle form submission
-            console.log('Form submitted', formData);
+            try {
+                const data = await registerUser(formData.username, formData.email, formData.password);
+                console.log('User registered:', data);
+                router.push('/login');
+            } catch (error) {
+                if (error instanceof Error) {
+                    setErrors({ ...errors, form: `${error.message}` });
+                } else {
+                    setErrors({ ...errors, form: 'An unexpected error occurred. Please try again.' });
+                }
+            }
         }
     };
 
@@ -155,7 +169,7 @@ export default function RegisterForm() {
                     />
                     {errors.confirmPassword && <span className={styles.error}>{errors.confirmPassword}</span>}
                 </div>
-
+                {errors.form && <div className={styles.error}>{errors.form}</div>}
                 <button type="submit" className={styles.submitButton}>Sign up</button>
             </form>
         </div>
