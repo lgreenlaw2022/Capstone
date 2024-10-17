@@ -1,7 +1,5 @@
 from flask import Blueprint, request, jsonify
-from werkzeug.security import generate_password_hash
 from flask_jwt_extended import (
-    JWTManager,
     create_access_token,
     jwt_required,
     get_jwt_identity,
@@ -12,6 +10,7 @@ from app import db
 from models import User
 
 auth_bp = Blueprint("auth", __name__)
+
 
 @auth_bp.route("/register", methods=["POST"])
 def register():
@@ -55,7 +54,8 @@ def login():
 
     # Find the user by username or email
     user = User.query.filter(
-        (User.username == data["userIdentifier"]) | (User.email == data["userIdentifier"])
+        (User.username == data["userIdentifier"])
+        | (User.email == data["userIdentifier"])
     ).first()
 
     # Check if the user exists and the password is correct
@@ -68,16 +68,19 @@ def login():
     else:
         return jsonify({"error": "Invalid username or password"}), 401
 
-@auth_bp.route('/logout', methods=['POST'])
-@jwt_required()
+
+@auth_bp.route("/logout", methods=["POST"])
 def logout():
-    response = jsonify({'message': 'Logout successful'})
+    response = jsonify({"message": "Logout successful"})
     unset_jwt_cookies(response)
     return response, 200
 
-@auth_bp.route('/protected', methods=['GET'])
+
+@auth_bp.route("/protected", methods=["GET"])
 @jwt_required()
 def protected():
     current_user_id = get_jwt_identity()
     user = User.query.get(current_user_id)
-    return jsonify({'id': user.id, 'username': user.username}), 200
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+    return jsonify({"id": user.id, "username": user.username}), 200

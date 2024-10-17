@@ -37,9 +37,9 @@ export default function Header({ showSignUpButton = false, showSignInButton = fa
 
     // register click outside event listener for the dropdown
     useEffect(() => {
-        document.addEventListener('mousedown', handleClickOutside);
+        document.addEventListener('click', handleClickOutside);
         return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
+            document.removeEventListener('click', handleClickOutside);
         };
     }, []);
 
