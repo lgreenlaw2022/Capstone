@@ -86,6 +86,20 @@ export const getUnitsInPrepCourse = async () => {
     }
 };
 
+export const getModulesInUnit = async (unitId: number) => {
+    try {
+        const response = await axiosInstance.get(`content/units/${unitId}/modules`);
+        return response.data;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error fetching modules:', error.message);
+        } else {
+            console.error('Unknown error fetching modules:', error);
+        }
+        throw error;
+    }
+};
+
 export const getModuleContent = async (moduleId: number) => {
     try {
         const response = await axiosInstance.get(`content/modules/${moduleId}`);

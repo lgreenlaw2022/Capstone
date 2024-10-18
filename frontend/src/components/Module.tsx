@@ -1,11 +1,14 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import Image from 'next/image';
-import { UserModule, ModuleType } from '../types/ModuleTypes';
+import { ModuleType } from '../types/ModuleTypes';
 import styles from '../styles/Module.module.css';
+import { useRouter } from 'next/router';
+import { toast } from 'react-toastify';
 
 interface ModuleProps {
-    module: UserModule;
-    onClick: () => void;
+    id: number;
+    type: ModuleType;
+    isOpen: boolean;
 }
 
 // load correct icon based on module type and open status
@@ -28,23 +31,52 @@ const getModuleIcon = (type: ModuleType, isOpen: boolean) => {
     }
 };
 
-export default function Module({ module, onClick }: ModuleProps) {
-    const iconSrc = getModuleIcon(module.type, module.isOpen);
+export default function Module({ id, type, isOpen }: ModuleProps) {
+    const iconSrc = getModuleIcon(type, isOpen);
+    const router = useRouter();
 
     // only allow click if module is open
     const handleClick = () => {
-        if (module.isOpen) {
-            onClick();
+        if (isOpen) {
+            try {
+                switch (type) {
+                    case ModuleType.CONCEPT_GUIDE:
+                        router.push(`/learn/concept-guide/${id}`);
+                        break;
+                    case ModuleType.PYTHON_GUIDE:
+                        router.push(`/learn/python-guide/${id}`);
+                        break;
+                    case ModuleType.RECOGNITION_GUIDE:
+                        router.push(`/learn/recognition-guide/${id}`);
+                        break;
+                    case ModuleType.QUIZ:
+                        router.push(`/learn/quiz/${id}`);
+                        break;
+                    case ModuleType.CHALLENGE:
+                        router.push(`/learn/challenge/${id}`);
+                        break;
+                    case ModuleType.CHALLENGE_SOLUTION:
+                        router.push(`/learn/challenge-solution/${id}`);
+                        break;
+                    default:
+                        console.error('Unknown module type:', id);
+                        throw new Error(`Unknown module type: ${id}`);
+                }
+            } catch (error) {
+                console.error('Error navigating to module:', error);
+                toast.error('Failed to navigate to the module.');
+            }
+
         }
     };
 
     return (
         <div
-            className={`${styles.module} ${module.isOpen ? styles.open : styles.closed}`}
+            className={`${styles.module} ${isOpen ? styles.open : styles.closed}`}
             onClick={handleClick}
             role="button"
         >
-            <Image src={iconSrc} alt={`${module.type.replace('_', ' ')} icon`} width={69} height={65} />
+            <Image src={iconSrc} alt={`${type.replace('_', ' ')} icon`} width={69} height={65} />
         </div>
     );
 }

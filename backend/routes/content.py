@@ -1,7 +1,10 @@
 from flask import Blueprint, jsonify, send_file, abort
 import logging
-from models import db, Unit, Course, Module
-from flask_jwt_extended import jwt_required
+from models import db, Unit, Course, Module, UserModule
+from flask_jwt_extended import (
+    jwt_required,
+    get_jwt_identity
+)
 import os
 
 content_bp = Blueprint("content", __name__)
@@ -20,6 +23,31 @@ def get_units_in_course(course_id):
     units_data = [{"id": unit.id, "title": unit.title} for unit in units]
 
     return jsonify(units_data), 200
+
+@content_bp.route("/units/<int:unit_id>/modules", methods=["GET"])
+@jwt_required()
+def get_modules_in_unit(unit_id):
+    user_id = get_jwt_identity()
+    modules = Module.query.filter_by(unit_id=unit_id).order_by(Module.order).all()
+    if not modules:
+        logging.error("Modules not found")
+        return abort(404, description="Modules not found")
+
+    modules_data = []
+    for module in modules:
+        logging.debug(f"Found Module to send: {module.title}")
+        user_module = UserModule.query.filter_by(user_id=user_id, module_id=module.id).first()
+        # ensure the first module is always open and default to closed if not found
+        is_open = module.order == 1 or (user_module and user_module.open)
+        modules_data.append({
+            "id": module.id,
+            "title": module.title,
+            "module_type": module.module_type.value,
+            "order": module.order,
+            "isOpen": is_open
+        })
+
+    return jsonify(modules_data), 200
 
 
 @content_bp.route("/modules/<int:module_id>", methods=["GET"])
