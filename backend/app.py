@@ -4,13 +4,14 @@ from flask_cors import CORS
 import os
 from flask_jwt_extended import JWTManager
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 
 # Load environment variables from .env file
 # from dotenv import load_dotenv
 # load_dotenv()
 # Initialize SQLAlchemy for database operations
 from models import db
-
+migrate = Migrate()
 
 # TODO: Initialize Migrate for database migrations
 def create_app():
@@ -31,6 +32,7 @@ def create_app():
 
     # Initialize database and migration functionalities with the app
     db.init_app(app)
+    migrate.init_app(app, db)
 
     #register blueprints
     from routes.user_info import user_bp
@@ -41,7 +43,6 @@ def create_app():
     # Create all database tables within the application context
     # TODO: switch out for migrations later in development
     with app.app_context():
-        db.drop_all()
         db.create_all()
     
     return app
