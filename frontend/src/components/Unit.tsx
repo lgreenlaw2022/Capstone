@@ -11,7 +11,6 @@ import { UserModule, ModuleType } from '../types/ModuleTypes';
 interface UnitProps {
     unitId: number;
     title: string;
-    completion: number;
 }
 
 interface Module {
@@ -26,9 +25,11 @@ const defaultUserModules: UserModule[] = [
     { moduleId: '5', isOpen: false, type: ModuleType.CHALLENGE },
 ];
 
-export default function Unit({ unitId, title, completion }: UnitProps) {
+export default function Unit({ unitId, title }: UnitProps) {
     // const { userModules, loading, error } = useUserModules(unitId);
     const userModules = defaultUserModules; // Use default data for now
+    // TODO: calculate this within the unit component
+    const completion: number = 50
 
     // redirect to module page based on module type
     const handleModuleClick = (moduleId: string, moduleType: ModuleType) => {

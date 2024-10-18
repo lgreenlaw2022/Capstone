@@ -37,13 +37,20 @@ def create_app():
     #register blueprints
     from routes.user_info import user_bp
     from routes.auth import auth_bp
+    from routes.content import content_bp
     app.register_blueprint(user_bp, url_prefix='/user')
     app.register_blueprint(auth_bp, url_prefix='/auth')
+    app.register_blueprint(content_bp, url_prefix='/content')
 
     # Create all database tables within the application context
     # TODO: switch out for migrations later in development
-    with app.app_context():
-        db.create_all()
+    # with app.app_context():
+    #     db.create_all()
+    # Add custom CLI command to run the seed script
+    @app.cli.command("seed")
+    def seed():
+        from seed import seed_data
+        seed_data()
     
     return app
 

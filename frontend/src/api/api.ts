@@ -70,3 +70,18 @@ export const logoutUser = async () => {
         throw error;
     }
 };
+
+// Function to get units in the prep course (id 1)
+export const getUnitsInPrepCourse = async () => {
+    try {
+        const response = await axiosInstance.get('content/courses/1/units');
+        return response.data;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error fetching units in prep course:', error.message);
+        } else {
+            console.error('Unknown error fetching units in prep course:', error);
+        }
+        throw error;
+    }
+};
