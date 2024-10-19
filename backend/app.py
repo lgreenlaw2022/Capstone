@@ -5,6 +5,7 @@ import os
 from flask_jwt_extended import JWTManager
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+import logging
 
 # Load environment variables from .env file
 # from dotenv import load_dotenv
@@ -12,6 +13,9 @@ from flask_migrate import Migrate
 # Initialize SQLAlchemy for database operations
 from models import db
 migrate = Migrate()
+
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO)
 
 # TODO: Initialize Migrate for database migrations
 def create_app():
@@ -43,14 +47,16 @@ def create_app():
     app.register_blueprint(content_bp, url_prefix='/content')
 
     # Create all database tables within the application context
-    # TODO: switch out for migrations later in development
-    # with app.app_context():
-    #     db.create_all()
-    # Add custom CLI command to run the seed script
+    # custom CLI command to run the seed script
     @app.cli.command("seed")
     def seed():
         from seed import seed_data
-        seed_data()
+        try:
+            seed_data()
+        except Exception as e:
+            logger.error(f"An error occurred while seeding the database: {str(e)}")
+            db.session.rollback()
+            exit(1)  # Exit with a non-zero status code to indicate failure
     
     return app
 

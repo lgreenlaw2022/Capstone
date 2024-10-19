@@ -1,9 +1,49 @@
 from app import create_app
 from models import db, Unit, Course, Module
 from enums import ModuleType
+import logging
+
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO)
 
 app = create_app()
 
+def add_units(course_id, units):
+    units_to_add = []
+    for unit_data in units:
+        unit = Unit.query.filter_by(
+            title=unit_data["title"], course_id=course_id
+        ).first()
+        if unit is None:
+            unit = Unit(
+                course_id=course_id,
+                title=unit_data["title"],
+                order=unit_data["order"],
+            )
+            units_to_add.append(unit)
+    return units_to_add
+
+def add_modules(unit_id, modules):
+    modules_to_add = []
+    for module_data in modules:
+        module = Module.query.filter_by(
+            title=module_data["title"],
+            unit_id=unit_id,
+        ).first()
+        if module is None:
+            module = Module(
+                unit_id=unit_id,
+                title=module_data["title"],
+                order=module_data["order"],
+                module_type=module_data["module_type"],
+            )
+            modules_to_add.append(module)
+    return modules_to_add
+
+def bulk_insert(objects_to_add):
+    if objects_to_add:
+        db.session.bulk_save_objects(objects_to_add)
+        db.session.commit()
 
 def seed_data():
     with app.app_context():
@@ -20,17 +60,9 @@ def seed_data():
             # Add more units
         ]
 
-        for unit_data in units:
-            unit = Unit.query.filter_by(
-                title=unit_data["title"], course_id=course.id
-            ).first()
-            if not unit:
-                unit = Unit(
-                    course_id=course.id,
-                    title=unit_data["title"],
-                    order=unit_data["order"],
-                )
-                db.session.add(unit)
+        # Bulk insert units
+        units_to_add = add_units(course.id, units)
+        bulk_insert(units_to_add)
 
         # Add modules to the unit
         hashmaps_modules = [
@@ -41,22 +73,15 @@ def seed_data():
             },
             # Add more modules
         ]
+        # Get the "Hash Maps" unit
+        hashmaps_unit = Unit.query.filter_by(title="Hash Maps", course_id=course.id).first()
 
-        for module_data in hashmaps_modules:
-            module = Module.query.filter_by(
-                title=module_data["title"], unit_id=1  #TODO: probably shouldn't hardcode unit_id
-            ).first()
-            if not module:
-                module = Module(
-                    unit_id=unit.id,
-                    title=module_data["title"],
-                    order=module_data["order"],
-                    module_type=module_data["module_type"],
-                )
-                db.session.add(module)
+        # Add modules and perform bulk insert
+        if hashmaps_unit:
+            modules_to_add = add_modules(hashmaps_unit.id, hashmaps_modules)
+            bulk_insert(modules_to_add)
 
-        db.session.commit()
-        print("Database seeded successfully.")
+        logger.info("Database seeded successfully.")
 
 
 if __name__ == "__main__":
