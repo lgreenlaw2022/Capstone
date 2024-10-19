@@ -1,15 +1,10 @@
 import React from 'react';
 import styles from '../styles/Unit.module.css';
-import router from 'next/router';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import useUserModules from '../hooks/useUserModules';
 import { getModulesInUnit } from '../api/api';
 import { useEffect, useState } from 'react';
 import Module from './Module';
 import { ModuleType } from '../types/ModuleTypes';
 
-// TODO: decide if I want to only declare this once
 interface UnitProps {
     unitId: number;
     title: string;
@@ -25,8 +20,7 @@ interface Module {
 
 export default function Unit({ unitId, title }: UnitProps) {
     const [modules, setModules] = useState<Module[]>([]);
-    // TODO: calculate this within the unit component
-    const completion: number = 50
+    const [completionPercentage, setCompletionPercentage] = useState<number>(0);
 
     useEffect(() => {
         const fetchModules = async () => {
@@ -34,12 +28,17 @@ export default function Unit({ unitId, title }: UnitProps) {
                 if (unitId) {
                     console.log('Fetching modules for unit:', unitId);
                     const data = await getModulesInUnit(Number(unitId));
-                    // TODO: it may be better to do a formal mapper here
-                    const mappedModules = data.map((module: any) => ({
-                        ...module,
-                        type: module.module_type as ModuleType // Directly cast the string to the enum type
-                    }));
-                    setModules(mappedModules);
+                    if (data.modules) {
+                        // TODO: it may be better to do a formal mapper here
+                        const mappedModules = data.modules.map((module: any) => ({
+                            ...module,
+                            type: module.module_type as ModuleType // Directly cast the string to the enum type
+                        }));
+                        setModules(mappedModules);
+                    } else {
+                        console.error('Modules data is undefined');
+                    }
+                    setCompletionPercentage(data.completion_percentage);
                 }
             } catch (error) {
                 console.error('Error fetching modules:', error);
@@ -48,16 +47,15 @@ export default function Unit({ unitId, title }: UnitProps) {
 
         fetchModules();
     }, [unitId]);
-    
+
     return (
         <div className={styles.unitContainer}>
             <div className={styles.unitTitleContainer}>
                 <div className={styles.unitHeader}>
-                    {/* TODO: designate h1, h2 stylings */}
                     <h2 className={styles.unitTitle}>{title}</h2>
                 </div>
-                <div className={styles.unitCompletion}>{completion}% completed</div>
-                {completion === 100 &&
+                <div className={styles.unitCompletion}>{completionPercentage}% completed</div>
+                {completionPercentage === 100 &&
                     <button className={styles.reviewButton}>Review</button>
                 }
             </div>
@@ -65,7 +63,7 @@ export default function Unit({ unitId, title }: UnitProps) {
                 {modules.map(module => (
                     <Module
                         key={module.id}
-                        id = {module.id}
+                        id={module.id}
                         type={module.type}
                         isOpen={module.isOpen}
                     />

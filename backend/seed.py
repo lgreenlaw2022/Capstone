@@ -32,29 +32,28 @@ def seed_data():
                 )
                 db.session.add(unit)
 
-            # Add modules to the unit
-            # TODO this won't work when I add more units
-            modules = [
-                {
-                    "title": "Hash Maps",
-                    "order": 1,
-                    "module_type": ModuleType.CONCEPT_GUIDE,
-                },
-                # Add more modules
-            ]
+        # Add modules to the unit
+        hashmaps_modules = [
+            {
+                "title": "Hash Maps",
+                "order": 1,
+                "module_type": ModuleType.CONCEPT_GUIDE,
+            },
+            # Add more modules
+        ]
 
-            for module_data in modules:
-                module = Module.query.filter_by(
-                    title=module_data["title"], unit_id=unit.id
-                ).first()
-                if not module:
-                    module = Module(
-                        unit_id=unit.id,
-                        title=module_data["title"],
-                        order=module_data["order"],
-                        module_type=module_data["module_type"],
-                    )
-                    db.session.add(module)
+        for module_data in hashmaps_modules:
+            module = Module.query.filter_by(
+                title=module_data["title"], unit_id=1  #TODO: probably shouldn't hardcode unit_id
+            ).first()
+            if not module:
+                module = Module(
+                    unit_id=unit.id,
+                    title=module_data["title"],
+                    order=module_data["order"],
+                    module_type=module_data["module_type"],
+                )
+                db.session.add(module)
 
         db.session.commit()
         print("Database seeded successfully.")

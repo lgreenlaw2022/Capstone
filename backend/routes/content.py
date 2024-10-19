@@ -1,16 +1,14 @@
 from flask import Blueprint, jsonify, send_file, abort
 import logging
 from models import db, Unit, Course, Module, UserModule
-from flask_jwt_extended import (
-    jwt_required,
-    get_jwt_identity
-)
+from flask_jwt_extended import jwt_required, get_jwt_identity
 import os
 
 content_bp = Blueprint("content", __name__)
 
 # Configure the logger
 logging.basicConfig(level=logging.DEBUG)
+
 
 @content_bp.route("/courses/<int:course_id>/units", methods=["GET"])
 @jwt_required()
@@ -24,6 +22,7 @@ def get_units_in_course(course_id):
 
     return jsonify(units_data), 200
 
+
 @content_bp.route("/units/<int:unit_id>/modules", methods=["GET"])
 @jwt_required()
 def get_modules_in_unit(unit_id):
@@ -33,21 +32,42 @@ def get_modules_in_unit(unit_id):
         logging.error("Modules not found")
         return abort(404, description="Modules not found")
 
+    total_modules = len(modules)
+    completed_modules = 0
     modules_data = []
     for module in modules:
         logging.debug(f"Found Module to send: {module.title}")
-        user_module = UserModule.query.filter_by(user_id=user_id, module_id=module.id).first()
+        user_module = UserModule.query.filter_by(
+            user_id=user_id, module_id=module.id
+        ).first()
+        # TODO: consider abstracting this logic
         # ensure the first module is always open and default to closed if not found
         is_open = module.order == 1 or (user_module and user_module.open)
-        modules_data.append({
-            "id": module.id,
-            "title": module.title,
-            "module_type": module.module_type.value,
-            "order": module.order,
-            "isOpen": is_open
-        })
+        is_completed = user_module and user_module.completed if user_module else False
+        if is_completed:
+            completed_modules += 1
+        modules_data.append(
+            {
+                "id": module.id,
+                "title": module.title,
+                "module_type": module.module_type.value,
+                "order": module.order,
+                "isOpen": is_open,
+            }
+        )
 
-    return jsonify(modules_data), 200
+    completion_percentage = calculate_completion_percentage(
+        total_modules, completed_modules
+    )
+    response = {"modules": modules_data, "completion_percentage": completion_percentage}
+    return (
+        jsonify(response),
+        200,
+    )
+
+
+def calculate_completion_percentage(total_modules, completed_modules):
+    return (completed_modules / total_modules) * 100 if total_modules > 0 else 0
 
 
 @content_bp.route("/modules/<int:module_id>", methods=["GET"])
@@ -63,7 +83,7 @@ def get_module_content(module_id):
         return abort(404, description="Content not found")
 
     # Serve the HTML file
-    return send_file(file_path, mimetype="text/html")   
+    return send_file(file_path, mimetype="text/html")
 
 
 def transform_title(title: str) -> str:
