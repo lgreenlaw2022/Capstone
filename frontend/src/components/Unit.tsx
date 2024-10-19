@@ -22,30 +22,30 @@ export default function Unit({ unitId, title }: UnitProps) {
     const [modules, setModules] = useState<Module[]>([]);
     const [completionPercentage, setCompletionPercentage] = useState<number>(0);
 
-    useEffect(() => {
-        const fetchModules = async () => {
-            try {
-                if (unitId) {
-                    console.log('Fetching modules for unit:', unitId);
-                    const data = await getModulesInUnit(Number(unitId));
-                    if (data.modules) {
-                        // TODO: it may be better to do a formal mapper here
-                        const mappedModules = data.modules.map((module: any) => ({
-                            ...module,
-                            type: module.module_type as ModuleType // Directly cast the string to the enum type
-                        }));
-                        setModules(mappedModules);
-                    } else {
-                        console.error('Modules data is undefined');
-                    }
-                    setCompletionPercentage(data.completion_percentage);
+    const fetchModules = async (unitId: number) => {
+        try {
+            if (unitId) {
+                console.log('Fetching modules for unit:', unitId);
+                const data = await getModulesInUnit(Number(unitId));
+                if (data.modules) {
+                    // TODO: it may be better to do a formal mapper here
+                    const mappedModules = data.modules.map((module: any) => ({
+                        ...module,
+                        type: module.module_type as ModuleType // Directly cast the string to the enum type
+                    }));
+                    setModules(mappedModules);
+                } else {
+                    console.error('Modules data is undefined');
                 }
-            } catch (error) {
-                console.error('Error fetching modules:', error);
+                setCompletionPercentage(data.completion_percentage);
             }
-        };
+        } catch (error) {
+            console.error('Error fetching modules:', error);
+        }
+    };
 
-        fetchModules();
+    useEffect(() => {
+        fetchModules(unitId);
     }, [unitId]);
 
     return (

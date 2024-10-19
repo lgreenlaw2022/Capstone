@@ -75,6 +75,7 @@ export const logoutUser = async () => {
 export const getUnitsInPrepCourse = async () => {
     try {
         const response = await axiosInstance.get('content/courses/1/units');
+        // considering caching the response
         return response.data;
     } catch (error) {
         if (error instanceof Error) {
@@ -91,6 +92,7 @@ export const getModulesInUnit = async (unitId: number) => {
         const response = await axiosInstance.get(`content/units/${unitId}/modules`);
         return response.data;
     } catch (error) {
+        // Extract the error message handlign since its common
         if (error instanceof Error) {
             console.error('Error fetching modules:', error.message);
         } else {
