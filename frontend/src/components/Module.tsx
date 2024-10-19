@@ -31,42 +31,41 @@ const getModuleIcon = (type: ModuleType, isOpen: boolean) => {
     }
 };
 
+const getModulePath = (type: ModuleType, id: number): string => {
+    switch (type) {
+        case ModuleType.CONCEPT_GUIDE:
+            return `/learn/concept-guide/${id}`;
+        case ModuleType.PYTHON_GUIDE:
+            return `/learn/python-guide/${id}`;
+        case ModuleType.RECOGNITION_GUIDE:
+            return `/learn/recognition-guide/${id}`;
+        case ModuleType.QUIZ:
+            return `/learn/quiz/${id}`;
+        case ModuleType.CHALLENGE:
+            return `/learn/challenge/${id}`;
+        case ModuleType.CHALLENGE_SOLUTION:
+            return `/learn/challenge-solution/${id}`;
+        default:
+            toast.error('Error opening module.');
+            console.warn('Unknown module type:', id);
+            return '/learn';
+    }
+};
+
 export default function Module({ id, type, isOpen }: ModuleProps) {
     const iconSrc = getModuleIcon(type, isOpen);
     const router = useRouter();
 
     // only allow click if module is open
-    const handleClick = () => {
+    const handleClick = (): void => {
         if (isOpen) {
             try {
-                switch (type) {
-                    case ModuleType.CONCEPT_GUIDE:
-                        router.push(`/learn/concept-guide/${id}`);
-                        break;
-                    case ModuleType.PYTHON_GUIDE:
-                        router.push(`/learn/python-guide/${id}`);
-                        break;
-                    case ModuleType.RECOGNITION_GUIDE:
-                        router.push(`/learn/recognition-guide/${id}`);
-                        break;
-                    case ModuleType.QUIZ:
-                        router.push(`/learn/quiz/${id}`);
-                        break;
-                    case ModuleType.CHALLENGE:
-                        router.push(`/learn/challenge/${id}`);
-                        break;
-                    case ModuleType.CHALLENGE_SOLUTION:
-                        router.push(`/learn/challenge-solution/${id}`);
-                        break;
-                    default:
-                        console.error('Unknown module type:', id);
-                        throw new Error(`Unknown module type: ${id}`);
-                }
+                const path = getModulePath(type, id);
+                router.push(path);
             } catch (error) {
                 console.error('Error navigating to module:', error);
                 toast.error('Failed to navigate to the module.');
             }
-
         }
     };
 
@@ -76,7 +75,7 @@ export default function Module({ id, type, isOpen }: ModuleProps) {
             onClick={handleClick}
             role="button"
         >
-            <Image src={iconSrc} alt={`${type.replace('_', ' ')} icon`} width={69} height={65} />
+            <Image src={iconSrc} alt={`${type.replace('_', ' ')} icon`} width={69} height={65} /> 
         </div>
     );
 }
