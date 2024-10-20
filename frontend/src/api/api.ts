@@ -101,6 +101,9 @@ export const deleteUser = async () => {
             console.error('Error deleting user:', error.message);
         } else {
             console.error('Unknown error deleting out user:', error);
+        }
+    }
+};
           
 // Function to get units in the prep course (id 1)
 export const getUnitsInPrepCourse = async () => {

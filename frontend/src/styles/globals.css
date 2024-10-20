@@ -84,6 +84,7 @@ button {
 
 button:hover {
   background-color: #2636e8;
+}
 
 .guideContainer {
   display: flex;
