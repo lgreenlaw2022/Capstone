@@ -5,12 +5,16 @@ from flask_jwt_extended import (
     get_jwt_identity,
     unset_jwt_cookies,
 )
+import logging
 
 from app import db
 from models import User
 
 auth_bp = Blueprint("auth", __name__)
 
+# Configure the logger
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
 
 @auth_bp.route("/register", methods=["POST"])
 def register():
@@ -89,9 +93,12 @@ def delete_user():
     try:
         db.session.delete(user)
         db.session.commit()
+
+        logger.info(f"User {user_id} deleted successfully.")
         return jsonify({"message": "User deleted"}), 200
     except Exception as e:
         db.session.rollback()
+        logger.error(f"Error deleting user {user_id}: {str(e)}")
         return jsonify({"error": "Error deleting user"}), 500
 
 

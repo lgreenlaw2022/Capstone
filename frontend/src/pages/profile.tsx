@@ -13,7 +13,8 @@ interface UserData {
 }
 
 export default function Profile() {
-    const [userData, setUserData] = useState<UserData>();
+    const [userData, setUserData] = useState<UserData|null>(null);
+    const [error, setError] = useState<string | null>(null);
     const router = useRouter();
 
     useEffect(() => {
@@ -35,10 +36,14 @@ export default function Profile() {
     };
 
     const handleDelete = async () => {
+        if (!confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
+            return;
+        }
         try {
             const data = await deleteUser();
             router.push('/register');
         } catch (error) {
+            setError('Error deleting account. Please try again.');
             console.error('Error deleting user:', error);
         }
     };
@@ -70,6 +75,7 @@ export default function Profile() {
                     </div>
                 </div>
                 <button className={styles.deleteButton} onClick={handleDelete}>Delete Account</button>
+                <p className={styles.error}>{error}</p>
             </div>
         </div>
     )
