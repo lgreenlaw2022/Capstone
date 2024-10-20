@@ -1,85 +1,71 @@
 import React from 'react';
 import styles from '../styles/Unit.module.css';
-import router from 'next/router';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import useUserModules from '../hooks/useUserModules';
+import { getModulesInUnit } from '../api/api';
+import { useEffect, useState } from 'react';
 import Module from './Module';
-import { UserModule, ModuleType } from '../types/ModuleTypes';
+import { ModuleType } from '../types/ModuleTypes';
 
-// TODO: decide if I want to only declare this once
 interface UnitProps {
     unitId: number;
     title: string;
-    completion: number;
 }
 
 interface Module {
-    id: string;
+    id: number;
+    title: string;
+    type: ModuleType;
+    order: number;
+    isOpen: boolean;
 }
 
-const defaultUserModules: UserModule[] = [
-    { moduleId: '1', isOpen: true, type: ModuleType.CONCEPT_GUIDE },
-    { moduleId: '2', isOpen: true, type: ModuleType.PYTHON_GUIDE },
-    { moduleId: '3', isOpen: false, type: ModuleType.RECOGNITION_GUIDE },
-    { moduleId: '4', isOpen: false, type: ModuleType.QUIZ },
-    { moduleId: '5', isOpen: false, type: ModuleType.CHALLENGE },
-];
+export default function Unit({ unitId, title }: UnitProps) {
+    const [modules, setModules] = useState<Module[]>([]);
+    const [completionPercentage, setCompletionPercentage] = useState<number>(0);
 
-export default function Unit({ unitId, title, completion }: UnitProps) {
-    // const { userModules, loading, error } = useUserModules(unitId);
-    const userModules = defaultUserModules; // Use default data for now
-
-    // redirect to module page based on module type
-    const handleModuleClick = (moduleId: string, moduleType: ModuleType) => {
+    const fetchModules = async (unitId: number) => {
         try {
-            switch (moduleType) {
-                case ModuleType.CONCEPT_GUIDE:
-                    router.push(`/learn/concept-guide/${moduleId}`);
-                    break;
-                case ModuleType.PYTHON_GUIDE:
-                    router.push(`/learn/python-guide/${moduleId}`);
-                    break;
-                case ModuleType.RECOGNITION_GUIDE:
-                    router.push(`/learn/recognition-guide/${moduleId}`);
-                    break;
-                case ModuleType.QUIZ:
-                    router.push(`/learn/quiz/${moduleId}`);
-                    break;
-                case ModuleType.CHALLENGE:
-                    router.push(`/learn/challenge/${moduleId}`);
-                    break;
-                case ModuleType.CHALLENGE_SOLUTION:
-                    router.push(`/learn/challenge-solution/${moduleId}`);
-                    break;
-                default:
-                    console.error('Unknown module type:', moduleType);
-                    throw new Error(`Unknown module type: ${moduleType}`);
+            if (unitId) {
+                console.log('Fetching modules for unit:', unitId);
+                const data = await getModulesInUnit(Number(unitId));
+                if (data.modules) {
+                    // TODO: it may be better to do a formal mapper here
+                    const mappedModules = data.modules.map((module: any) => ({
+                        ...module,
+                        type: module.module_type as ModuleType // Directly cast the string to the enum type
+                    }));
+                    setModules(mappedModules);
+                } else {
+                    console.error('Modules data is undefined');
+                }
+                setCompletionPercentage(data.completion_percentage);
             }
         } catch (error) {
-            console.error('Error navigating to module:', error);
-            toast.error('Failed to navigate to the module.');
+            console.error('Error fetching modules:', error);
         }
     };
+
+    useEffect(() => {
+        fetchModules(unitId);
+    }, [unitId]);
 
     return (
         <div className={styles.unitContainer}>
             <div className={styles.unitTitleContainer}>
                 <div className={styles.unitHeader}>
-                    {/* TODO: designate h1, h2 stylings */}
                     <h2 className={styles.unitTitle}>{title}</h2>
                 </div>
-                <div className={styles.unitCompletion}>{completion}% completed</div>
-                {completion === 100 &&
+                <div className={styles.unitCompletion}>{completionPercentage}% completed</div>
+                {completionPercentage === 100 &&
                     <button className={styles.reviewButton}>Review</button>
                 }
             </div>
             <div className={styles.unitModules}>
-                {userModules.map(module => (
+                {modules.map(module => (
                     <Module
-                        key={module.moduleId}
-                        module={module}
-                        onClick={() => handleModuleClick(module.moduleId, module.type)}
+                        key={module.id}
+                        id={module.id}
+                        type={module.type}
+                        isOpen={module.isOpen}
                     />
                 ))}
             </div>

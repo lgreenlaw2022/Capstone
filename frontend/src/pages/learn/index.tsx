@@ -1,29 +1,36 @@
 import React, { useEffect, useState } from 'react';
 import Unit from '../../components/Unit';
 
+import { getUnitsInPrepCourse } from '../../api/api';
+
 // Define the type for the unit data
 interface UnitData {
     id: number;
     title: string;
-    completion: number;
 }
 
 export default function Learn() {
-    const [units, setUnits] = useState<UnitData[]>([{ id: 1, title: 'Hash Tables', completion: 0 }]);
+    const [units, setUnits] = useState<UnitData[]>([]);
 
-    // Waiting for the API to be ready
-    //   useEffect(() => {
-    //     // Fetch units from the API
-    //     fetch('/api/units')
-    //       .then(response => response.json())
-    //       .then(data => setUnits(data))
-    //       .catch(error => console.error('Error fetching units:', error));
-    //   }, []);
+    // fetch the units in the prep course on component mount (eg. 'Hash Maps')
+    useEffect(() => {
+        const fetchUnits = async () => {
+            try {
+                const units = await getUnitsInPrepCourse();
+                setUnits(units);
+                console.log('Units in prep course:', units);
+            } catch (error) {
+                console.error('Error fetching units:', error);
+            }
+        };
+
+        fetchUnits();
+    }, []);
 
     return (
         <div>
             {units.map((unit, index) => (
-                <Unit key={index} unitId={unit.id}title={unit.title} completion={unit.completion} />
+                <Unit key={index} unitId={unit.id} title={unit.title} />
             ))}
         </div>
     );

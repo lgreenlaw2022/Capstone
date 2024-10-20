@@ -49,7 +49,7 @@ def get_user_bio_data():
 @jwt_required()
 def get_user_stats():
     user_id = get_jwt_identity()
-    if not user_id:
+    if user_id is None:
         return jsonify({"error": "Invalid user identity"}), 400
 
     user = User.query.get(user_id)

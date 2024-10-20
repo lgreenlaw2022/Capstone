@@ -128,8 +128,6 @@ class Module(db.Model):
     unit_id = db.Column(db.Integer, db.ForeignKey("units.id"), nullable=False)
     title = db.Column(db.String(255), nullable=False)
     module_type = db.Column(db.Enum(ModuleType), nullable=False)
-    # this is the path to the json file containing the module text content
-    content_file_path = db.Column(db.String(255), nullable=False)
     order = db.Column(db.Integer, nullable=False)  # order in unit
 
     # TODO: figure out what delete to use here

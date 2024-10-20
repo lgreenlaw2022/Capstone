@@ -84,4 +84,36 @@ button {
 
 button:hover {
   background-color: #2636e8;
+
+.guideContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  justify-content: center;
+  padding: 50px;
+  width: 100%;
+  max-width: 800px;
+}
+
+.boldPoint {
+  color: #000;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  padding-left: 10px;
+  border-left: 5px solid #3C4DFF;
+}
+
+.highlight {
+  color: #000;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+
+  padding: 11px;
+  border-radius: 4px;
+  background: #E5E5E5;
+  border: none;
 }

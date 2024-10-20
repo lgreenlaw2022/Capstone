@@ -22,7 +22,7 @@ def register():
 
     # Validate input data
     if (
-        not data
+        data is None
         or not data.get("username")
         or not data.get("password")
         or not data.get("email")
@@ -53,7 +53,7 @@ def login():
     data = request.get_json()
 
     # Validate input data
-    if not data or not data.get("userIdentifier") or not data.get("password"):
+    if data is None or not data.get("userIdentifier") or not data.get("password"):
         return jsonify({"error": "Missing required fields"}), 400
     # Find the user by username or email
     user = User.query.filter(
@@ -107,6 +107,6 @@ def delete_user():
 def protected():
     current_user_id = get_jwt_identity()
     user = User.query.get(current_user_id)
-    if not user:
+    if user is None:
         return jsonify({"error": "User not found"}), 404
     return jsonify({"id": user.id, "username": user.username}), 200
