@@ -15,6 +15,7 @@ class User(db.Model):
     username = db.Column(db.String(40), nullable=False, unique=True)
     password = db.Column(db.String(100), nullable=False)  # hashed passwords
     email = db.Column(db.String(100), nullable=False, unique=True)
+    # TODO: do I need the time here as well?
     created_date = db.Column(db.DateTime, default=current_time)  # Set upon creation
     # TODO: monitor if this is redundant with the DailyUserActivity table
     # TODO: monitor if I want to index these

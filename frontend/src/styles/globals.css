@@ -71,6 +71,20 @@ a {
   text-decoration: none;
 }
 
+button {
+  color: #FFF;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  border-radius: 4px;
+  background: #3C4DFF;
+  padding: 8px 14px;
+  border: none;
+}
+
+button:hover {
+  background-color: #2636e8;
+
 .guideContainer {
   display: flex;
   flex-direction: column;

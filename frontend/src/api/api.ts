@@ -1,7 +1,21 @@
 import axiosInstance from './axiosInstance';
 import axios from 'axios';
 
-// Function to get user stats
+
+export const getUserBioData = async () => {
+    try {
+        const response = await axiosInstance.get('/user/bio-data');
+        return response.data;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error fetching user stats:', error.message);
+        } else {
+            console.error('Unknown error fetching user stats:', error);
+        }
+        throw error;
+    }
+};
+
 export const getUserStats = async () => {
     try {
         const response = await axiosInstance.get('/user/stats');
@@ -49,7 +63,6 @@ export const loginUser = async (userIdentifier: string, password: string) => {
     }
 };
 
-// Function to logout a user
 export const logoutUser = async () => {
     try {
         const token = localStorage.getItem('access_token');
@@ -71,6 +84,24 @@ export const logoutUser = async () => {
     }
 };
 
+
+export const deleteUser = async () => {
+    try {
+        const token = localStorage.getItem('access_token');
+        if (!token) {
+            throw new Error('No access token found');
+        }
+
+        const response = await axiosInstance.post('/auth/delete');
+
+        localStorage.removeItem('access_token');
+        return response.data;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error deleting user:', error.message);
+        } else {
+            console.error('Unknown error deleting out user:', error);
+          
 // Function to get units in the prep course (id 1)
 export const getUnitsInPrepCourse = async () => {
     try {

@@ -5,12 +5,16 @@ from flask_jwt_extended import (
     get_jwt_identity,
     unset_jwt_cookies,
 )
+import logging
 
 from app import db
 from models import User
 
 auth_bp = Blueprint("auth", __name__)
 
+# Configure the logger
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
 
 @auth_bp.route("/register", methods=["POST"])
 def register():
@@ -51,7 +55,6 @@ def login():
     # Validate input data
     if data is None or not data.get("userIdentifier") or not data.get("password"):
         return jsonify({"error": "Missing required fields"}), 400
-
     # Find the user by username or email
     user = User.query.filter(
         (User.username == data["userIdentifier"])
@@ -74,6 +77,29 @@ def logout():
     response = jsonify({"message": "Logout successful"})
     unset_jwt_cookies(response)
     return response, 200
+
+
+# endpoint for a logged in user to delete their account
+@auth_bp.route("/delete", methods=["POST"])
+@jwt_required()
+def delete_user():
+    user_id = get_jwt_identity()
+
+    user = User.query.get(user_id)
+
+    if user is None:
+        return jsonify({"error": "User not found"}), 404
+
+    try:
+        db.session.delete(user)
+        db.session.commit()
+
+        logger.info(f"User {user_id} deleted successfully.")
+        return jsonify({"message": "User deleted"}), 200
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Error deleting user {user_id}: {str(e)}")
+        return jsonify({"error": "Error deleting user"}), 500
 
 
 @auth_bp.route("/protected", methods=["GET"])
