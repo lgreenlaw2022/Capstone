@@ -17,7 +17,7 @@ class QuizType(Enum):
     CONCEPT = "concept"
 
 class ModuleType(Enum):
-    STUDY_GUIDE = "study_guide"
+    CONCEPT_GUIDE = "concept_guide"
     PYTHON_GUIDE = "python_guide"
     RECOGNITION_GUIDE = "recognition_guide"
     QUIZ = "quiz"
