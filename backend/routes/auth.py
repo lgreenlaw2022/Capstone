@@ -52,7 +52,6 @@ def login():
     if not data or not data.get("userIdentifier") or not data.get("password"):
         return jsonify({"error": "Missing required fields"}), 400
     # Find the user by username or email
-    # TODO: this isn't actually allowing either or
     user = User.query.filter(
         (User.username == data["userIdentifier"])
         | (User.email == data["userIdentifier"])
@@ -76,7 +75,7 @@ def logout():
     return response, 200
 
 
-# delete user
+# endpoint for a logged in user to delete their account
 @auth_bp.route("/delete", methods=["POST"])
 @jwt_required()
 def delete_user():

@@ -43,8 +43,6 @@ export default function Header({ showSignUpButton = false, showSignInButton = fa
         };
     }, []);
 
-    // This isn't being called
-    // I have to reload the page after I log in for it to populate the userData
     useEffect(() => {
         const fetchUserStats = async () => {
             try {
@@ -63,7 +61,7 @@ export default function Header({ showSignUpButton = false, showSignInButton = fa
     return (
         <div className={styles.header}>
             <div className={styles.title}>
-                <Image src="/assets/favicon.ico" height={30} width={30} alt="AlgoArena logo" />
+                <Image src="/assets/logo-blue.svg" height={30} width={30} alt="AlgoArena logo" />
                 <h1>AlgoArena</h1>
             </div>
             {/* Show auth buttons instead of user stats on login and register pages */}
@@ -90,7 +88,6 @@ export default function Header({ showSignUpButton = false, showSignInButton = fa
                         <h3 className={styles.profileLink} onClick={toggleDropdown}>
                             {userData?.username}
                         </h3>
-                        {/* TODO: fix dropdown being open on first learn page load */}
                         {dropdownVisible && (
                             <HeaderDropdownMenu />
                         )}
