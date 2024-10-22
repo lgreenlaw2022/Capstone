@@ -154,6 +154,7 @@ class QuizQuestion(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     module_id = db.Column(db.Integer, db.ForeignKey("modules.id"), index=True, nullable=False)
     title = db.Column(db.String(100), nullable=False)
+    # TODO: add explanation?
 
     module = db.relationship("Module", back_populates="quiz_questions")
     users = db.relationship("UserQuizQuestion", back_populates="quiz_question", cascade="all, delete-orphan")

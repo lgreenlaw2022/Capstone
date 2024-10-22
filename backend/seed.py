@@ -1,12 +1,13 @@
 from app import create_app
-from models import db, Unit, Course, Module
-from enums import ModuleType
+from models import db, Unit, Course, Module, QuizQuestion, QuizQuestionOption
+from enums import ModuleType, QuizType
 import logging
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
 app = create_app()
+
 
 def add_units(course_id, units):
     units_to_add = []
@@ -22,6 +23,7 @@ def add_units(course_id, units):
             )
             units_to_add.append(unit)
     return units_to_add
+
 
 def add_modules(unit_id, modules):
     modules_to_add = []
@@ -40,10 +42,40 @@ def add_modules(unit_id, modules):
             modules_to_add.append(module)
     return modules_to_add
 
+def add_quiz_questions(module_id, quiz_questions):
+    quiz_questions_to_add = []
+    # add each question in the list to the db
+    for question_data in quiz_questions:
+        # check the question is not already in the db
+        question = QuizQuestion.query.filter_by(
+            title=question_data["title"],
+            module_id=module_id,
+        ).first()
+        if question is None:
+            question = QuizQuestion(
+                module_id=module_id,
+                title=question_data["title"],
+            )
+            db.session.add(question)
+            db.session.flush()  # Ensure the question ID is available for options
+
+            # add the listed quiz answers to QuizQuestionOption table
+            for option_data in question_data["options"]:
+                option = QuizQuestionOption(
+                    question_id=question.id,
+                    option_text=option_data["option_text"],
+                    is_correct=option_data["is_correct"],
+                    option_type=option_data["option_type"],
+                )
+                db.session.add(option)
+            quiz_questions_to_add.append(question)
+    return quiz_questions_to_add
+
 def bulk_insert(objects_to_add):
     if objects_to_add:
         db.session.bulk_save_objects(objects_to_add)
         db.session.commit()
+
 
 def seed_data():
     with app.app_context():
@@ -71,15 +103,71 @@ def seed_data():
                 "order": 1,
                 "module_type": ModuleType.CONCEPT_GUIDE,
             },
+            {
+                "title": "Hash Maps Quiz",
+                "order": 2,
+                "module_type": ModuleType.QUIZ,
+            },
             # Add more modules
         ]
         # Get the "Hash Maps" unit
-        hashmaps_unit = Unit.query.filter_by(title="Hash Maps", course_id=course.id).first()
+        hashmaps_unit = Unit.query.filter_by(
+            title="Hash Maps", course_id=course.id
+        ).first()
 
         # Add modules and perform bulk insert
         if hashmaps_unit:
             modules_to_add = add_modules(hashmaps_unit.id, hashmaps_modules)
             bulk_insert(modules_to_add)
+
+        # Add quiz questions and options
+        quiz_questions_data = [
+            {
+                "module_id": 1,
+                "title": "What is a Hash Map?",
+                "options": [
+                    {
+                        "option_text": "A data structure that maps keys to values",
+                        "is_correct": True,
+                        "option_type": "CONCEPT",
+                    },
+                    {
+                        "option_text": "A type of array",
+                        "is_correct": False,
+                        "option_type": "CONCEPT",
+                    },
+                    {
+                        "option_text": "A sorting algorithm",
+                        "is_correct": False,
+                        "option_type": "CONCEPT",
+                    },
+                ],
+            },
+            {
+                "module_id": 1,
+                "title": "What is the time complexity of searching in a Hash Map?",
+                "options": [
+                    {
+                        "option_text": "O(1)",
+                        "is_correct": True,
+                        "option_type": "CONCEPT",
+                    },
+                    {
+                        "option_text": "O(n)",
+                        "is_correct": False,
+                        "option_type": "CONCEPT",
+                    },
+                    {
+                        "option_text": "O(log n)",
+                        "is_correct": False,
+                        "option_type": "CONCEPT",
+                    },
+                ],
+            },
+        ]
+
+        quiz_questions_to_add = add_quiz_questions(hashmaps_unit.id, quiz_questions_data)
+        bulk_insert(quiz_questions_to_add)
 
         logger.info("Database seeded successfully.")
 
