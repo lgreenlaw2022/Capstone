@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 
-import QuizQuestion from '@/components/QuizQuestions';
+import QuizQuestion from '@/components/QuizQuestion';
 import styles from '@/styles/Quiz.module.css';
 import { getQuizQuestions } from '@/api/api';
 

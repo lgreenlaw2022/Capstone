@@ -121,11 +121,11 @@ def seed_data():
     with app.app_context():
 
         # Clear the user_modules table
-        clear_user_modules()
-        db.session.query(QuizQuestion).delete()
-        db.session.commit()
-        db.session.query(QuizQuestionOption).delete()
-        db.session.commit()
+        # clear_user_modules()
+        # db.session.query(QuizQuestion).delete()
+        # db.session.commit()
+        # db.session.query(QuizQuestionOption).delete()
+        # db.session.commit()
 
         # Check if the course already exists
         course = Course.query.filter_by(title="Technical Interview Prep").first()

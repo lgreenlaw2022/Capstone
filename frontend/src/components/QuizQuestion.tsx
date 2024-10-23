@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import QuizOption from "./QuizOption";
 import styles from '../styles/QuizQuestion.module.css';
 
@@ -20,6 +20,12 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({ question, handleNextQuestio
     const [selectedOption, setSelectedOption] = useState<number | null>(null);
     const [submitted, setSubmitted] = useState(false);
 
+    useEffect(() => {
+        // Reset state when the question prop changes
+        setSelectedOption(null);
+        setSubmitted(false);
+    }, [question]);
+
     const handleOptionChange = (optionId: number) => {
         setSelectedOption(optionId);
     };
@@ -27,9 +33,12 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({ question, handleNextQuestio
     const handleSubmit = () => {
         // TODO: make sure I can employ the conditional styling
         setSubmitted(true);
+    };
+
+    const handleNext = () => {
         const selected = question.options.find(option => option.id === selectedOption);
         handleNextQuestion(selected?.is_correct || false);
-    };
+    }
 
     return (
         <div className={styles.quizQuestionContainer}>
@@ -51,7 +60,7 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({ question, handleNextQuestio
                     Submit
                 </button>
             ) : (
-                <button onClick={() => handleNextQuestion(false)}>
+                <button onClick={handleNext}>
                     Continue
                 </button>
             )}
