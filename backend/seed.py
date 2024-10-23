@@ -1,5 +1,5 @@
 from app import create_app
-from models import db, Unit, Course, Module, QuizQuestion, QuizQuestionOption
+from models import db, Unit, Course, Module, QuizQuestion, QuizQuestionOption, UserModule
 from enums import ModuleType, QuizType
 import logging
 
@@ -42,6 +42,41 @@ def add_modules(unit_id, modules):
             modules_to_add.append(module)
     return modules_to_add
 
+
+def add_modules_to_user_1(user_id, unit_id):
+    if user_id:
+        # Fetch the modules
+        concept_guide_module = Module.query.filter_by(
+            title="Hash Maps", unit_id=unit_id
+        ).first()
+        quiz_module = Module.query.filter_by(
+            title="Hash Maps Quiz", unit_id=unit_id
+        ).first()
+
+        # Create UserModule entries
+        user_modules_to_add = []
+        if concept_guide_module:
+            user_modules_to_add.append(
+                UserModule(
+                    user_id=user_id,
+                    module_id=concept_guide_module.id,
+                    completed=True,
+                    open=True,
+                )
+            )
+
+        if quiz_module:
+            user_modules_to_add.append(
+                UserModule(
+                    user_id=user_id,
+                    module_id=quiz_module.id,
+                    completed=False,
+                    open=True,
+                )
+            )
+
+    return user_modules_to_add
+
 def add_quiz_questions(module_id, quiz_questions):
     quiz_questions_to_add = []
     # add each question in the list to the db
@@ -51,6 +86,7 @@ def add_quiz_questions(module_id, quiz_questions):
             title=question_data["title"],
             module_id=module_id,
         ).first()
+
         if question is None:
             question = QuizQuestion(
                 module_id=module_id,
@@ -71,14 +107,26 @@ def add_quiz_questions(module_id, quiz_questions):
             quiz_questions_to_add.append(question)
     return quiz_questions_to_add
 
+
 def bulk_insert(objects_to_add):
     if objects_to_add:
         db.session.bulk_save_objects(objects_to_add)
         db.session.commit()
 
+def clear_user_modules():
+    db.session.query(UserModule).delete()
+    db.session.commit()
 
 def seed_data():
     with app.app_context():
+
+        # Clear the user_modules table
+        clear_user_modules()
+        db.session.query(QuizQuestion).delete()
+        db.session.commit()
+        db.session.query(QuizQuestionOption).delete()
+        db.session.commit()
+
         # Check if the course already exists
         course = Course.query.filter_by(title="Technical Interview Prep").first()
         if not course:
@@ -119,55 +167,66 @@ def seed_data():
         if hashmaps_unit:
             modules_to_add = add_modules(hashmaps_unit.id, hashmaps_modules)
             bulk_insert(modules_to_add)
+            # add the specific hashmap modules to userModule table so they are open
+            userModules_to_add = add_modules_to_user_1(1, hashmaps_unit.id)
+            bulk_insert(userModules_to_add)
 
-        # Add quiz questions and options
-        quiz_questions_data = [
-            {
-                "module_id": 1,
-                "title": "What is a Hash Map?",
-                "options": [
-                    {
-                        "option_text": "A data structure that maps keys to values",
-                        "is_correct": True,
-                        "option_type": "CONCEPT",
-                    },
-                    {
-                        "option_text": "A type of array",
-                        "is_correct": False,
-                        "option_type": "CONCEPT",
-                    },
-                    {
-                        "option_text": "A sorting algorithm",
-                        "is_correct": False,
-                        "option_type": "CONCEPT",
-                    },
-                ],
-            },
-            {
-                "module_id": 1,
-                "title": "What is the time complexity of searching in a Hash Map?",
-                "options": [
-                    {
-                        "option_text": "O(1)",
-                        "is_correct": True,
-                        "option_type": "CONCEPT",
-                    },
-                    {
-                        "option_text": "O(n)",
-                        "is_correct": False,
-                        "option_type": "CONCEPT",
-                    },
-                    {
-                        "option_text": "O(log n)",
-                        "is_correct": False,
-                        "option_type": "CONCEPT",
-                    },
-                ],
-            },
-        ]
+        # Fetch the "Hash Maps Quiz" module dynamically
+        quiz_module = Module.query.filter_by(
+            title="Hash Maps Quiz", unit_id=hashmaps_unit.id
+        ).first()
+        if quiz_module:
+            # Add quiz questions and options
+        
+            quiz_questions_data = [
+                {
+                    "module_id": quiz_module.id,
+                    "title": "What is a Hash Map?",
+                    "options": [
+                        {
+                            "option_text": "A data structure that maps keys to values",
+                            "is_correct": True,
+                            "option_type": "CONCEPT",
+                        },
+                        {
+                            "option_text": "A type of array",
+                            "is_correct": False,
+                            "option_type": "CONCEPT",
+                        },
+                        {
+                            "option_text": "A sorting algorithm",
+                            "is_correct": False,
+                            "option_type": "CONCEPT",
+                        },
+                    ],
+                },
+                {
+                    "module_id": quiz_module.id,
+                    "title": "What is the time complexity of searching in a Hash Map?",
+                    "options": [
+                        {
+                            "option_text": "O(1)",
+                            "is_correct": True,
+                            "option_type": "CONCEPT",
+                        },
+                        {
+                            "option_text": "O(n)",
+                            "is_correct": False,
+                            "option_type": "CONCEPT",
+                        },
+                        {
+                            "option_text": "O(log n)",
+                            "is_correct": False,
+                            "option_type": "CONCEPT",
+                        },
+                    ],
+                },
+            ]
 
-        quiz_questions_to_add = add_quiz_questions(hashmaps_unit.id, quiz_questions_data)
-        bulk_insert(quiz_questions_to_add)
+            quiz_questions_to_add = add_quiz_questions(
+                quiz_module.id, quiz_questions_data
+            )
+            bulk_insert(quiz_questions_to_add)
 
         logger.info("Database seeded successfully.")
 

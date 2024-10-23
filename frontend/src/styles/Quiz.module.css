@@ -1,0 +1,11 @@
+.quizContainer {
+    display: flex;
+    flex-direction: column;
+    margin: 50px;
+    min-width: 600px;
+    max-width: 650px;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    gap: 19px;
+}

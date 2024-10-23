@@ -1,8 +1,9 @@
 from flask import Blueprint, jsonify, send_file, abort
 import logging
-from models import db, Unit, Course, Module, UserModule
+from models import db, Unit, Course, Module, UserModule, QuizQuestion, QuizQuestionOption
 from flask_jwt_extended import jwt_required, get_jwt_identity
 import os
+from sqlalchemy.orm import joinedload
 
 content_bp = Blueprint("content", __name__)
 
@@ -72,6 +73,7 @@ def calculate_completion_percentage(total_modules, completed_modules):
 
 @content_bp.route("/modules/<int:module_id>", methods=["GET"])
 @jwt_required()
+# TODO: these route names may be confusing
 def get_module_content(module_id):
     try:
         # Get the file path using the module_id
@@ -108,3 +110,36 @@ def get_content_file_path(module_id: int) -> str:
     logger.debug(f"File path: {file_path}")
 
     return file_path
+
+
+@content_bp.route("/modules/<int:module_id>/quiz-questions", methods=["GET"])
+def get_quiz_questions(module_id):
+    try:
+        # Fetch the module and its quiz questions and options using relationships
+        module = Module.query.filter_by(id=module_id).first()
+        if not module:
+            return jsonify({"error": "Module not found"}), 404
+
+        # Use joinedload to eagerly load the related QuizQuestionOption objects
+        quiz_questions = QuizQuestion.query.options(joinedload(QuizQuestion.options)).filter_by(module_id=module_id).all()
+
+        # Serialize the data
+        quiz_data = []
+        for question in quiz_questions:
+            question_data = {
+                "id": question.id,
+                "title": question.title,
+                "options": [
+                    {
+                        "id": option.id,
+                        "option_text": option.option_text,
+                        "is_correct": option.is_correct,
+                    }
+                    for option in question.options
+                ],
+            }
+            quiz_data.append(question_data)
+        logger.info(f"Quiz questions fetched for module {module_id}: {quiz_data}")
+        return jsonify(quiz_data), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500

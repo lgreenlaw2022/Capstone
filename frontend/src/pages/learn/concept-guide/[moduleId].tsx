@@ -9,7 +9,6 @@ const ConceptGuidePage = () => {
     const { moduleId } = router.query;
     const [content, setContent] = useState<string | null>(null);
 
-    // TODO: add api call to get content based on moduleId
     useEffect(() => {
         const fetchContent = async () => {
             try {
