@@ -14,8 +14,19 @@ interface QuizOptionProps {
 }
 
 const QuizOption: React.FC<QuizOptionProps> = ({ option, selectedOption, handleOptionChange, submitted }) => {
+    
+    const className = `${styles.option} ${
+        submitted
+            ? option.is_correct
+                ? styles.correct
+                : selectedOption === option.id
+                ? styles.incorrect
+                : ''
+            : ''
+    }`;
+
     return (
-        <div className={styles.option}>
+        <div className={className}>
             <label>
                 <input
                     type="radio"
@@ -28,8 +39,8 @@ const QuizOption: React.FC<QuizOptionProps> = ({ option, selectedOption, handleO
                 {option.option_text}
             </label>
             {/* TODO: transfer this styling up  */}
-            {submitted && option.is_correct && <span className={styles.correct}> (Correct)</span>}
-            {submitted && selectedOption === option.id && !option.is_correct && <span className={styles.incorrect}> (Incorrect)</span>}
+            {/* {submitted && option.is_correct && <span className={styles.correct}> (Correct)</span>}
+            {submitted && selectedOption === option.id && !option.is_correct && <span className={styles.incorrect}> (Incorrect)</span>} */}
         </div>
     );
 };

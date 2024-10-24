@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 
 import QuizQuestion from '@/components/QuizQuestion';
+import ProgressBar from '@/components/ProgressBar';
 import styles from '@/styles/Quiz.module.css';
 import { getQuizQuestions } from '@/api/api';
 
@@ -59,15 +60,19 @@ const QuizPage = () => {
     // should question submission be handled by the page or the question component?
         // going to need to show the explanation and correct/incorrect post submit, which are based on the question
     return (
-        <div className={styles.quizContainer}>
-            {/* Unit title */}
-            <h1>Static Title</h1>
-            {/* Progress bar */}
-            <div> <p> progress bar</p> </div>
-            {/* display the correct quiz question */}
+        <div>
             {currentQuestion ? (
-                <QuizQuestion question={currentQuestion} handleNextQuestion={handleNextQuestion} />
+                <div className={styles.quizContainer}>
+                    {/* Unit title */}
+                    <h1>Static Title</h1>
+                    {/* Progress bar */}
+                
+                    {/* display the correct quiz question */}
+                    <ProgressBar percentage={progressPercentage} />
+                    <QuizQuestion question={currentQuestion} handleNextQuestion={handleNextQuestion} />
+                </div>
             ) : (
+                // TODO: this will be another component
                 <div className={styles.quizCompletion}>
                     <h2>Quiz Completed!</h2>
                     <p>You got {numCorrectAnswers} out of {questions.length} questions correct.</p>

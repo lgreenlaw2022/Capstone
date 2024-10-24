@@ -1,0 +1,17 @@
+.quizQuestionContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 19px;
+    flex-shrink: 0;
+}
+
+.optionsContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: left;
+    gap: 10px;
+    flex-shrink: 0;
+}
