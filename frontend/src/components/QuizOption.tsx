@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from '../styles/QuizOption.module.css';
+import classNames from 'classnames';
 
 interface QuizOptionProps {
     // TODO: make option a type?
@@ -14,19 +15,22 @@ interface QuizOptionProps {
 }
 
 const QuizOption: React.FC<QuizOptionProps> = ({ option, selectedOption, handleOptionChange, submitted }) => {
-    
-    const className = `${styles.option} ${
-        submitted
-            ? option.is_correct
-                ? styles.correct
-                : selectedOption === option.id
-                ? styles.incorrect
-                : ''
-            : ''
-    }`;
+    // Determine the class name based on the submission status, correctness, and selected state
+    const optionClassName = classNames(styles.option, {
+        [styles.correct]: submitted && option.is_correct,
+        [styles.incorrect]: submitted && selectedOption === option.id && !option.is_correct,
+        [styles.selected]: !submitted && selectedOption === option.id,
+    });
+
+    const handleClick = () => {
+        // disable option selection if the question has been submitted
+        if (!submitted) {
+            handleOptionChange(option.id);
+        }
+    };
 
     return (
-        <div className={className}>
+        <div className={optionClassName} onClick={handleClick}>
             <label>
                 <input
                     type="radio"
@@ -35,12 +39,10 @@ const QuizOption: React.FC<QuizOptionProps> = ({ option, selectedOption, handleO
                     checked={selectedOption === option.id}
                     onChange={() => handleOptionChange(option.id)}
                     disabled={submitted}
+                    className={styles.hiddenRadio}
                 />
                 {option.option_text}
             </label>
-            {/* TODO: transfer this styling up  */}
-            {/* {submitted && option.is_correct && <span className={styles.correct}> (Correct)</span>}
-            {submitted && selectedOption === option.id && !option.is_correct && <span className={styles.incorrect}> (Incorrect)</span>} */}
         </div>
     );
 };
