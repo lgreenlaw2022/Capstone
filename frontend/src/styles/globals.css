@@ -93,7 +93,6 @@ button:hover {
     flex-direction: column;
     gap: 11px;
     justify-content: center;
-    padding: 50px;
     width: 100%;
     max-width: 800px;
 }

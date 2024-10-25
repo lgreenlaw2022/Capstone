@@ -178,3 +178,16 @@ export const submitQuizScore = async (moduleId: number, accuracy: number) => {
         }
     }
 }
+
+export const submitCompleteModule = async (moduleId: number) => {
+    try {
+        const response = await axiosInstance.post(`content/modules/${moduleId}/complete`);
+        return response.data;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error submitting complete module:', error.message);
+        } else {
+            console.error('Unknown error submitting complete module:', error);
+        }
+    }
+}
