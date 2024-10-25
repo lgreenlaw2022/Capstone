@@ -1,5 +1,13 @@
 from app import create_app
-from models import db, Unit, Course, Module, QuizQuestion, QuizQuestionOption, UserModule
+from models import (
+    db,
+    Unit,
+    Course,
+    Module,
+    QuizQuestion,
+    QuizQuestionOption,
+    UserModule,
+)
 from enums import ModuleType, QuizType
 import logging
 
@@ -60,8 +68,6 @@ def add_modules_to_user_1(user_id, unit_id):
                 UserModule(
                     user_id=user_id,
                     module_id=concept_guide_module.id,
-                    completed=True,
-                    open=True,
                 )
             )
 
@@ -70,12 +76,11 @@ def add_modules_to_user_1(user_id, unit_id):
                 UserModule(
                     user_id=user_id,
                     module_id=quiz_module.id,
-                    completed=False,
-                    open=True,
                 )
             )
 
     return user_modules_to_add
+
 
 def add_quiz_questions(module_id, quiz_questions):
     quiz_questions_to_add = []
@@ -113,15 +118,17 @@ def bulk_insert(objects_to_add):
         db.session.bulk_save_objects(objects_to_add)
         db.session.commit()
 
+
 def clear_user_modules():
     db.session.query(UserModule).delete()
     db.session.commit()
+
 
 def seed_data():
     with app.app_context():
 
         # Clear the user_modules table
-        # clear_user_modules()
+        clear_user_modules()
         # db.session.query(QuizQuestion).delete()
         # db.session.commit()
         # db.session.query(QuizQuestionOption).delete()
@@ -177,7 +184,7 @@ def seed_data():
         ).first()
         if quiz_module:
             # Add quiz questions and options
-        
+
             quiz_questions_data = [
                 {
                     "module_id": quiz_module.id,

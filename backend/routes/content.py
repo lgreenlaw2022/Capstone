@@ -1,6 +1,14 @@
-from flask import Blueprint, jsonify, send_file, abort
+from flask import Blueprint, request, jsonify, send_file, abort
 import logging
-from models import db, Unit, Course, Module, UserModule, QuizQuestion, QuizQuestionOption
+from models import (
+    db,
+    Unit,
+    Course,
+    Module,
+    UserModule,
+    QuizQuestion,
+    QuizQuestionOption,
+)
 from flask_jwt_extended import jwt_required, get_jwt_identity
 import os
 from sqlalchemy.orm import joinedload
@@ -121,7 +129,11 @@ def get_quiz_questions(module_id):
             return jsonify({"error": "Module not found"}), 404
 
         # Use joinedload to eagerly load the related QuizQuestionOption objects
-        quiz_questions = QuizQuestion.query.options(joinedload(QuizQuestion.options)).filter_by(module_id=module_id).all()
+        quiz_questions = (
+            QuizQuestion.query.options(joinedload(QuizQuestion.options))
+            .filter_by(module_id=module_id)
+            .all()
+        )
 
         # Serialize the data
         quiz_data = []
@@ -139,7 +151,79 @@ def get_quiz_questions(module_id):
                 ],
             }
             quiz_data.append(question_data)
-        logger.info(f"Quiz questions fetched for module {module_id}: {quiz_data}")
+        # logger.info(f"Quiz questions fetched for module {module_id}: {quiz_data}")
         return jsonify(quiz_data), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
+@content_bp.route("/modules/<int:module_id>/quiz-scores", methods=["POST"])
+def submit_quiz_scores(module_id):
+    try:
+        data = request.get_json()
+        accuracy = data.get("accuracy")
+        ACCURACY_THRESHOLD = 80  # TODO Define the threshold for passing
+
+        if accuracy >= ACCURACY_THRESHOLD:
+            mark_module_complete_and_open_next(module_id)
+            logger.info(f"Quiz score submitted for module {module_id}")
+            return jsonify({"message": "Quiz score submitted successfully"}), 200
+        else:
+            return jsonify({"message": "Quiz score not high enough to pass"}), 400
+    except Exception as e:
+        logger.error(f"Error submitting quiz score for module {module_id}: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+
+
+@content_bp.route("/modules/<int:module_id>/complete", methods=["POST"])
+def complete_module(module_id):
+    try:
+        result = mark_module_complete_and_open_next(module_id)
+        return jsonify(result), 200
+    except Exception as e:
+        logger.error(
+            f"Error marking module {module_id} as complete and opening next modules: {str(e)}"
+        )
+        return jsonify({"error": str(e)}), 500
+
+
+def mark_module_complete_and_open_next(module_id):
+    try:
+        # Update module status to completed
+        user_module = UserModule.query.filter_by(module_id=module_id).first()
+        if not user_module:
+            raise ValueError(f"UserModule with module_id {module_id} not found")
+        user_module.completed = True
+        db.session.commit()
+        logger.info(f"Marked module {module_id} as complete")
+
+        # Get the current module's order and unit_id
+        current_module = Module.query.filter_by(id=module_id).first()
+        if not current_module:
+            raise ValueError(f"Module with id {module_id} not found")
+
+        unit_id = current_module.unit_id
+        order = current_module.order
+
+        # Get the next module(s) in the unit based on the order value
+        next_modules = Module.query.filter(
+            Module.unit_id == unit_id, Module.order == order + 1
+        ).all()
+        logger.info(f"Found next modules: {[module.id for module in next_modules]}")
+        # Update the UserModule entries for the next modules to open
+        for next_module in next_modules:
+            user_module_next = UserModule.query.filter_by(
+                module_id=next_module.id
+            ).first()
+            if user_module_next:
+                user_module_next.open = True
+        db.session.commit()
+        logger.info("Next modules opened successfully")
+        return {
+            "message": "Module marked as complete and next modules opened successfully"
+        }
+    except Exception as e:
+        logger.error(
+            f"Error marking module {module_id} as complete and opening next modules: {str(e)}"
+        )
+        raise

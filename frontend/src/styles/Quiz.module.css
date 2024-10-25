@@ -1,6 +1,7 @@
 .quizContainer {
     display: flex;
     flex-direction: column;
+    /* TODO: shouldn't need to be adding this every time */
     margin: 50px;
     width: 600px;
     justify-content: center;

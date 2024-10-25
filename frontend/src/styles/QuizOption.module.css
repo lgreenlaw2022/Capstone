@@ -23,9 +23,9 @@
 
 .selected {
     border-radius: 4px;
-    background: #DDF3FE; /* Darker blue */
+    background: #DDF3FE;
 } 
 
 .hiddenRadio {
-    display: none; /* Hide the default radio button appearance */
+    display: none; /* Hide the default radio button */
 }

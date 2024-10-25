@@ -1,0 +1,34 @@
+.quizScoreContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    justify-content: center;
+    padding: 40px 20px;
+    text-align: center;
+    width: 210px;
+
+    border-radius: 12px;
+    border: 3px solid #d9d9d9;
+    background: #f7f7f7;
+}
+
+.quizScoreContainer p {
+    font-size: 18px;
+}
+
+.scoreDescription {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.stat {
+    color: #3c4dff;
+    margin-bottom: 5px;
+}
+
+.quizScoreContainer button {
+    /* TODO: don't like how I am having to hard set these button widths when they are in flexbox */
+    width: 140px;
+    align-self: center;
+}

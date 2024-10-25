@@ -163,3 +163,18 @@ export const getQuizQuestions = async (moduleId: number) => {
         return [];
     }
 }
+
+export const submitQuizScore = async (moduleId: number, accuracy: number) => {
+    try {
+        const response = await axiosInstance.post(`content/modules/${moduleId}/quiz-scores`, {
+            accuracy: accuracy
+        });
+        return response.data;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error submitting quiz data:', error.message);
+        } else {
+            console.error('Unknown error submitting quiz data:', error);
+        }
+    }
+}
