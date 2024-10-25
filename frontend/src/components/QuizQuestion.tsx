@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import QuizOption from "./QuizOption";
-import styles from '../styles/QuizQuestion.module.css';
+import styles from "../styles/QuizQuestion.module.css";
 
 // TODO: make quiz question a type
 interface QuizQuestionProps {
@@ -16,7 +16,10 @@ interface QuizQuestionProps {
     handleNextQuestion: (isCorrect: boolean) => void;
 }
 
-const QuizQuestion: React.FC<QuizQuestionProps> = ({ question, handleNextQuestion }) => {
+const QuizQuestion: React.FC<QuizQuestionProps> = ({
+    question,
+    handleNextQuestion,
+}) => {
     const [selectedOption, setSelectedOption] = useState<number | null>(null);
     const [submitted, setSubmitted] = useState(false);
 
@@ -36,16 +39,18 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({ question, handleNextQuestio
     };
 
     const handleNext = () => {
-        const selected = question.options.find(option => option.id === selectedOption);
+        const selected = question.options.find(
+            (option) => option.id === selectedOption
+        );
         handleNextQuestion(selected?.is_correct || false);
-    }
+    };
 
     return (
         <div className={styles.quizQuestionContainer}>
             <h2>{question.title}</h2>
             <div className={styles.optionsContainer}>
                 {/* TODO: shuffle order of questions */}
-                {question.options.map(option => (
+                {question.options.map((option) => (
                     <QuizOption
                         key={option.id}
                         option={option}
@@ -56,13 +61,14 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({ question, handleNextQuestio
                 ))}
             </div>
             {!submitted ? (
-                <button onClick={handleSubmit} disabled={selectedOption === null}>
+                <button
+                    onClick={handleSubmit}
+                    disabled={selectedOption === null}
+                >
                     Submit
                 </button>
             ) : (
-                <button onClick={handleNext}>
-                    Continue
-                </button>
+                <button onClick={handleNext}>Continue</button>
             )}
         </div>
     );

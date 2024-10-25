@@ -1,6 +1,6 @@
-import React from 'react';
-import styles from '../styles/QuizOption.module.css';
-import classNames from 'classnames';
+import React from "react";
+import styles from "../styles/QuizOption.module.css";
+import classNames from "classnames";
 
 interface QuizOptionProps {
     // TODO: make option a type?
@@ -14,11 +14,17 @@ interface QuizOptionProps {
     submitted: boolean;
 }
 
-const QuizOption: React.FC<QuizOptionProps> = ({ option, selectedOption, handleOptionChange, submitted }) => {
+const QuizOption: React.FC<QuizOptionProps> = ({
+    option,
+    selectedOption,
+    handleOptionChange,
+    submitted,
+}) => {
     // Determine the class name based on the submission status, correctness, and selected state
     const optionClassName = classNames(styles.option, {
         [styles.correct]: submitted && option.is_correct,
-        [styles.incorrect]: submitted && selectedOption === option.id && !option.is_correct,
+        [styles.incorrect]:
+            submitted && selectedOption === option.id && !option.is_correct,
         [styles.selected]: !submitted && selectedOption === option.id,
     });
 

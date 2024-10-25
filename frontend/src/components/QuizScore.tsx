@@ -1,5 +1,5 @@
-import React from 'react';
-import styles from '../styles/QuizScore.module.css';
+import React from "react";
+import styles from "../styles/QuizScore.module.css";
 
 interface QuizScoreProps {
     numCorrectAnswers: number;
@@ -7,7 +7,11 @@ interface QuizScoreProps {
     onContinue: () => void;
 }
 
-const QuizScore: React.FC<QuizScoreProps> = ({ numCorrectAnswers, numQuestions, onContinue }) => {
+const QuizScore: React.FC<QuizScoreProps> = ({
+    numCorrectAnswers,
+    numQuestions,
+    onContinue,
+}) => {
     const XP_PER_QUESTION = 10;
     const ACCURACY_THRESHOLD = 80; // Threshold for passing
 
@@ -16,11 +20,13 @@ const QuizScore: React.FC<QuizScoreProps> = ({ numCorrectAnswers, numQuestions, 
     const passed = accuracy >= ACCURACY_THRESHOLD;
 
     // Calculate XP earned
-    const xpEarned = Math.round((accuracy / 100) * numQuestions * XP_PER_QUESTION);
+    const xpEarned = Math.round(
+        (accuracy / 100) * numQuestions * XP_PER_QUESTION
+    );
 
     // Determine feedback text
-    const feedbackTitle = passed ? 'Good work!' : 'Not quite';
-    const buttonText = passed ? 'Keep it Going' : 'Keep Learning';
+    const feedbackTitle = passed ? "Good work!" : "Not quite";
+    const buttonText = passed ? "Keep it Going" : "Keep Learning";
 
     return (
         <div className={styles.quizScoreContainer}>
@@ -33,13 +39,17 @@ const QuizScore: React.FC<QuizScoreProps> = ({ numCorrectAnswers, numQuestions, 
                 {passed ? (
                     <div>
                         <h1 className={styles.stat}>{xpEarned}</h1>
-                        <p >XP Earned</p>
+                        <p>XP Earned</p>
                     </div>
                 ) : (
-                    <p className={styles.text}>Review the material and try again</p>
-                )} 
-            </div>           
-            <button onClick={onContinue} className={styles.text}>{buttonText}</button>
+                    <p className={styles.text}>
+                        Review the material and try again
+                    </p>
+                )}
+            </div>
+            <button onClick={onContinue} className={styles.text}>
+                {buttonText}
+            </button>
         </div>
     );
 };

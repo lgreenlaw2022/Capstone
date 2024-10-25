@@ -1,8 +1,8 @@
-import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 
-import { getModuleContent, submitCompleteModule } from '../../../api/api';
-import styles from '@/styles/ConceptGuide.module.css';
+import { getModuleContent, submitCompleteModule } from "../../../api/api";
+import styles from "@/styles/ConceptGuide.module.css";
 
 const ConceptGuidePage = () => {
     const router = useRouter();
@@ -15,7 +15,7 @@ const ConceptGuidePage = () => {
                 const data = await getModuleContent(Number(moduleId));
                 setContent(data);
             } catch (error) {
-                console.error('Error fetching content:', error);
+                console.error("Error fetching content:", error);
             }
         };
 
@@ -27,9 +27,9 @@ const ConceptGuidePage = () => {
     const handleComplete = async () => {
         try {
             await submitCompleteModule(Number(moduleId));
-            router.push('/learn');
+            router.push("/learn");
         } catch (error) {
-            console.error('Error setting module as complete:', error);
+            console.error("Error setting module as complete:", error);
         }
     };
 
