@@ -51,7 +51,7 @@ def add_modules(unit_id, modules):
     return modules_to_add
 
 
-def add_modules_to_user_1(user_id, unit_id):
+def add_hashmap_modules_to_user(user_id, unit_id):
     if user_id:
         # Fetch the modules
         concept_guide_module = Module.query.filter_by(
@@ -62,6 +62,7 @@ def add_modules_to_user_1(user_id, unit_id):
         ).first()
 
         # Create UserModule entries
+        # add concept guide
         user_modules_to_add = []
         if concept_guide_module:
             user_modules_to_add.append(
@@ -71,6 +72,7 @@ def add_modules_to_user_1(user_id, unit_id):
                 )
             )
 
+        # add quiz module
         if quiz_module:
             user_modules_to_add.append(
                 UserModule(
@@ -98,7 +100,7 @@ def add_quiz_questions(module_id, quiz_questions):
                 title=question_data["title"],
             )
             db.session.add(question)
-            db.session.flush()  # Ensure the question ID is available for options
+            db.session.flush()  # Ensure the question ID is available for options data
 
             # add the listed quiz answers to QuizQuestionOption table
             for option_data in question_data["options"]:
@@ -129,10 +131,6 @@ def seed_data():
 
         # Clear the user_modules table
         clear_user_modules()
-        # db.session.query(QuizQuestion).delete()
-        # db.session.commit()
-        # db.session.query(QuizQuestionOption).delete()
-        # db.session.commit()
 
         # Check if the course already exists
         course = Course.query.filter_by(title="Technical Interview Prep").first()
@@ -144,7 +142,6 @@ def seed_data():
         # Add units to the course
         units = [
             {"title": "Hash Maps", "order": 1},
-            # Add more units
         ]
 
         # Bulk insert units
@@ -163,7 +160,6 @@ def seed_data():
                 "order": 2,
                 "module_type": ModuleType.QUIZ,
             },
-            # Add more modules
         ]
         # Get the "Hash Maps" unit
         hashmaps_unit = Unit.query.filter_by(
@@ -174,9 +170,6 @@ def seed_data():
         if hashmaps_unit:
             modules_to_add = add_modules(hashmaps_unit.id, hashmaps_modules)
             bulk_insert(modules_to_add)
-            # add the specific hashmap modules to userModule table so they are open
-            userModules_to_add = add_modules_to_user_1(1, hashmaps_unit.id)
-            bulk_insert(userModules_to_add)
 
         # Fetch the "Hash Maps Quiz" module dynamically
         quiz_module = Module.query.filter_by(

@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import QuizQuestion from "@/components/QuizQuestion";
 import ProgressBar from "@/components/ProgressBar";
 import styles from "@/styles/Quiz.module.css";
-import { getQuizQuestions, submitQuizScore } from "@/api/api";
+import { getModuleTitle, getQuizQuestions, submitQuizScore } from "@/api/api";
 import QuizScore from "@/components/QuizScore";
 
 interface QuizQuestion {
@@ -30,6 +30,7 @@ const QuizPage = () => {
     const [questions, setQuestions] = useState<QuizQuestion[]>([]);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0); // is the index reliable?
     const [numCorrectAnswers, setNumCorrectAnswers] = useState<number>(0);
+    const [moduleTitle, setModuleTitle] = useState<string | null>(null);
 
     const currentQuestion = questions[currentQuestionIndex];
     const progressPercentage = calculateProgressPercentage(
@@ -37,24 +38,37 @@ const QuizPage = () => {
         currentQuestionIndex
     );
 
-    useEffect(() => {
-        const fetchQuestions = async () => {
-            try {
-                const data = await getQuizQuestions(Number(moduleId));
-                setQuestions(data);
-                console.log("Questions:", data);
-            } catch (error) {
-                console.error("Error fetching questions:", error);
-            }
-        };
+    const fetchQuestions = async () => {
+        try {
+            const data = await getQuizQuestions(Number(moduleId));
+            setQuestions(data);
+            console.log("Questions:", data);
+        } catch (error) {
+            console.error("Error fetching questions:", error);
+        }
+    };
 
+    const fetchModuleDetails = async () => {
+        try {
+            const moduleDetails = await getModuleTitle(Number(moduleId));
+            setModuleTitle(moduleDetails.title);
+            console.log("Module title:", moduleDetails);
+        } catch (error) {
+            console.error('Error fetching module details:', error);
+        }
+    };
+
+    useEffect(() => {
         if (moduleId) {
+            // TODO: need a loading state
             fetchQuestions();
+            fetchModuleDetails();
         }
     }, [moduleId]);
 
     // TODO: add feature to try missed questions again at the end of the quiz
     const handleNextQuestion = (isCorrect: boolean) => {
+        // log correct answers and move to next question
         if (isCorrect) {
             setNumCorrectAnswers((prev) => prev + 1);
         }
@@ -75,8 +89,7 @@ const QuizPage = () => {
         <div>
             {currentQuestion ? (
                 <div className={styles.quizContainer}>
-                    {/* TODO: Unit title */}
-                    <h1>Static Title</h1>
+                    <h1>{moduleTitle}</h1>
                     <ProgressBar percentage={progressPercentage} />
                     <QuizQuestion
                         question={currentQuestion}
@@ -84,7 +97,8 @@ const QuizPage = () => {
                     />
                 </div>
             ) : (
-                // TODO: seems weird to applhy the same styling because the class contains more than needed
+                // If no questions left, show the score
+                // TODO: seems weird to apply the same styling because the class contains more than needed
                 <div className={styles.quizContainer}>
                     <QuizScore
                         numCorrectAnswers={numCorrectAnswers}

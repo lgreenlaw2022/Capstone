@@ -164,6 +164,16 @@ export const getQuizQuestions = async (moduleId: number) => {
     }
 }
 
+export const getModuleTitle = async (moduleId: number) => {
+    try {
+        const response = await axiosInstance.get(`/content/modules/${moduleId}/title`);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching module title:', error);
+        throw error;
+    }
+};
+
 export const submitQuizScore = async (moduleId: number, accuracy: number) => {
     try {
         const response = await axiosInstance.post(`content/modules/${moduleId}/quiz-scores`, {
