@@ -42,7 +42,6 @@ const QuizPage = () => {
         try {
             const data = await getQuizQuestions(Number(moduleId));
             setQuestions(data);
-            console.log("Questions:", data);
         } catch (error) {
             console.error("Error fetching questions:", error);
         }
@@ -52,7 +51,6 @@ const QuizPage = () => {
         try {
             const moduleDetails = await getModuleTitle(Number(moduleId));
             setModuleTitle(moduleDetails.title);
-            console.log("Module title:", moduleDetails);
         } catch (error) {
             console.error('Error fetching module details:', error);
         }
@@ -98,7 +96,6 @@ const QuizPage = () => {
                 </div>
             ) : (
                 // If no questions left, show the score
-                // TODO: seems weird to apply the same styling because the class contains more than needed
                 <div className={styles.quizContainer}>
                     <QuizScore
                         numCorrectAnswers={numCorrectAnswers}

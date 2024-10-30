@@ -34,7 +34,6 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({
     };
 
     const handleSubmit = () => {
-        // TODO: make sure I can employ the conditional styling
         setSubmitted(true);
     };
 

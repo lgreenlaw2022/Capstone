@@ -51,6 +51,7 @@ def add_modules(unit_id, modules):
     return modules_to_add
 
 
+# this function can be used if I want to manually seed the user's progress in the unit
 def add_hashmap_modules_to_user(user_id, unit_id):
     if user_id:
         # Fetch the modules
@@ -100,7 +101,7 @@ def add_quiz_questions(module_id, quiz_questions):
                 title=question_data["title"],
             )
             db.session.add(question)
-            db.session.flush()  # Ensure the question ID is available for options data
+            db.session.flush()  # Ensure the question id is available for options data
 
             # add the listed quiz answers to QuizQuestionOption table
             for option_data in question_data["options"]:
@@ -177,7 +178,6 @@ def seed_data():
         ).first()
         if quiz_module:
             # Add quiz questions and options
-
             quiz_questions_data = [
                 {
                     "module_id": quiz_module.id,

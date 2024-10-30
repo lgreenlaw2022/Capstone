@@ -209,7 +209,7 @@ def mark_module_complete_and_open_next(module_id, user_id):
                 user_id=user_id,
             )
             db.session.add(user_module)
-        if not user_module:
+        if user_module is None:
             raise ValueError(f"UserModule with module_id {module_id} not found")
         # Update user module status to completed
         user_module.completed = True
@@ -251,7 +251,7 @@ def mark_module_complete_and_open_next(module_id, user_id):
 def get_module_title(module_id):
     try:
         module = Module.query.filter_by(id=module_id).first()
-        if not module:
+        if module is None:
             return jsonify({"error": "Module not found"}), 404
 
         module_title = {
