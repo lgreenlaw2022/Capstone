@@ -1,22 +1,21 @@
-import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 
-import { getModuleContent } from '../../../api/api';
-
+import { getModuleContent, submitCompleteModule } from "../../../api/api";
+import styles from "@/styles/ConceptGuide.module.css";
 
 const ConceptGuidePage = () => {
     const router = useRouter();
     const { moduleId } = router.query;
     const [content, setContent] = useState<string | null>(null);
 
-    // TODO: add api call to get content based on moduleId
     useEffect(() => {
         const fetchContent = async () => {
             try {
                 const data = await getModuleContent(Number(moduleId));
                 setContent(data);
             } catch (error) {
-                console.error('Error fetching content:', error);
+                console.error("Error fetching content:", error);
             }
         };
 
@@ -25,15 +24,27 @@ const ConceptGuidePage = () => {
         }
     }, [moduleId]);
 
+    const handleComplete = async () => {
+        try {
+            await submitCompleteModule(Number(moduleId));
+            router.push("/learn");
+        } catch (error) {
+            console.error("Error setting module as complete:", error);
+        }
+    };
+
     return (
-        <div>
-            <div>
-                {content ? (
+        <div className={styles.container}>
+            {content ? (
+                <div>
                     <div dangerouslySetInnerHTML={{ __html: content }} />
-                ) : (
-                    <p>Loading...</p>
-                )}
-            </div>
+                    <div>
+                        <button onClick={handleComplete}>Complete</button>
+                    </div>
+                </div>
+            ) : (
+                <p>Loading...</p>
+            )}
         </div>
     );
 };

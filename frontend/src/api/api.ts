@@ -149,3 +149,55 @@ export const getModuleContent = async (moduleId: number) => {
         throw error;
     }
 };
+
+export const getQuizQuestions = async (moduleId: number) => {
+    try {
+        const response = await axiosInstance.get(`content/modules/${moduleId}/quiz-questions`);
+        return response.data;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error fetching quiz data:', error.message);
+        } else {
+            console.error('Unknown error fetching quiz data:', error);
+        }
+        return [];
+    }
+}
+
+export const getModuleTitle = async (moduleId: number) => {
+    try {
+        const response = await axiosInstance.get(`/content/modules/${moduleId}/title`);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching module title:', error);
+        throw error;
+    }
+};
+
+export const submitQuizScore = async (moduleId: number, accuracy: number) => {
+    try {
+        const response = await axiosInstance.post(`content/modules/${moduleId}/quiz-scores`, {
+            accuracy: accuracy
+        });
+        return response.data;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error submitting quiz data:', error.message);
+        } else {
+            console.error('Unknown error submitting quiz data:', error);
+        }
+    }
+}
+
+export const submitCompleteModule = async (moduleId: number) => {
+    try {
+        const response = await axiosInstance.post(`content/modules/${moduleId}/complete`);
+        return response.data;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error submitting complete module:', error.message);
+        } else {
+            console.error('Unknown error submitting complete module:', error);
+        }
+    }
+}
