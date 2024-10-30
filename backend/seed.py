@@ -161,6 +161,11 @@ def seed_data():
                 "order": 2,
                 "module_type": ModuleType.QUIZ,
             },
+            {
+                "title": "Hash Maps Code Challenge 1",
+                "order": 3,
+                "module_type": ModuleType.CHALLENGE,
+            },
         ]
         # Get the "Hash Maps" unit
         hashmaps_unit = Unit.query.filter_by(
