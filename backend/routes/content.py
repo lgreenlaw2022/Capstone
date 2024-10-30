@@ -161,6 +161,11 @@ def submit_quiz_scores(module_id):
     try:
         data = request.get_json()
         accuracy = data.get("accuracy")
+        # Validate accuracy
+        if accuracy is None:
+            return jsonify({"error": "Accuracy is required"}), 400
+        if not (0 <= accuracy <= 100):
+            return jsonify({"error": "Accuracy must be between 0 and 100"}), 400
         ACCURACY_THRESHOLD = 80  # TODO Define the threshold for passing as a constant
 
         # mark module as complete if accuracy is above passing threshold
@@ -171,7 +176,7 @@ def submit_quiz_scores(module_id):
         else:
             return jsonify({"message": "Quiz score not high enough to pass"}), 400
     except Exception as e:
-        logger.error(f"Error submitting quiz score for module {module_id}: {str(e)}")
+        logger.error(f"Error submitting user {user_id} quiz score for module {module_id}: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
 
@@ -209,6 +214,7 @@ def mark_module_complete_and_open_next(module_id, user_id):
                 user_id=user_id,
             )
             db.session.add(user_module)
+
         if user_module is None:
             raise ValueError(f"UserModule with module_id {module_id} not found")
         # Update user module status to completed
@@ -234,8 +240,9 @@ def mark_module_complete_and_open_next(module_id, user_id):
                 )
                 db.session.add(user_module_next)
             # Update the UserModule entry to open
-            user_module_next.open = True
-            db.session.commit()
+            else:
+                user_module_next.open = True
+        db.session.commit()
         logger.info("Next modules opened successfully")
         return {
             "message": "Module marked as complete and next modules opened successfully"
@@ -244,7 +251,7 @@ def mark_module_complete_and_open_next(module_id, user_id):
         logger.error(
             f"Error marking module {module_id} as complete and opening next modules: {str(e)}"
         )
-        raise
+        return jsonify({"error": str(e)}), 500
 
 
 @content_bp.route("/modules/<int:module_id>/title", methods=["GET"])

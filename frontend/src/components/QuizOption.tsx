@@ -37,9 +37,10 @@ const QuizOption: React.FC<QuizOptionProps> = ({
 
     return (
         <div className={optionClassName} onClick={handleClick}>
-            <label>
+            <label htmlFor={`option-${option.id}`}>
                 <input
                     type="radio"
+                    id={`option-${option.id}`}
                     name={`option-${option.id}`}
                     value={option.id}
                     checked={selectedOption === option.id}

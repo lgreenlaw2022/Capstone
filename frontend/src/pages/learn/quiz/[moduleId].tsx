@@ -21,7 +21,7 @@ const calculateProgressPercentage = (
     numQuestions: number,
     numCompleted: number
 ) => {
-    return (numCompleted / numQuestions) * 100;
+    return numQuestions > 0 ? (numCompleted / numQuestions) * 100 : 0;
 };
 
 const QuizPage = () => {
@@ -52,7 +52,7 @@ const QuizPage = () => {
             const moduleDetails = await getModuleTitle(Number(moduleId));
             setModuleTitle(moduleDetails.title);
         } catch (error) {
-            console.error('Error fetching module details:', error);
+            console.error("Error fetching module details:", error);
         }
     };
 
@@ -85,7 +85,7 @@ const QuizPage = () => {
 
     return (
         <div>
-            {currentQuestion ? (
+            {currentQuestionIndex < questions.length ? (
                 <div className={styles.quizContainer}>
                     <h1>{moduleTitle}</h1>
                     <ProgressBar percentage={progressPercentage} />
