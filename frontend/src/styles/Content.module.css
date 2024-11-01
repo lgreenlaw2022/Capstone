@@ -1,0 +1,14 @@
+.container {
+    padding: 50px;
+}
+
+.container button {
+    margin-top: 30px;
+}
+
+.editor {
+    max-width: 650px;
+    min-width: 450px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}

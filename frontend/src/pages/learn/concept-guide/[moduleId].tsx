@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 import { getModuleContent, submitCompleteModule } from "../../../api/api";
-import styles from "@/styles/ConceptGuide.module.css";
+import styles from "@/styles/Content.module.css";
 
 const ConceptGuidePage = () => {
     const router = useRouter();
