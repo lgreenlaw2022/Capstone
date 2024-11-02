@@ -9,7 +9,7 @@ import styles from "@/styles/Content.module.css";
 const CodeChallengePage: React.FC = () => {
     const router = useRouter();
     const { moduleId } = router.query;
-    const [content, setContent] = useState<string | null>("null");
+    const [content, setContent] = useState<string | null>();
     const [code, setCode] = useState<string | undefined>("");
     const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
 

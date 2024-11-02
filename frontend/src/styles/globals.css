@@ -54,7 +54,7 @@ p {
 }
 
 a {
-    color: #3c4dff;
+    color: #3c4dff !important;
 }
 
 ul {

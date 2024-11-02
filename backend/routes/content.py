@@ -314,7 +314,7 @@ def get_code_challenge(module_id):
 def get_code_challenge_file_path(module_id: int) -> str:
     # TODO: consider using the module title again for file names
     # Define the path to the text files
-    base_path = os.path.join(os.getcwd(), "content", "code-challenges")
+    base_path = os.path.join(os.getcwd(), "content", "code-challenges", "code")
     file_path = os.path.join(base_path, f"{module_id}.txt")
     logger.debug(f"File path: {file_path}")
 
