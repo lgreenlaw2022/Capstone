@@ -9,7 +9,7 @@ import styles from "@/styles/Content.module.css";
 const CodeChallengePage: React.FC = () => {
     const router = useRouter();
     const { moduleId } = router.query;
-    const [content, setContent] = useState<string | null>();
+    const [content, setContent] = useState<string | null>(null);
     const [code, setCode] = useState<string | undefined>("");
     const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
 
@@ -18,19 +18,19 @@ const CodeChallengePage: React.FC = () => {
         editorRef.current = editor;
     };
 
-    useEffect(() => {
-        const fetchContent = async () => {
-            try {
-                if (moduleId) {
-                    const data = await getCodeChallenge(Number(moduleId));
-                    setContent(data.html);
-                    setCode(data.code);
-                }
-            } catch (error) {
-                console.error("Error fetching code challenge:", error);
+    const fetchContent = async () => {
+        try {
+            if (moduleId) {
+                const data = await getCodeChallenge(Number(moduleId));
+                setContent(data.html);
+                setCode(data.code);
             }
-        };
+        } catch (error) {
+            console.error("Error fetching code challenge:", error);
+        }
+    };
 
+    useEffect(() => {
         fetchContent();
     }, [moduleId]);
 
@@ -43,10 +43,6 @@ const CodeChallengePage: React.FC = () => {
         }
     };
 
-    const handleEditorChange = (newValue: string | undefined) => {
-        setCode(newValue);
-    };
-
     // Show loading state until content is fetched
     if (!content) {
         return <p>Loading...</p>;
@@ -57,11 +53,10 @@ const CodeChallengePage: React.FC = () => {
             <div>
                 <div dangerouslySetInnerHTML={{ __html: content }} />
                 <Editor
-                    height="50vh"
+                    height="25vh"
                     width="100%"
                     defaultLanguage="python"
                     value={code}
-                    onChange={handleEditorChange}
                     onMount={handleEditorDidMount}
                     theme="vs-dark"
                     className={styles.editor}
@@ -77,7 +72,12 @@ const CodeChallengePage: React.FC = () => {
             </div>
             {/* TODO: hint component */}
             <p>Hint component will go here</p>
-            <button onClick={handleComplete}>Complete</button>
+            <button
+                onClick={handleComplete}
+                aria-label="Mark module as complete"
+            >
+                Complete
+            </button>
             {/* TODO: add a continue to solution button */}
         </div>
     );

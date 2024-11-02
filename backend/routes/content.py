@@ -276,29 +276,25 @@ def get_module_title(module_id):
 @content_bp.route("/code-challenges/<int:module_id>", methods=["GET"])
 def get_code_challenge(module_id):
     try:
-        # Get the file path for the code challenge text file
+        # Get file paths for the code challenge and HTML
         code_challenge_file_path = get_code_challenge_file_path(module_id)
+        html_file_path = get_html_file_path(module_id)
 
         # Check if the text file exists
         if not os.path.exists(code_challenge_file_path):
             logger.error(f"Code challenge file not found for module {module_id}")
             return jsonify({"error": "Content not found"}), 404
 
-        # Read the content from the file
-        with open(code_challenge_file_path, "r", encoding="utf-8") as file:
-            code_content = file.read()
-
-        # Get the file path for the HTML file
-        html_file_path = get_html_file_path(module_id)
-
         # Check if the HTML file exists
         if not os.path.exists(html_file_path):
             logger.error(f"HTML file not found for module {module_id}")
             return jsonify({"error": "Content not found"}), 404
 
-        # Read the HTML content from the file
-        with open(html_file_path, "r", encoding="utf-8") as file:
-            html_content = file.read()
+        # Read content from both files
+        with open(code_challenge_file_path, "r", encoding="utf-8") as code_file, \
+             open(html_file_path, "r", encoding="utf-8") as html_file:
+            code_content = code_file.read()
+            html_content = html_file.read()
 
         # Return the HTML content and code string as part of the response
         logger.debug(f"Code challenge retrieved successfully for module {module_id}")
@@ -308,7 +304,7 @@ def get_code_challenge(module_id):
         logger.error(
             f"Error retrieving code challenge for module {module_id}: {str(e)}"
         )
-        return abort(404, description=str(e))
+        return abort(500, description=str(e))
 
 
 def get_code_challenge_file_path(module_id: int) -> str:
@@ -316,16 +312,14 @@ def get_code_challenge_file_path(module_id: int) -> str:
     # Define the path to the text files
     base_path = os.path.join(os.getcwd(), "content", "code-challenges", "code")
     file_path = os.path.join(base_path, f"{module_id}.txt")
-    logger.debug(f"File path: {file_path}")
 
     return file_path
 
 
-def get_html_file_path(html_module_id: int) -> str:
+def get_html_file_path(module_id: int) -> str:
     # Define the path to the HTML files
     base_path = os.path.join(os.getcwd(), "content", "code-challenges", "html")
-    # Construct the file path using the html_module_id
-    file_path = os.path.join(base_path, f"{html_module_id}.html")
-    logger.debug(f"HTML file path: {file_path}")
+    # Construct the file path using the module_id
+    file_path = os.path.join(base_path, f"{module_id}.html")
 
     return file_path
