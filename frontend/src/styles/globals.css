@@ -53,6 +53,14 @@ p {
     line-height: normal;
 }
 
+a {
+    color: #3c4dff !important;
+}
+
+ul {
+    padding-left: 20px;
+}
+
 .main-content {
     display: flex;
     flex-direction: column;

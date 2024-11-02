@@ -201,3 +201,17 @@ export const submitCompleteModule = async (moduleId: number) => {
         }
     }
 }
+
+export const getCodeChallenge = async (moduleId: number) => {
+    try {
+        const response = await axiosInstance.get(`/content/code-challenges/${moduleId}`);
+        return response.data;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error fetching code challenge:', error.message);
+        } else {
+            console.error('Unknown error fetching code challenge:', error);
+        }
+        throw error;
+    }
+};

@@ -83,7 +83,7 @@ def calculate_completion_percentage(total_modules, completed_modules):
 def get_module_content(module_id):
     try:
         # Get the file path using the module_id
-        file_path = get_content_file_path(module_id)
+        file_path = get_content_file_path(module_id, "concept-guides")
     except ValueError as e:
         return abort(404, description=str(e))
 
@@ -100,7 +100,7 @@ def transform_title(title: str) -> str:
     return title.replace(" ", "-").lower()
 
 
-def get_content_file_path(module_id: int) -> str:
+def get_content_file_path(module_id: int, content_type: str) -> str:
     # Query the database for the module title using the module_id
     module = Module.query.get(module_id)
     if module is None:
@@ -110,7 +110,7 @@ def get_content_file_path(module_id: int) -> str:
     transformed_title = transform_title(module.title)
 
     # Define the path to the HTML files
-    base_path = os.path.join(os.getcwd(), "content", "concept-guides")
+    base_path = os.path.join(os.getcwd(), "content", content_type)
     # Construct the file path using the transformed title
     file_path = os.path.join(base_path, f"{transformed_title}.html")
     logger.debug(f"File path: {file_path}")
@@ -176,7 +176,9 @@ def submit_quiz_scores(module_id):
         else:
             return jsonify({"message": "Quiz score not high enough to pass"}), 400
     except Exception as e:
-        logger.error(f"Error submitting user {user_id} quiz score for module {module_id}: {str(e)}")
+        logger.error(
+            f"Error submitting user {user_id} quiz score for module {module_id}: {str(e)}"
+        )
         return jsonify({"error": str(e)}), 500
 
 
@@ -269,3 +271,55 @@ def get_module_title(module_id):
     except Exception as e:
         logger.error(f"Error fetching module title for module {module_id}: {str(e)}")
         return jsonify({"error": str(e)}), 500
+
+
+@content_bp.route("/code-challenges/<int:module_id>", methods=["GET"])
+def get_code_challenge(module_id):
+    try:
+        # Get file paths for the code challenge and HTML
+        code_challenge_file_path = get_code_challenge_file_path(module_id)
+        html_file_path = get_html_file_path(module_id)
+
+        # Check if the text file exists
+        if not os.path.exists(code_challenge_file_path):
+            logger.error(f"Code challenge file not found for module {module_id}")
+            return jsonify({"error": "Content not found"}), 404
+
+        # Check if the HTML file exists
+        if not os.path.exists(html_file_path):
+            logger.error(f"HTML file not found for module {module_id}")
+            return jsonify({"error": "Content not found"}), 404
+
+        # Read content from both files
+        with open(code_challenge_file_path, "r", encoding="utf-8") as code_file, \
+             open(html_file_path, "r", encoding="utf-8") as html_file:
+            code_content = code_file.read()
+            html_content = html_file.read()
+
+        # Return the HTML content and code string as part of the response
+        logger.debug(f"Code challenge retrieved successfully for module {module_id}")
+        return jsonify({"html": html_content, "code": code_content}), 200
+
+    except Exception as e:
+        logger.error(
+            f"Error retrieving code challenge for module {module_id}: {str(e)}"
+        )
+        return abort(500, description=str(e))
+
+
+def get_code_challenge_file_path(module_id: int) -> str:
+    # TODO: consider using the module title again for file names
+    # Define the path to the text files
+    base_path = os.path.join(os.getcwd(), "content", "code-challenges", "code")
+    file_path = os.path.join(base_path, f"{module_id}.txt")
+
+    return file_path
+
+
+def get_html_file_path(module_id: int) -> str:
+    # Define the path to the HTML files
+    base_path = os.path.join(os.getcwd(), "content", "code-challenges", "html")
+    # Construct the file path using the module_id
+    file_path = os.path.join(base_path, f"{module_id}.html")
+
+    return file_path
