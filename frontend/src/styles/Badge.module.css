@@ -38,11 +38,11 @@
     font-weight: 600;
 }
 
-/* .conceptBadgeText {
+.badgeText {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 2px;
     align-self: stretch;
-} */
+}

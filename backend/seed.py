@@ -9,7 +9,7 @@ from models import (
     UserModule,
     Badge,
 )
-from enums import ModuleType, QuizType
+from enums import ModuleType, BadgeType
 import logging
 
 logger = logging.getLogger(__name__)
@@ -120,14 +120,19 @@ def add_quiz_questions(module_id, quiz_questions):
 def add_badges():
     badges_data = [
         {
-            "title": "First Module Completed",
-            "description": "Awarded for completing the first module.",
-            "image_src": "/images/badges/first_module_completed.png",
+            "title": "Hash Tables",
+            "description": "Awarded for completing the hash tables unit.",
+            "type": BadgeType.CONTENT
+        },
+        {
+            "title": "30 day streak",
+            "description": "Awarded for reaching a 30 day streak.",
+            "type": BadgeType.AWARD,
         },
         {
             "title": "Quiz Master",
             "description": "Awarded for scoring 100% on a quiz.",
-            "image_src": "/images/badges/quiz_master.png",
+            "type": BadgeType.AWARD,
         },
     ]
 
@@ -136,7 +141,7 @@ def add_badges():
         badge = Badge(
             title=badge_data["title"],
             description=badge_data["description"],
-            image_src=badge_data["image_src"],
+            type=badge_data["type"]
         )
         badges_to_add.append(badge)
 

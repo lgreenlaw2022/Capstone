@@ -15,8 +15,7 @@ const Badge: React.FC<BadgeProps> = ({ title, type }) => {
 
     return (
         <div className={badgeClass}>
-            <div className="badge-info">
-                {/* TODO: figure out if I need to add this somewhere */}
+            <div className={styles.badgeText}>
                 {type === "concept" && <p>Completed Unit</p>}
                 <h3>{title}</h3>
             </div>
