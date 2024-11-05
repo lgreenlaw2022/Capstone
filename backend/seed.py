@@ -122,7 +122,7 @@ def add_badges():
         {
             "title": "Hash Tables",
             "description": "Awarded for completing the hash tables unit.",
-            "type": BadgeType.CONTENT
+            "type": BadgeType.CONTENT,
         },
         {
             "title": "30 day streak",
@@ -141,7 +141,7 @@ def add_badges():
         badge = Badge(
             title=badge_data["title"],
             description=badge_data["description"],
-            type=badge_data["type"]
+            type=badge_data["type"],
         )
         badges_to_add.append(badge)
 
