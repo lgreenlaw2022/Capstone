@@ -7,8 +7,9 @@ from models import (
     QuizQuestion,
     QuizQuestionOption,
     UserModule,
+    Badge,
 )
-from enums import ModuleType, QuizType
+from enums import ModuleType, BadgeType
 import logging
 
 logger = logging.getLogger(__name__)
@@ -114,6 +115,39 @@ def add_quiz_questions(module_id, quiz_questions):
                 db.session.add(option)
             quiz_questions_to_add.append(question)
     return quiz_questions_to_add
+
+
+def add_badges():
+    badges_data = [
+        {
+            "title": "Hash Tables",
+            "description": "Awarded for completing the hash tables unit.",
+            "type": BadgeType.CONTENT
+        },
+        {
+            "title": "30 day streak",
+            "description": "Awarded for reaching a 30 day streak.",
+            "type": BadgeType.AWARD,
+        },
+        {
+            "title": "Quiz Master",
+            "description": "Awarded for scoring 100% on a quiz.",
+            "type": BadgeType.AWARD,
+        },
+    ]
+
+    badges_to_add = []
+    for badge_data in badges_data:
+        badge = Badge(
+            title=badge_data["title"],
+            description=badge_data["description"],
+            type=badge_data["type"]
+        )
+        badges_to_add.append(badge)
+
+    db.session.bulk_save_objects(badges_to_add)
+    db.session.commit()
+    print("Badges added successfully.")
 
 
 def bulk_insert(objects_to_add):
@@ -232,6 +266,9 @@ def seed_data():
                 quiz_module.id, quiz_questions_data
             )
             bulk_insert(quiz_questions_to_add)
+
+        # Add badges
+        add_badges()
 
         logger.info("Database seeded successfully.")
 
