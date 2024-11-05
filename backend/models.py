@@ -1,6 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, date, timezone
-from enums import MetricType, TimePeriodType, ModuleType, QuizType
+from enums import BadgeType, MetricType, TimePeriodType, ModuleType, QuizType
 from werkzeug.security import generate_password_hash, check_password_hash
 
 db = SQLAlchemy()
@@ -49,7 +49,8 @@ class Badge(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False, unique=True)
-    description = db.Column(db.Text, nullable=False)
+    description = db.Column(db.Text)
+    type = db.Column(db.Enum(BadgeType), nullable=False)
     image_src = db.Column(db.String(255), nullable=False)  # Path or URL to badge image
 
     users = db.relationship('UserBadge', back_populates='badge', cascade='all, delete-orphan')  

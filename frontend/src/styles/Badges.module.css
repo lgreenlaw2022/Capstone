@@ -9,50 +9,5 @@
     display: flex;
     flex-direction: column;
     gap: 22px;
-    margin-bottom: 42px;
-}
-
-.conceptBadge {
-    display: flex;
-    width: 160px;
-    height: 149px;
-    padding: 23px 21px;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-
-    border-radius: 12px;
-    border: 2px solid #3c4dff;
-    background: #f7f7f7;
-    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-}
-
-.awardBadge {
-    width: 150px;
-    height: 150px;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-
-    border-radius: 50%;
-    background-color: #3c4dff;
-    box-shadow: 0px 4px 4px 7px rgba(0, 0, 0, 0.25) inset;
-}
-
-.awardBadge p {
-    color: #fff;
-    font-size: 18px;
-    font-weight: 600;
-}
-
-.contentBadgeText {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 2px;
-    align-self: stretch;
+    margin-bottom: 6px;
 }
