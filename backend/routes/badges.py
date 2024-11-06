@@ -27,7 +27,7 @@ badge_schema = BadgeSchema(many=True)
 
 
 # Get the user's badges
-@badges_bp.route("/badges/", methods=["GET"])
+@badges_bp.route("", methods=["GET"])
 @jwt_required()
 def get_badges():
     try:
@@ -39,6 +39,7 @@ def get_badges():
             .all()
         )
         json_badges = badge_schema.dump(user_badges)
+        logger.debug(f"User badges: {json_badges}")
         return jsonify(json_badges), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500

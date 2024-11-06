@@ -138,6 +138,9 @@ def add_badges():
 
     badges_to_add = []
     for badge_data in badges_data:
+        existing_badge = Badge.query.filter_by(title=badge_data["title"]).first()
+        if existing_badge:
+            continue
         badge = Badge(
             title=badge_data["title"],
             description=badge_data["description"],
