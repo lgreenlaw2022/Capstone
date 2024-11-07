@@ -1,33 +1,36 @@
 import { useState, useEffect } from "react";
 import styles from "../styles/Badges.module.css";
 import Badge from "@/components/Badge";
+import {
+    Badge as BadgeType,
+    BadgeType as BadgeEnum,
+    mapBadgeType,
+} from "../types/BadgeTypes";
 
 import { getBadges } from "@/api/api";
 
-interface Badge {
-    id: number;
-    title: string;
-    description: string;
-    type: "concept" | "award";
-}
-
 export default function Badges() {
-    const [badges, setBadges] = useState<Badge[]>([]);
-    const [conceptBadges, setConceptBadges] = useState<Badge[]>([]);
-    const [awardBadges, setAwardBadges] = useState<Badge[]>([]);
+    const [badges, setBadges] = useState<BadgeType[]>([]);
+    const [conceptBadges, setConceptBadges] = useState<BadgeType[]>([]);
+    const [awardBadges, setAwardBadges] = useState<BadgeType[]>([]);
 
     const fetchBadges = async () => {
         try {
             const data = await getBadges();
-            // TODO: do I need to keep this?
-            setBadges(data);
-            // Filter badges by type
-            // TODO: see what the type value will be mapped as
+            const mappedData = data.map((badge: any) => ({
+                ...badge,
+                type: mapBadgeType(badge.type),
+            }));
+            setBadges(mappedData);
             setConceptBadges(
-                data.filter((badge: Badge) => badge.type === "concept")
+                mappedData.filter(
+                    (badge: BadgeType) => badge.type === BadgeEnum.CONTENT
+                )
             );
             setAwardBadges(
-                data.filter((badge: Badge) => badge.type === "award")
+                mappedData.filter(
+                    (badge: BadgeType) => badge.type === BadgeEnum.AWARD
+                )
             );
         } catch (error) {
             console.error("Error fetching badges:", error);
@@ -53,7 +56,9 @@ export default function Badges() {
                             type={badge.type}
                         />
                     ))}
-                    {conceptBadges.length === 0 && (<p>No badges earned yet. Keep going!</p>)}
+                    {conceptBadges.length === 0 && (
+                        <p>No badges earned yet. Keep going!</p>
+                    )}
                 </div>
                 {/* TODO: see what the type value will be mapped as */}
                 {/* <Badge title="Hash Tables" type="concept" /> */}
@@ -68,7 +73,9 @@ export default function Badges() {
                             type={badge.type}
                         />
                     ))}
-                    {awardBadges.length === 0 && (<p>No badges earned yet. Keep going!</p>)}
+                    {awardBadges.length === 0 && (
+                        <p>No badges earned yet. Keep going!</p>
+                    )}
                 </div>
                 {/* <Badge title="30 day streak" type="award" /> */}
             </div>

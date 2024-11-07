@@ -20,7 +20,10 @@ class BadgeSchema(Schema):
     id = fields.Int()
     title = fields.Str()
     description = fields.Str()
-    type = fields.Str()
+    type = fields.Method("get_type")
+
+    def get_type(self, obj):
+        return obj.type.value
 
 
 badge_schema = BadgeSchema(many=True)

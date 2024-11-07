@@ -8,6 +8,7 @@ from models import (
     QuizQuestionOption,
     UserModule,
     Badge,
+    UserBadge,
 )
 from enums import ModuleType, BadgeType
 import logging
@@ -152,6 +153,31 @@ def add_badges():
     db.session.commit()
     print("Badges added successfully.")
 
+def add_user_badges(user_id):
+    # Fetch the badges
+    hash_table_badge = Badge.query.filter_by(title="Hash Tables").first()
+    streak_badge = Badge.query.filter_by(title="30 day streak").first()
+
+    # Create UserBadge entries
+    user_badges_to_add = []
+    if hash_table_badge:
+        user_badges_to_add.append(
+            UserBadge(
+                user_id=user_id,
+                badge_id=hash_table_badge.id,
+            )
+        )
+
+    if streak_badge:
+        user_badges_to_add.append(
+            UserBadge(
+                user_id=user_id,
+                badge_id=streak_badge.id,
+            )
+        )
+
+    return user_badges_to_add
+
 
 def bulk_insert(objects_to_add):
     if objects_to_add:
@@ -272,6 +298,9 @@ def seed_data():
 
         # Add badges
         add_badges()
+
+        # hardcode some user badges for testing
+        # bulk_insert(add_user_badges(1))
 
         logger.info("Database seeded successfully.")
 
