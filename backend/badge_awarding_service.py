@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 
 class BadgeAwardingService:
     def __init__(self, user_id):
-        self.user_id = user_id
+        self.user_id = user_id  # The user to whom the badge is awarded
 
     def award_badge(self, badge):
         user_badge = UserBadge(
@@ -20,6 +20,7 @@ class BadgeAwardingService:
         logger.info(f"Badge awarded to user {self.user_id}: {badge.title}")
 
     def check_and_award_badges(self, event_type, **kwargs):
+        # Get all badges for the event type
         badges = Badge.query.filter_by(event_type=event_type).all()
         for badge in badges:
             logger.debug("Evaluating badge criteria for badge: %s", badge.title)

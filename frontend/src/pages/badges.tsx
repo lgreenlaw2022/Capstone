@@ -10,18 +10,16 @@ import {
 import { getBadges } from "@/api/api";
 
 export default function Badges() {
-    const [badges, setBadges] = useState<BadgeType[]>([]);
     const [conceptBadges, setConceptBadges] = useState<BadgeType[]>([]);
     const [awardBadges, setAwardBadges] = useState<BadgeType[]>([]);
 
     const fetchBadges = async () => {
         try {
             const data = await getBadges();
-            const mappedData = data.map((badge: any) => ({
+            const mappedData = data.map((badge: BadgeType) => ({
                 ...badge,
                 type: mapBadgeType(badge.type),
             }));
-            setBadges(mappedData);
             setConceptBadges(
                 mappedData.filter(
                     (badge: BadgeType) => badge.type === BadgeEnum.CONTENT

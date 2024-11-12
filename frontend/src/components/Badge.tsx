@@ -5,7 +5,6 @@ import { BadgeType } from "../types/BadgeTypes";
 
 interface BadgeProps {
     title: string;
-    // TODO: make this an enum?
     type: BadgeType;
 }
 

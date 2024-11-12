@@ -219,7 +219,6 @@ export const getCodeChallenge = async (moduleId: number) => {
 export const getBadges = async () => {
     try {
         const response = await axiosInstance.get('/badges');
-        console.log(response.data);
         return response.data;
     } catch (error) {
         if (error instanceof Error) {

@@ -62,11 +62,11 @@ class Badge(db.Model):
     __tablename__ = "badges"
 
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(100), nullable=False, unique=True)
+    title = db.Column(db.String(100), nullable=False, unique=True, index=True)
     description = db.Column(db.Text)
     type = db.Column(db.Enum(BadgeType), nullable=False)
     criteria_expression = db.Column(db.String(255))  # Store criteria expression eg. streak >= 7
-    event_type = db.Column(db.Enum(EventType), default=EventType.STREAK_ACHIEVEMENT, nullable=False)  # Store event trigger type
+    event_type = db.Column(db.Enum(EventType), default=EventType.STREAK_ACHIEVEMENT, nullable=False, index=True)  # Store event trigger type
 
     users = db.relationship(
         "UserBadge", back_populates="badge", cascade="all, delete-orphan"
