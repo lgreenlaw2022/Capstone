@@ -54,7 +54,8 @@ p {
 }
 
 a {
-    color: #3c4dff !important;
+    /* making this important ruined the auth button text colors, need to find a different solution */
+    color: #3c4dff;
 }
 
 ul {
