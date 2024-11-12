@@ -16,7 +16,7 @@ from models import db
 migrate = Migrate()
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 
 
 # TODO: Initialize Migrate for database migrations

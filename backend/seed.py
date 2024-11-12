@@ -10,7 +10,7 @@ from models import (
     Badge,
     UserBadge,
 )
-from enums import ModuleType, BadgeType
+from enums import ModuleType, BadgeType, EventType
 import logging
 
 logger = logging.getLogger(__name__)
@@ -124,16 +124,22 @@ def add_badges():
             "title": "Hash Tables",
             "description": "Awarded for completing the hash tables unit.",
             "type": BadgeType.CONTENT,
+            "criteria_expression": "user_unit.completed == True and user_unit.unit_id == 1", # TODO: don't hardcode?
+            "event_type": EventType.UNIT_COMPLETION,
         },
         {
             "title": "30 day streak",
             "description": "Awarded for reaching a 30 day streak.",
             "type": BadgeType.AWARD,
+            "criteria_expression": "user.streak >= 7",
+            "event_type": EventType.STREAK_ACHIEVEMENT,
         },
         {
             "title": "Quiz Master",
             "description": "Awarded for scoring 100% on a quiz.",
             "type": BadgeType.AWARD,
+            "criteria_expression": "quiz_score == 100",
+            "event_type": EventType.QUIZ_PERFECT_SCORE,
         },
     ]
 
@@ -146,12 +152,15 @@ def add_badges():
             title=badge_data["title"],
             description=badge_data["description"],
             type=badge_data["type"],
+            criteria_expression=badge_data["criteria_expression"],
+            event_type=badge_data["event_type"],
         )
         badges_to_add.append(badge)
 
     db.session.bulk_save_objects(badges_to_add)
     db.session.commit()
     print("Badges added successfully.")
+
 
 def add_user_badges(user_id):
     # Fetch the badges
@@ -190,12 +199,17 @@ def clear_user_modules():
     db.session.commit()
 
 
+def clear_badges():
+    db.session.query(Badge).delete()
+    db.session.commit()
+
+
 def seed_data():
     with app.app_context():
 
         # Clear the user_modules table
         clear_user_modules()
-
+        
         # Check if the course already exists
         course = Course.query.filter_by(title="Technical Interview Prep").first()
         if not course:

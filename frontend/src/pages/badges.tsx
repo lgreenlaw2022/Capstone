@@ -60,8 +60,6 @@ export default function Badges() {
                         <p>No badges earned yet. Keep going!</p>
                     )}
                 </div>
-                {/* TODO: see what the type value will be mapped as */}
-                {/* <Badge title="Hash Tables" type="concept" /> */}
             </div>
             <div className={styles.badgeGroup}>
                 <h3>Awards</h3>
@@ -77,7 +75,6 @@ export default function Badges() {
                         <p>No badges earned yet. Keep going!</p>
                     )}
                 </div>
-                {/* <Badge title="30 day streak" type="award" /> */}
             </div>
         </div>
     );

@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class MetricType(Enum):
     COMPLETE_MODULES = "complete_modules"
     EARN_GEMS = "earn_gems"
@@ -7,14 +8,17 @@ class MetricType(Enum):
     # Add more metrics as needed
     # consider: goals completed
 
+
 class TimePeriodType(Enum):
     DAILY = "daily"
     MONTHLY = "monthly"
+
 
 class QuizType(Enum):
     PYTHON = "python"
     RECOGNITION = "recognition"
     CONCEPT = "concept"
+
 
 class ModuleType(Enum):
     CONCEPT_GUIDE = "concept_guide"
@@ -24,6 +28,15 @@ class ModuleType(Enum):
     CHALLENGE = "challenge"
     CHALLENGE_SOLUTION = "solution_guide"
 
+
 class BadgeType(Enum):
     CONTENT = "content"
     AWARD = "award"
+
+
+class EventType(Enum):
+    COMPLETE_MODULE = "complete_module"
+    UNIT_COMPLETION = "unit_completion"
+    QUIZ_PERFECT_SCORE = "quiz_perfect_score"
+    STREAK_ACHIEVEMENT = "streak_achievement"
+    # goals completed

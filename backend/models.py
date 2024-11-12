@@ -1,6 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime, date, timezone
-from enums import BadgeType, MetricType, TimePeriodType, ModuleType, QuizType
+from datetime import datetime, timezone
+from enums import BadgeType, MetricType, TimePeriodType, ModuleType, QuizType, EventType
 from werkzeug.security import generate_password_hash, check_password_hash
 
 db = SQLAlchemy()
@@ -65,6 +65,8 @@ class Badge(db.Model):
     title = db.Column(db.String(100), nullable=False, unique=True)
     description = db.Column(db.Text)
     type = db.Column(db.Enum(BadgeType), nullable=False)
+    criteria_expression = db.Column(db.String(255))  # Store criteria expression eg. streak >= 7
+    event_type = db.Column(db.Enum(EventType), default=EventType.STREAK_ACHIEVEMENT, nullable=False)  # Store event trigger type
 
     users = db.relationship(
         "UserBadge", back_populates="badge", cascade="all, delete-orphan"
@@ -141,7 +143,6 @@ class UserUnit(db.Model):
     __tablename__ = "user_units"
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), primary_key=True)
     unit_id = db.Column(db.Integer, db.ForeignKey("units.id"), primary_key=True)
-    # TODO: consider if I want to lock units until the previous unit is completed
     completed = db.Column(db.Boolean, default=False)
 
     user = db.relationship("User", back_populates="units")

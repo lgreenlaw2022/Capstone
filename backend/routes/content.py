@@ -1,6 +1,9 @@
+from badge_awarding_service import BadgeAwardingService
+from enums import EventType
 from flask import Blueprint, request, jsonify, send_file, abort
 import logging
 from models import (
+    UserUnit,
     db,
     Unit,
     Course,
@@ -172,6 +175,13 @@ def submit_quiz_scores(module_id):
         if accuracy >= ACCURACY_THRESHOLD:
             user_id = get_jwt_identity()
             mark_module_complete_and_open_next(module_id, user_id)
+
+            # check if the user has earned a badge
+            badge_awarding_service = BadgeAwardingService(user_id)
+            badge_awarding_service.check_and_award_badges(
+                EventType.QUIZ_PERFECT_SCORE, quiz_score=accuracy
+            )
+
             return jsonify({"message": "Submitted quiz complete successfully"}), 200
         else:
             return jsonify({"message": "Quiz score not high enough to pass"}), 400
@@ -224,6 +234,27 @@ def mark_module_complete_and_open_next(module_id, user_id):
         db.session.commit()
         logger.info(f"Marked module {module_id} as complete")
 
+        # Check if all modules in the unit are completed
+        all_modules_completed = are_all_modules_completed(unit_id, user_id)
+
+        # Trigger the UNIT_COMPLETION event if all modules in the unit are completed
+        if all_modules_completed:
+            logger.info(f"All modules in unit {unit_id} completed")
+            # Mark the unit as completed
+            user_unit = UserUnit.query.filter_by(
+                unit_id=unit_id, user_id=user_id
+            ).first()
+            if user_unit is None:
+                user_unit = UserUnit(unit_id=unit_id, user_id=user_id, completed=True)
+                db.session.add(user_unit)
+
+            badge_awarding_service = BadgeAwardingService(user_id)
+            badge_awarding_service.check_and_award_badges(
+                EventType.UNIT_COMPLETION, user_unit=user_unit
+            )
+            # skip opening next modules
+            return {"message": "Module marked as complete and unit completed"}
+
         # Get the next module(s) in the unit based on the order
         next_modules = Module.query.filter(
             Module.unit_id == unit_id,
@@ -246,6 +277,7 @@ def mark_module_complete_and_open_next(module_id, user_id):
                 user_module_next.open = True
         db.session.commit()
         logger.info("Next modules opened successfully")
+
         return {
             "message": "Module marked as complete and next modules opened successfully"
         }
@@ -254,6 +286,22 @@ def mark_module_complete_and_open_next(module_id, user_id):
             f"Error marking module {module_id} as complete and opening next modules: {str(e)}"
         )
         return jsonify({"error": str(e)}), 500
+
+
+def are_all_modules_completed(unit_id, user_id):
+    # check if all modules are completed by comparing the count of completed modules with the total modules
+    total_modules = db.session.query(Module).filter_by(unit_id=unit_id).count()
+    completed_modules = (
+        db.session.query(UserModule)
+        .join(Module, Module.id == UserModule.module_id)
+        .filter(
+            UserModule.user_id == user_id,
+            Module.unit_id == unit_id,
+            UserModule.completed == True,
+        )
+        .count()
+    )
+    return completed_modules == total_modules
 
 
 @content_bp.route("/modules/<int:module_id>/title", methods=["GET"])
@@ -291,8 +339,9 @@ def get_code_challenge(module_id):
             return jsonify({"error": "Content not found"}), 404
 
         # Read content from both files
-        with open(code_challenge_file_path, "r", encoding="utf-8") as code_file, \
-             open(html_file_path, "r", encoding="utf-8") as html_file:
+        with open(code_challenge_file_path, "r", encoding="utf-8") as code_file, open(
+            html_file_path, "r", encoding="utf-8"
+        ) as html_file:
             code_content = code_file.read()
             html_content = html_file.read()
 
