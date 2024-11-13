@@ -1,6 +1,7 @@
 import WeeklyReviewCard from '@/components/WeeklyReviewCard'
 import styles from '../styles/Review.module.css'
 import ConceptReviewCard from '@/components/ConceptReviewCard'
+import CodingChallengeReview from '@/components/CodingChallengeReview'
 
 export default function Review() {
     return (
@@ -12,9 +13,7 @@ export default function Review() {
                 <ConceptReviewCard />
             </div>
             <div>
-                <h3>Bonus Coding Challenges </h3>
-                <p>Earn gems to unlock bonus code challenges</p>
-                <h4>Completed</h4>
+                <CodingChallengeReview/>
             </div>
         </div>
     )
