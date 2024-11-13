@@ -229,3 +229,17 @@ export const getCompletedUserUnits = async () => {
         throw error;
     }
 }
+
+export const getBadges = async () => {
+    try {
+        const response = await axiosInstance.get('/badges');
+        return response.data;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error fetching badges:', error.message);
+        } else {
+            console.error('Unknown error fetching badges:', error);
+        }
+        throw error;
+    }
+}

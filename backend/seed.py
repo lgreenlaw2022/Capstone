@@ -7,8 +7,10 @@ from models import (
     QuizQuestion,
     QuizQuestionOption,
     UserModule,
+    Badge,
+    UserBadge,
 )
-from enums import ModuleType, QuizType
+from enums import ModuleType, BadgeType, EventType
 import logging
 
 logger = logging.getLogger(__name__)
@@ -116,6 +118,76 @@ def add_quiz_questions(module_id, quiz_questions):
     return quiz_questions_to_add
 
 
+def add_badges():
+    badges_data = [
+        {
+            "title": "Hash Tables",
+            "description": "Awarded for completing the hash tables unit.",
+            "type": BadgeType.CONTENT,
+            "criteria_expression": "user_unit.completed == True and user_unit.unit_id == 1", # TODO: don't hardcode?
+            "event_type": EventType.UNIT_COMPLETION,
+        },
+        {
+            "title": "30 day streak",
+            "description": "Awarded for reaching a 30 day streak.",
+            "type": BadgeType.AWARD,
+            "criteria_expression": "user.streak >= 7",
+            "event_type": EventType.STREAK_ACHIEVEMENT,
+        },
+        {
+            "title": "Quiz Master",
+            "description": "Awarded for scoring 100% on a quiz.",
+            "type": BadgeType.AWARD,
+            "criteria_expression": "quiz_score == 100",
+            "event_type": EventType.QUIZ_PERFECT_SCORE,
+        },
+    ]
+
+    badges_to_add = []
+    for badge_data in badges_data:
+        existing_badge = Badge.query.filter_by(title=badge_data["title"]).first()
+        if existing_badge:
+            continue
+        badge = Badge(
+            title=badge_data["title"],
+            description=badge_data["description"],
+            type=badge_data["type"],
+            criteria_expression=badge_data["criteria_expression"],
+            event_type=badge_data["event_type"],
+        )
+        badges_to_add.append(badge)
+
+    db.session.bulk_save_objects(badges_to_add)
+    db.session.commit()
+    print("Badges added successfully.")
+
+
+def add_user_badges(user_id):
+    # Fetch the badges
+    hash_table_badge = Badge.query.filter_by(title="Hash Tables").first()
+    streak_badge = Badge.query.filter_by(title="30 day streak").first()
+
+    # Create UserBadge entries
+    user_badges_to_add = []
+    if hash_table_badge:
+        user_badges_to_add.append(
+            UserBadge(
+                user_id=user_id,
+                badge_id=hash_table_badge.id,
+            )
+        )
+
+    if streak_badge:
+        user_badges_to_add.append(
+            UserBadge(
+                user_id=user_id,
+                badge_id=streak_badge.id,
+            )
+        )
+
+    return user_badges_to_add
+
+
 def bulk_insert(objects_to_add):
     if objects_to_add:
         db.session.bulk_save_objects(objects_to_add)
@@ -127,12 +199,17 @@ def clear_user_modules():
     db.session.commit()
 
 
+def clear_badges():
+    db.session.query(Badge).delete()
+    db.session.commit()
+
+
 def seed_data():
     with app.app_context():
 
         # Clear the user_modules table
         clear_user_modules()
-
+        
         # Check if the course already exists
         course = Course.query.filter_by(title="Technical Interview Prep").first()
         if not course:
@@ -232,6 +309,12 @@ def seed_data():
                 quiz_module.id, quiz_questions_data
             )
             bulk_insert(quiz_questions_to_add)
+
+        # Add badges
+        add_badges()
+
+        # hardcode some user badges for testing
+        # bulk_insert(add_user_badges(1))
 
         logger.info("Database seeded successfully.")
 

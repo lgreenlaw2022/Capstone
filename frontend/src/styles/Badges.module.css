@@ -1,0 +1,13 @@
+.badgeContainer {
+    padding: 50px;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+.badgeGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    margin-bottom: 6px;
+}

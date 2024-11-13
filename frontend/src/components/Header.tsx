@@ -76,7 +76,7 @@ export default function Header({ showSignUpButton = false, showSignInButton = fa
             ) : (
                 <div className={styles.stats}>
                     <div className={styles.statItem}>
-                        <Image src="/assets/flame.svg" height={26} width={26} alt="streak flame" />
+                        <Image src="/assets/streak-flame.svg" height={26} width={26} alt="streak flame" />
                         <h3>{userData?.streak}</h3>
                     </div>
                     <div className={styles.statItem}>
