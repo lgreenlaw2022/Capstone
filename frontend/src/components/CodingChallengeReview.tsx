@@ -1,9 +1,11 @@
 import CodingChallengeCard from "@/components/CodingChallengeCard";
 import { useEffect, useState } from "react";
+import { getBonusCodingChallenges } from "@/api/api";
 
 interface CodingChallenge {
     id: number;
     title: string;
+    unit_title: string;
     completed: boolean;
     open: boolean;
 }
@@ -13,9 +15,9 @@ export default function CodingChallengeReview() {
         []
     );
 
-    const getCodingChallenges = async () => {
+    const getChallenges = async () => {
         try {
-            const data = await getCodingChallenges();
+            const data = await getBonusCodingChallenges();
             setCodingChallenges(data);
         } catch (error) {
             console.error("Error fetching coding challenges:", error);
@@ -25,7 +27,7 @@ export default function CodingChallengeReview() {
     // fetch coding reviews
     useEffect(() => {
         // fetch coding challenges
-        getCodingChallenges();
+        getChallenges();
     }, []);
 
     return (
@@ -38,7 +40,11 @@ export default function CodingChallengeReview() {
                     .map((challenge) => (
                         <CodingChallengeCard
                             key={challenge.id}
-                            {...challenge}
+                            module_id={challenge.id}
+                            title={challenge.title}
+                            unit={challenge.unit_title}
+                            open={challenge.open}
+                            completed={challenge.completed}
                         />
                     ))}
                 {/* <CodingChallengeCard /> */}
@@ -50,7 +56,11 @@ export default function CodingChallengeReview() {
                     .map((challenge) => (
                         <CodingChallengeCard
                             key={challenge.id}
-                            {...challenge}
+                            module_id={challenge.id}
+                            title={challenge.title}
+                            unit={challenge.unit_title}
+                            open={challenge.open}
+                            completed={challenge.completed}
                         />
                     ))}
                 {/* <CodingChallengeCard /> */}

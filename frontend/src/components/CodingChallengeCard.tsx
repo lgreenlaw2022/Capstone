@@ -1,13 +1,20 @@
 import styles from '../styles/CodingChallengeCard.module.css'
 
-export default function ConceptReviewCard() {
+interface CodingChallengeCardProps {
+    module_id: number;
+    title: string;
+    unit: string;
+    open: boolean;
+    completed: boolean;
+}
 
-    // fetch concept quizzes
-        // need to split by open, locked, and completed
+export default function ConceptReviewCard({ module_id, title, unit, open, completed }: CodingChallengeCardProps) {
+
+    // need to split by open and completed
     return (
         <div className={styles.card}>
-            <h4>Title</h4>
-            <p>unit</p>
+            <h4>{title}</h4>
+            <p>{unit}</p>
         </div>
     )
 }

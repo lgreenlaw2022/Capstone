@@ -40,7 +40,15 @@ def get_units_in_course(course_id):
 @jwt_required()
 def get_modules_in_unit(unit_id):
     user_id = get_jwt_identity()
-    modules = Module.query.filter_by(unit_id=unit_id).order_by(Module.order).all()
+    # Filter out bonus challenges (they are not part of the main unit flow)
+    modules = (
+        Module.query.filter(
+            Module.unit_id == unit_id,
+            Module.module_type != ModuleType.BONUS_CHALLENGE,
+        )
+        .order_by(Module.order)
+        .all()
+    )
     if modules is None:
         logger.error(f"No modules found for unit {unit_id}")
         return jsonify({"error": "Modules not found"}), 404
@@ -238,10 +246,10 @@ def mark_module_complete_and_open_next(module_id, user_id):
         finished_unit = is_unit_newly_completed(unit_id, user_id)
 
         if finished_unit:
+            logger.debug(f"Unit {unit_id} is newly completed")
             complete_unit(unit_id, user_id)
             # skip opening next modules if the unit is complete
             return {"message": "Module marked as complete and unit completed"}
-
 
         # Get the next module(s) in the unit based on the order
         next_modules = Module.query.filter(
@@ -277,8 +285,17 @@ def mark_module_complete_and_open_next(module_id, user_id):
 
 
 def are_all_modules_completed(unit_id, user_id):
+    logger.debug(
+        f"Checking if all modules are completed for unit {unit_id} and user {user_id}"
+    )
     # check if all modules are completed by comparing the count of completed modules with the total modules
-    total_modules = db.session.query(Module).filter_by(unit_id=unit_id).count()
+    total_modules = (
+        db.session.query(Module)
+        .filter(
+            Module.unit_id == unit_id, Module.module_type != ModuleType.BONUS_CHALLENGE
+        )
+        .count()
+    )
     completed_modules = (
         db.session.query(UserModule)
         .join(Module, Module.id == UserModule.module_id)
@@ -293,8 +310,10 @@ def are_all_modules_completed(unit_id, user_id):
 
 
 def is_unit_newly_completed(unit_id, user_id):
+    logger.debug(f"Checking if unit {unit_id} is newly completed for user {user_id}")
     user_unit = UserUnit.query.filter_by(unit_id=unit_id, user_id=user_id).first()
     if user_unit is not None and user_unit.completed:
+        logger.debug(f"found UserUnit {unit_id} record as already completed")
         return False
     if are_all_modules_completed(unit_id, user_id):
         return True
@@ -302,6 +321,7 @@ def is_unit_newly_completed(unit_id, user_id):
 
 
 def complete_unit(unit_id, user_id):
+    logger.debug(f"Marking unit {unit_id} as complete for user {user_id}")
     user_unit = UserUnit.query.filter_by(unit_id=unit_id, user_id=user_id).first()
     if user_unit is None:
         user_unit = UserUnit(unit_id=unit_id, user_id=user_id, completed=True)
@@ -322,7 +342,9 @@ def complete_unit(unit_id, user_id):
         .filter_by(unit_id=unit_id, module_type=ModuleType.BONUS_CHALLENGE)
         .all()
     )
-    
+    logger.debug(
+        f"adding bonus_challenge_modules to UserModules: {bonus_challenge_modules}"
+    )
     for bonus_challenge_module in bonus_challenge_modules:
         user_module = UserModule.query.filter_by(
             user_id=user_id, module_id=bonus_challenge_module.id
@@ -332,6 +354,7 @@ def complete_unit(unit_id, user_id):
                 user_id=user_id, module_id=bonus_challenge_module.id
             )
             db.session.add(user_module)
+    db.session.commit()
 
     return {"message": "Unit marked as complete"}
 
@@ -434,23 +457,24 @@ def get_user_completed_units():
         return jsonify({"error": str(e)}), 500
 
 
-@content_bp.route("/practice-challenges", methods=["GET"])
+@content_bp.route("/bonus-code-challenges", methods=["GET"])
 @jwt_required()
-def get_practice_challenges():
+def get_bonus_challenges():
     try:
+        logger.debug("Fetching bonus challenges")
         user_id = get_jwt_identity()
-        practice_challenges = (
+        bonus_challenges = (
             db.session.query(UserModule, Module, Unit)
             .join(Module, UserModule.module_id == Module.id)
             .join(Unit, Module.unit_id == Unit.id)
             .filter(
                 UserModule.user_id == user_id,
-                Module.module_type == ModuleType.PRACTICE_CHALLENGE,
+                Module.module_type == ModuleType.BONUS_CHALLENGE,
             )
             .all()
         )
-
-        practice_challenges_data = [
+        logger.debug(f"bonus challenges: {bonus_challenges}")
+        bonus_challenges_data = [
             {
                 "id": user_module.module_id,
                 "title": module.title,
@@ -458,10 +482,10 @@ def get_practice_challenges():
                 "open": user_module.open,
                 "completed": user_module.completed,
             }
-            for user_module, module, unit in practice_challenges
+            for user_module, module, unit in bonus_challenges
         ]
 
-        return jsonify(practice_challenges_data), 200
+        return jsonify(bonus_challenges_data), 200
     except Exception as e:
         logger.error(f"Error fetching practice challenges: {str(e)}")
         return jsonify({"error": str(e)}), 500

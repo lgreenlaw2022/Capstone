@@ -216,6 +216,21 @@ export const getCodeChallenge = async (moduleId: number) => {
     }
 };
 
+export const getBonusCodingChallenges = async () => {
+    try {
+        console.log('Fetching coding challenges');
+        const response = await axiosInstance.get('/content/bonus-code-challenges');
+        return response.data;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error fetching bonus coding challenges:', error.message);
+        } else {
+            console.error('Unknown error fetching bonus coding challenges:', error);
+        }
+        throw error;
+    }
+}
+
 export const getCompletedUserUnits = async () => {
     try {
         const response = await axiosInstance.get('/content/units/completed');

@@ -9,6 +9,7 @@ from models import (
     UserModule,
     Badge,
     UserBadge,
+    UserUnit,
 )
 from enums import ModuleType, BadgeType, EventType
 import logging
@@ -46,7 +47,7 @@ def add_modules(unit_id, modules):
             module = Module(
                 unit_id=unit_id,
                 title=module_data["title"],
-                order=module_data["order"],
+                order=module_data.get("order"),
                 module_type=module_data["module_type"],
             )
             modules_to_add.append(module)
@@ -199,6 +200,16 @@ def clear_user_modules():
     db.session.commit()
 
 
+def clear_user_units():
+    db.session.query(UserUnit).delete()
+    db.session.commit()
+
+
+def clear_user_badges():
+    db.session.query(UserBadge).delete()
+    db.session.commit()
+
+
 def clear_badges():
     db.session.query(Badge).delete()
     db.session.commit()
@@ -206,9 +217,11 @@ def clear_badges():
 
 def seed_data():
     with app.app_context():
-        
+
         # Clear the user_modules table
         clear_user_modules()
+        clear_user_badges()
+        clear_user_units()
 
         # Check if the course already exists
         course = Course.query.filter_by(title="Technical Interview Prep").first()
@@ -242,6 +255,10 @@ def seed_data():
                 "title": "Hash Maps Code Challenge 1",
                 "order": 3,
                 "module_type": ModuleType.CHALLENGE,
+            },
+            {
+                "title": "Two Sum",
+                "module_type": ModuleType.BONUS_CHALLENGE,
             },
         ]
         # Get the "Hash Maps" unit

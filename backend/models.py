@@ -65,8 +65,15 @@ class Badge(db.Model):
     title = db.Column(db.String(100), nullable=False, unique=True, index=True)
     description = db.Column(db.Text)
     type = db.Column(db.Enum(BadgeType), nullable=False)
-    criteria_expression = db.Column(db.String(255))  # Store criteria expression eg. streak >= 7
-    event_type = db.Column(db.Enum(EventType), default=EventType.STREAK_ACHIEVEMENT, nullable=False, index=True)  # Store event trigger type
+    criteria_expression = db.Column(
+        db.String(255)
+    )  # Store criteria expression eg. streak >= 7
+    event_type = db.Column(
+        db.Enum(EventType),
+        default=EventType.STREAK_ACHIEVEMENT,
+        nullable=False,
+        index=True,
+    )  # Store event trigger type
 
     users = db.relationship(
         "UserBadge", back_populates="badge", cascade="all, delete-orphan"
@@ -156,7 +163,7 @@ class Module(db.Model):
     unit_id = db.Column(db.Integer, db.ForeignKey("units.id"), nullable=False)
     title = db.Column(db.String(255), nullable=False)
     module_type = db.Column(db.Enum(ModuleType), nullable=False)
-    order = db.Column(db.Integer, nullable=False)  # order in unit
+    order = db.Column(db.Integer)  # order in unit
 
     # TODO: figure out what delete to use here
     unit = db.relationship("Unit", back_populates="modules")
