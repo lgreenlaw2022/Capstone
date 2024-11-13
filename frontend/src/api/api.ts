@@ -215,3 +215,17 @@ export const getCodeChallenge = async (moduleId: number) => {
         throw error;
     }
 };
+
+export const getCompletedUserUnits = async () => {
+    try {
+        const response = await axiosInstance.get('/content/units/completed');
+        return response.data;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error fetching completed units:', error.message);
+        } else {
+            console.error('Unknown error fetching completed units:', error);
+        }
+        throw error;
+    }
+}

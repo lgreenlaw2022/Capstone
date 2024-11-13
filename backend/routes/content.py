@@ -4,6 +4,7 @@ from models import (
     db,
     Unit,
     Course,
+    UserUnit,
     Module,
     UserModule,
     QuizQuestion,
@@ -291,8 +292,9 @@ def get_code_challenge(module_id):
             return jsonify({"error": "Content not found"}), 404
 
         # Read content from both files
-        with open(code_challenge_file_path, "r", encoding="utf-8") as code_file, \
-             open(html_file_path, "r", encoding="utf-8") as html_file:
+        with open(code_challenge_file_path, "r", encoding="utf-8") as code_file, open(
+            html_file_path, "r", encoding="utf-8"
+        ) as html_file:
             code_content = code_file.read()
             html_content = html_file.read()
 
@@ -323,3 +325,24 @@ def get_html_file_path(module_id: int) -> str:
     file_path = os.path.join(base_path, f"{module_id}.html")
 
     return file_path
+
+
+@content_bp.route("/units/completed", methods=["GET"])
+@jwt_required()
+def get_user_completed_units():
+    try:
+        user_id = get_jwt_identity()
+        user_units = UserUnit.query.filter_by(user_id=user_id, completed=True).all()
+
+        user_units_data = [
+            {
+                "id": unit.id,
+                "title": unit.title,
+            }
+            for unit in user_units
+        ]
+
+        return jsonify(user_units_data), 200
+    except Exception as e:
+        logger.error(f"Error fetching user units: {str(e)}")
+        return jsonify({"error": str(e)}), 500

@@ -1,9 +1,21 @@
+import { useRouter } from 'next/router'
 import styles from '../styles/ConceptReviewCard.module.css'
 
-export default function ConceptReviewCard() {
+interface ConceptReviewCardProps {
+    unitId: number;
+    unitTitle: string;
+}
+
+export default function ConceptReviewCard({unitId, unitTitle}: ConceptReviewCardProps) {
+    const router = useRouter()
+
+    const handleClick = () => {
+        router.push(`/review/${unitId}`)
+    };
+
     return (
-        <div className={styles.reviewCard}>
-            <h4>Unit title</h4>
+        <div className={styles.reviewCard} onClick={handleClick}>
+            <h4>{unitTitle}</h4>
             <img src="/assets/unit-icons/hashmaps.svg" alt="unit icon" />
         </div>
     )
