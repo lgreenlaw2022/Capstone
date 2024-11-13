@@ -28,6 +28,7 @@ const UnitQuizPage = () => {
     const handleSubmit = async (numCorrectAnswers: number) => {
         // TODO: call endpoint
         console.log('Quiz submitted with score:');
+        router.push('/review');
     }
 
     return (

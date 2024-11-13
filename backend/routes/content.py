@@ -1,5 +1,5 @@
 from badge_awarding_service import BadgeAwardingService
-from enums import EventType
+from enums import EventType, ModuleType
 from flask import Blueprint, request, jsonify, send_file, abort
 import logging
 from models import (
@@ -49,7 +49,6 @@ def get_modules_in_unit(unit_id):
     completed_modules = 0
     modules_data = []
     for module in modules:
-        logger.debug(f"Found Module to send: {module.title}")
         user_module = UserModule.query.filter_by(
             user_id=user_id, module_id=module.id
         ).first()
@@ -235,26 +234,14 @@ def mark_module_complete_and_open_next(module_id, user_id):
         db.session.commit()
         logger.info(f"Marked module {module_id} as complete")
 
-        # Check if all modules in the unit are completed
-        all_modules_completed = are_all_modules_completed(unit_id, user_id)
+        # If this module completes the unit, mark the unit as complete
+        finished_unit = is_unit_newly_completed(unit_id, user_id)
 
-        # Trigger the UNIT_COMPLETION event if all modules in the unit are completed
-        if all_modules_completed:
-            logger.info(f"All modules in unit {unit_id} completed")
-            # Mark the unit as completed
-            user_unit = UserUnit.query.filter_by(
-                unit_id=unit_id, user_id=user_id
-            ).first()
-            if user_unit is None:
-                user_unit = UserUnit(unit_id=unit_id, user_id=user_id, completed=True)
-                db.session.add(user_unit)
-
-            badge_awarding_service = BadgeAwardingService(user_id)
-            badge_awarding_service.check_and_award_badges(
-                EventType.UNIT_COMPLETION, user_unit=user_unit
-            )
-            # skip opening next modules
+        if finished_unit:
+            complete_unit(unit_id, user_id)
+            # skip opening next modules if the unit is complete
             return {"message": "Module marked as complete and unit completed"}
+
 
         # Get the next module(s) in the unit based on the order
         next_modules = Module.query.filter(
@@ -303,6 +290,50 @@ def are_all_modules_completed(unit_id, user_id):
         .count()
     )
     return completed_modules == total_modules
+
+
+def is_unit_newly_completed(unit_id, user_id):
+    user_unit = UserUnit.query.filter_by(unit_id=unit_id, user_id=user_id).first()
+    if user_unit is not None and user_unit.completed:
+        return False
+    if are_all_modules_completed(unit_id, user_id):
+        return True
+    return False
+
+
+def complete_unit(unit_id, user_id):
+    user_unit = UserUnit.query.filter_by(unit_id=unit_id, user_id=user_id).first()
+    if user_unit is None:
+        user_unit = UserUnit(unit_id=unit_id, user_id=user_id, completed=True)
+        db.session.add(user_unit)
+    else:
+        user_unit.completed = True
+    db.session.commit()
+
+    # Trigger the UNIT_COMPLETION event to award badges
+    badge_awarding_service = BadgeAwardingService(user_id)
+    badge_awarding_service.check_and_award_badges(
+        EventType.UNIT_COMPLETION, user_unit=user_unit
+    )
+
+    # add bonus challenge questions to the users modules
+    bonus_challenge_modules = (
+        db.session.query(Module)
+        .filter_by(unit_id=unit_id, module_type=ModuleType.BONUS_CHALLENGE)
+        .all()
+    )
+    
+    for bonus_challenge_module in bonus_challenge_modules:
+        user_module = UserModule.query.filter_by(
+            user_id=user_id, module_id=bonus_challenge_module.id
+        ).first()
+        if user_module is None:
+            user_module = UserModule(
+                user_id=user_id, module_id=bonus_challenge_module.id
+            )
+            db.session.add(user_module)
+
+    return {"message": "Unit marked as complete"}
 
 
 @content_bp.route("/modules/<int:module_id>/title", methods=["GET"])
@@ -380,17 +411,57 @@ def get_html_file_path(module_id: int) -> str:
 def get_user_completed_units():
     try:
         user_id = get_jwt_identity()
-        user_units = UserUnit.query.filter_by(user_id=user_id, completed=True).all()
+
+        # Join UserUnit with Unit to get the unit title
+        user_units = (
+            db.session.query(UserUnit, Unit)
+            .join(Unit, UserUnit.unit_id == Unit.id)
+            .filter(UserUnit.user_id == user_id, UserUnit.completed == True)
+            .all()
+        )
 
         user_units_data = [
             {
-                "id": unit.id,
+                "id": user_unit.unit_id,
                 "title": unit.title,
             }
-            for unit in user_units
+            for user_unit, unit in user_units
         ]
 
         return jsonify(user_units_data), 200
     except Exception as e:
         logger.error(f"Error fetching user units: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+
+
+@content_bp.route("/practice-challenges", methods=["GET"])
+@jwt_required()
+def get_practice_challenges():
+    try:
+        user_id = get_jwt_identity()
+        practice_challenges = (
+            db.session.query(UserModule, Module, Unit)
+            .join(Module, UserModule.module_id == Module.id)
+            .join(Unit, Module.unit_id == Unit.id)
+            .filter(
+                UserModule.user_id == user_id,
+                Module.module_type == ModuleType.PRACTICE_CHALLENGE,
+            )
+            .all()
+        )
+
+        practice_challenges_data = [
+            {
+                "id": user_module.module_id,
+                "title": module.title,
+                "unit_title": unit.title,
+                "open": user_module.open,
+                "completed": user_module.completed,
+            }
+            for user_module, module, unit in practice_challenges
+        ]
+
+        return jsonify(practice_challenges_data), 200
+    except Exception as e:
+        logger.error(f"Error fetching practice challenges: {str(e)}")
         return jsonify({"error": str(e)}), 500

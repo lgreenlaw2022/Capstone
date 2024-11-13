@@ -232,7 +232,7 @@ export const getCompletedUserUnits = async () => {
 
 export const getBadges = async () => {
     try {
-        const response = await axiosInstance.get('/badges');
+        const response = await axiosInstance.get('/badges/user-badges');
         return response.data;
     } catch (error) {
         if (error instanceof Error) {

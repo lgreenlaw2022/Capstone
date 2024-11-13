@@ -124,7 +124,7 @@ def add_badges():
             "title": "Hash Tables",
             "description": "Awarded for completing the hash tables unit.",
             "type": BadgeType.CONTENT,
-            "criteria_expression": "user_unit.completed == True and user_unit.unit_id == 1", # TODO: don't hardcode?
+            "criteria_expression": "user_unit.completed == True and user_unit.unit_id == 1",  # TODO: don't hardcode?
             "event_type": EventType.UNIT_COMPLETION,
         },
         {
@@ -206,10 +206,10 @@ def clear_badges():
 
 def seed_data():
     with app.app_context():
-
+        
         # Clear the user_modules table
         clear_user_modules()
-        
+
         # Check if the course already exists
         course = Course.query.filter_by(title="Technical Interview Prep").first()
         if not course:
