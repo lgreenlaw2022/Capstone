@@ -1,8 +1,12 @@
 import { useRouter } from "next/router";
 import styles from "../styles/WeeklyReviewCard.module.css";
 
+interface WeeklyReviewCardProps {
+    completed: boolean;
+}
+
 // decide if completed should be a prop or not
-export default function WeeklyReviewCard(completed: boolean) {
+export default function WeeklyReviewCard({completed}: WeeklyReviewCardProps) {
     const router = useRouter();
 
     // add an onClick function to send user to quiz

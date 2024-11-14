@@ -187,6 +187,7 @@ class UserModule(db.Model):
     open = db.Column(
         db.Boolean, default=False
     )  # flag for if the user can start the module
+    completed_date = db.Column(db.DateTime, nullable=True) # used to help with review
 
     user = db.relationship("User", back_populates="modules")
     module = db.relationship("Module", back_populates="users")
@@ -238,6 +239,7 @@ class UserQuizQuestion(db.Model):
     )
     # used to determine when review is needed
     last_practiced_date = db.Column(db.DateTime)
+    # TODO: maybe track if they got it right or wrong
 
     user = db.relationship("User", back_populates="quiz_questions")
     quiz_question = db.relationship("QuizQuestion", back_populates="users")

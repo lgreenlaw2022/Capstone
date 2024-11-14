@@ -258,3 +258,47 @@ export const getBadges = async () => {
         throw error;
     }
 }
+
+export const getWeeklyReviewStatus = async () => {
+    try {
+        const response = await axiosInstance.get('/review/weekly-review/status');
+        return response.data;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error fetching weekly review status:', error.message);
+        } else {
+            console.error('Unknown error fetching weekly review status:', error);
+        }
+        throw error;
+    }
+}
+
+export const getWeeklyReviewQuestions = async () => {
+    try {
+        const response = await axiosInstance.get('/review/weekly-review/questions');
+        return response.data;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error fetching weekly review questions:', error.message);
+        } else {
+            console.error('Unknown error fetching weekly review questions:', error);
+        }
+        throw error;
+    }
+}
+
+export const submitWeeklyReviewScore = async (accuracy: number) => {
+    try {
+        const response = await axiosInstance.post('review/weekly-review/submit', {
+            accuracy: accuracy
+        });
+        return response.data;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error submitting weekly review score:', error.message);
+        } else {
+            console.error('Unknown error submitting weekly review score:', error);
+        }
+        throw error;
+    }
+}

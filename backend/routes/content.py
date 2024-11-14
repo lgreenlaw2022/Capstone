@@ -239,6 +239,7 @@ def mark_module_complete_and_open_next(module_id, user_id):
             raise ValueError(f"UserModule with module_id {module_id} not found")
         # Update user module status to completed
         user_module.completed = True
+        user_module.completed_date = db.func.current_timestamp()
         db.session.commit()
         logger.info(f"Marked module {module_id} as complete")
 
@@ -461,7 +462,6 @@ def get_user_completed_units():
 @jwt_required()
 def get_bonus_challenges():
     try:
-        logger.debug("Fetching bonus challenges")
         user_id = get_jwt_identity()
         bonus_challenges = (
             db.session.query(UserModule, Module, Unit)

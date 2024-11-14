@@ -14,6 +14,12 @@ export default function CodingChallengeReview() {
     const [codingChallenges, setCodingChallenges] = useState<CodingChallenge[]>(
         []
     );
+    const completedChallenges = codingChallenges.filter(
+        (challenge) => challenge.completed
+    );
+    const incompleteChallenges = codingChallenges.filter(
+        (challenge) => !challenge.completed
+    );
 
     const getChallenges = async () => {
         try {
@@ -35,35 +41,31 @@ export default function CodingChallengeReview() {
             <h3>Bonus Coding Challenges </h3>
             <div>
                 <p>Earn gems to unlock bonus code challenges</p>
-                {codingChallenges
-                    .filter((challenge) => !challenge.completed)
-                    .map((challenge) => (
-                        <CodingChallengeCard
-                            key={challenge.id}
-                            module_id={challenge.id}
-                            title={challenge.title}
-                            unit={challenge.unit_title}
-                            open={challenge.open}
-                            completed={challenge.completed}
-                        />
-                    ))}
-                {/* <CodingChallengeCard /> */}
+                {incompleteChallenges.map((challenge) => (
+                    <CodingChallengeCard
+                        key={challenge.id}
+                        module_id={challenge.id}
+                        title={challenge.title}
+                        unit={challenge.unit_title}
+                        completed={challenge.completed}
+                    />
+                ))}
             </div>
             <div>
                 <h4>Completed</h4>
-                {codingChallenges
-                    .filter((challenge) => challenge.completed)
-                    .map((challenge) => (
+                {completedChallenges.length > 0 ? (
+                    completedChallenges.map((challenge) => (
                         <CodingChallengeCard
                             key={challenge.id}
                             module_id={challenge.id}
                             title={challenge.title}
                             unit={challenge.unit_title}
-                            open={challenge.open}
                             completed={challenge.completed}
                         />
-                    ))}
-                {/* <CodingChallengeCard /> */}
+                    ))
+                ) : (
+                    <p>No completed challenges yet.</p>
+                )}
             </div>
         </div>
     );

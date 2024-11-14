@@ -11,6 +11,10 @@
     background: #f7f7f7;
 }
 
+.card:hover {
+    cursor: pointer;
+}
+
 .card p {
     color: #777;
     font-weight: 500;
