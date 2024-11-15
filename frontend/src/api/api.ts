@@ -174,6 +174,16 @@ export const getModuleTitle = async (moduleId: number) => {
     }
 };
 
+export const getUnitTitle = async (unitId: number) => {
+    try {
+        const response = await axiosInstance.get(`/content/units/${unitId}/title`);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching unit title:', error);
+        throw error;
+    }
+}
+
 export const submitQuizScore = async (moduleId: number, accuracy: number) => {
     try {
         const response = await axiosInstance.post(`content/modules/${moduleId}/quiz-scores`, {
@@ -298,6 +308,21 @@ export const submitWeeklyReviewScore = async (accuracy: number) => {
             console.error('Error submitting weekly review score:', error.message);
         } else {
             console.error('Unknown error submitting weekly review score:', error);
+        }
+        throw error;
+    }
+}
+
+export const getUnitQuestions = async (unitId: number) => {
+    try {
+        console.log('Fetching unit questions');
+        const response = await axiosInstance.get(`/review/unit-review/${unitId}/questions`);
+        return response.data;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error fetching unit questions:', error.message);
+        } else {
+            console.error('Unknown error fetching unit questions:', error);
         }
         throw error;
     }

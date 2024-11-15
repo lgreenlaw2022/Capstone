@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from models import User, db, UserModule, QuizQuestion, UserQuizQuestion, Module
+from models import Unit, User, db, UserModule, QuizQuestion, UserQuizQuestion, Module
 import random
 
 import logging
@@ -172,4 +172,49 @@ def submit_weekly_review():
         return jsonify({"message": "Weekly review data submitted successfully"}), 200
     except Exception as e:
         logger.error(f"An error occurred while submitting weekly review data: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+
+
+# TODO: maybe this should be a content route?
+@review_bp.route("/unit-review/<int:unit_id>/questions", methods=["GET"])
+def get_unit_review_questions(unit_id):
+    try:
+        if not unit_id:
+            return jsonify({"error": "Unit ID is required"}), 400
+
+        # Check if the unit exists
+        unit = Unit.query.get(unit_id)
+        if not unit:
+            return jsonify({"error": "Unit not found"}), 404
+
+        logger.debug(f"Fetching unit review data for unit {unit_id}")
+
+        unit_questions = (
+            db.session.query(QuizQuestion)
+            .join(Module)
+            .filter(Module.unit_id == unit_id)
+            .all()
+        )
+
+        logger.debug(f"Fetched unit questions {unit_questions}")
+
+        unit_review_questions = []
+        for question in unit_questions:
+            question_data = {
+                "id": question.id,
+                "title": question.title,
+                "options": [
+                    {
+                        "id": option.id,
+                        "option_text": option.option_text,
+                        "is_correct": option.is_correct,
+                    }
+                    for option in question.options
+                ],
+            }
+            unit_review_questions.append(question_data)
+
+        return jsonify(unit_review_questions), 200
+    except Exception as e:
+        logger.error(f"An error occurred while fetching unit review data: {str(e)}")
         return jsonify({"error": str(e)}), 500

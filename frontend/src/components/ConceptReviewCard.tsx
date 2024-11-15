@@ -16,6 +16,7 @@ export default function ConceptReviewCard({unitId, unitTitle}: ConceptReviewCard
     return (
         <div className={styles.reviewCard} onClick={handleClick}>
             <h4>{unitTitle}</h4>
+            {/* TODO: make icon dynamic */}
             <img src="/assets/unit-icons/hashmaps.svg" alt="unit icon" />
         </div>
     )

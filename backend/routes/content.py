@@ -377,6 +377,23 @@ def get_module_title(module_id):
         return jsonify({"error": str(e)}), 500
 
 
+@content_bp.route("/units/<int:unit_id>/title", methods=["GET"])
+def get_unit_title(unit_id):
+    try:
+        unit = Unit.query.filter_by(id=unit_id).first()
+        if unit is None:
+            return jsonify({"error": "Unit not found"}), 404
+
+        unit_title = {
+            "id": unit.id,
+            "title": unit.title,
+        }
+        return jsonify(unit_title), 200
+    except Exception as e:
+        logger.error(f"Error fetching unit title for unit {unit_id}: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+
+
 @content_bp.route("/code-challenges/<int:module_id>", methods=["GET"])
 def get_code_challenge(module_id):
     try:
