@@ -327,3 +327,19 @@ export const getUnitQuestions = async (unitId: number) => {
         throw error;
     }
 }
+
+export const submitUnitReviewScore = async (unitId: number, accuracy: number) => {
+    try {
+        const response = await axiosInstance.post(`/review/units/${unitId}/submit`, {
+            accuracy: accuracy
+        });
+        return response.data;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error submitting unit review score:', error.message);
+        } else {
+            console.error('Unknown error submitting unit review score:', error);
+        }
+        throw error;
+    }
+}

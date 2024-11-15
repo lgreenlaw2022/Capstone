@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import Quiz from "@/components/Quiz";
 import styles from "../../styles/Quiz.module.css";
 
-import { getUnitQuestions, getUnitTitle } from "@/api/api";
+import { getUnitQuestions, getUnitTitle, submitUnitReviewScore } from "@/api/api";
 
 const UnitQuizPage = () => {
     const router = useRouter();
@@ -28,9 +28,7 @@ const UnitQuizPage = () => {
 
     const handleSubmit = async (numCorrectAnswers: number) => {
         const accuracy = (numCorrectAnswers / questions.length) * 100;
-        // do I want to submit the score to the backend?
-        // just use it for awarding XP?
-        // going to be a different endpoint because its not a module to mark complete
+        await submitUnitReviewScore(Number(unitId), accuracy);
         router.push("/review");
     };
 

@@ -218,3 +218,55 @@ def get_unit_review_questions(unit_id):
     except Exception as e:
         logger.error(f"An error occurred while fetching unit review data: {str(e)}")
         return jsonify({"error": str(e)}), 500
+
+
+@review_bp.route("/units/<int:unit_id>/submit", methods=["POST"])
+@jwt_required()
+def submit_unit_quiz_score(unit_id):
+    try:
+        data = request.get_json()
+        accuracy = data.get("accuracy")
+        # Validate accuracy
+        if accuracy is None:
+            return jsonify({"error": "Accuracy is required"}), 400
+        if not (0 <= accuracy <= 100):
+            return jsonify({"error": "Accuracy must be between 0 and 100"}), 400
+        ACCURACY_THRESHOLD = 80  # TODO Define the threshold for passing as a constant
+
+        if accuracy >= ACCURACY_THRESHOLD:
+            user_id = get_jwt_identity()
+            # TODO: reward XP
+            # mark questions as practiced (assuming they got all questions correct)
+            unit_questions = (
+                db.session.query(QuizQuestion)
+                .join(Module)
+                .filter(Module.unit_id == unit_id)
+                .all()
+            )
+            update_quiz_questions_practiced_date(user_id, unit_questions)
+
+            return (
+                jsonify({"message": "Submitted unit review complete successfully"}),
+                200,
+            )
+        else:
+            return jsonify({"message": "Quiz score not high enough to pass"}), 400
+    except Exception as e:
+        logger.error(
+            f"Error submitting user {user_id} score for unit {unit_id} review: {str(e)}"
+        )
+        return jsonify({"error": str(e)}), 500
+
+
+# TODO: duplicate function from content.py
+def update_quiz_questions_practiced_date(user_id, questions):
+    for question in questions:
+        # create UserQuizQuestion record if it does not exist
+        user_question = UserQuizQuestion.query.filter_by(
+            user_id=user_id, question_id=question.id
+        ).first()
+        if user_question is None:
+            user_question = UserQuizQuestion(user_id=user_id, question_id=question.id)
+            db.session.add(user_question)
+        user_question.last_practiced_date = db.func.current_timestamp()
+    db.session.commit()

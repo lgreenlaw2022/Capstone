@@ -3,6 +3,7 @@ from enums import EventType, ModuleType
 from flask import Blueprint, request, jsonify, send_file, abort
 import logging
 from models import (
+    UserQuizQuestion,
     UserUnit,
     db,
     Unit,
@@ -184,6 +185,10 @@ def submit_quiz_scores(module_id):
             user_id = get_jwt_identity()
             mark_module_complete_and_open_next(module_id, user_id)
 
+            # update practiced date for the questions
+            quiz_questions = QuizQuestion.query.filter_by(module_id=module_id).all()
+            update_quiz_questions_practiced_date(user_id, quiz_questions)
+
             # check if the user has earned a badge
             badge_awarding_service = BadgeAwardingService(user_id)
             badge_awarding_service.check_and_award_badges(
@@ -199,6 +204,19 @@ def submit_quiz_scores(module_id):
         )
         return jsonify({"error": str(e)}), 500
 
+def update_quiz_questions_practiced_date(user_id, questions):
+    for question in questions:
+        # create UserQuizQuestion record if it does not exist
+        user_question = UserQuizQuestion.query.filter_by(
+            user_id=user_id, question_id=question.id
+        ).first()
+        if user_question is None:
+            user_question = UserQuizQuestion(
+                user_id=user_id, question_id=question.id
+            )
+            db.session.add(user_question)
+        user_question.last_practiced_date = db.func.current_timestamp()
+    db.session.commit()
 
 @content_bp.route("/modules/<int:module_id>/complete", methods=["POST"])
 @jwt_required()
