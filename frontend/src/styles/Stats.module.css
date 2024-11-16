@@ -1,0 +1,6 @@
+.statsContainer {
+    display: flex;
+    justify-content: center;
+    gap: 105px;
+    padding: 50px;
+}
