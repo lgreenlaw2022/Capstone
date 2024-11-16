@@ -162,7 +162,7 @@ class Module(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     unit_id = db.Column(db.Integer, db.ForeignKey("units.id"), nullable=False)
     title = db.Column(db.String(255), nullable=False)
-    module_type = db.Column(db.Enum(ModuleType), nullable=False)
+    module_type = db.Column(db.Enum(ModuleType), nullable=False, index=True)
     order = db.Column(db.Integer)  # order in unit
 
     # TODO: figure out what delete to use here

@@ -1,24 +1,14 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 
-import QuizQuestion from "@/components/QuizQuestion";
+import { QuizQuestion as QuizQuestionType } from "@/types/QuestionTypes";
 import { getModuleTitle, getQuizQuestions, submitQuizScore } from "@/api/api";
 import Quiz from "@/components/Quiz";
-
-interface QuizQuestion {
-    id: number;
-    title: string;
-    options: {
-        id: number;
-        option_text: string;
-        is_correct: boolean;
-    }[];
-}
 
 const QuizPage = () => {
     const router = useRouter();
     const { moduleId } = router.query;
-    const [questions, setQuestions] = useState<QuizQuestion[]>([]);
+    const [questions, setQuestions] = useState<QuizQuestionType[]>([]);
     const [moduleTitle, setModuleTitle] = useState<string>("");
 
     const fetchQuestions = async () => {
@@ -63,7 +53,7 @@ const QuizPage = () => {
             moduleTitle={moduleTitle}
             onSubmit={handleContinue}
         />
-    )
+    );
 };
 
 export default QuizPage;

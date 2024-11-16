@@ -1,4 +1,5 @@
 import CodingChallengeCard from "@/components/CodingChallengeCard";
+import styles from "@/styles/CodingChallengeReview.module.css";
 import { useEffect, useState } from "react";
 import { getBonusCodingChallenges } from "@/api/api";
 
@@ -37,19 +38,23 @@ export default function CodingChallengeReview() {
     }, []);
 
     return (
-        <div>
+        <div className={styles.challengesContainer}>
             <h3>Bonus Coding Challenges </h3>
             <div>
                 <p>Earn gems to unlock bonus code challenges</p>
-                {incompleteChallenges.map((challenge) => (
-                    <CodingChallengeCard
-                        key={challenge.id}
-                        module_id={challenge.id}
-                        title={challenge.title}
-                        unit={challenge.unit_title}
-                        completed={challenge.completed}
-                    />
-                ))}
+                {incompleteChallenges.length > 0 ? (
+                    incompleteChallenges.map((challenge) => (
+                        <CodingChallengeCard
+                            key={challenge.id}
+                            module_id={challenge.id}
+                            title={challenge.title}
+                            unit={challenge.unit_title}
+                            completed={challenge.completed}
+                        />
+                    ))
+                ) : (
+                    <p>No incomplete challenges available.</p>
+                )}
             </div>
             <div>
                 <h4>Completed</h4>

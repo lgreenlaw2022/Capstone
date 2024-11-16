@@ -4,19 +4,10 @@ import QuizQuestion from "@/components/QuizQuestion";
 import ProgressBar from "@/components/ProgressBar";
 import styles from "@/styles/Quiz.module.css";
 import QuizScore from "@/components/QuizScore";
-
-interface QuizQuestion {
-    id: number;
-    title: string;
-    options: {
-        id: number;
-        option_text: string;
-        is_correct: boolean;
-    }[];
-}
+import { QuizQuestion as QuizQuestionType} from "@/types/QuestionTypes";
 
 interface QuizProps {
-    questions: QuizQuestion[];
+    questions: QuizQuestionType[];
     moduleTitle: string;
     onSubmit: (score: number) => void;
 }
@@ -29,9 +20,7 @@ const calculateProgressPercentage = (
 };
 
 const Quiz = ({ questions, moduleTitle, onSubmit }: QuizProps) => {
-    // const router = useRouter();
-    // const { moduleId } = router.query;
-    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0); // is the index reliable?
+    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);     // is the index reliable?
     const [numCorrectAnswers, setNumCorrectAnswers] = useState<number>(0);
 
     const currentQuestion = questions[currentQuestionIndex];

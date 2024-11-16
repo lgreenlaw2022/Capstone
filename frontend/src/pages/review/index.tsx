@@ -11,45 +11,39 @@ export default function Review() {
     const [units, setUnits] = useState<UnitData[]>([]);
     const [weeklyReviewStatus, setWeeklyReviewStatus] = useState(false);
 
-    const getUnits = async () => {
+    const fetchData = async () => {
         try {
-            const data = await getCompletedUserUnits();
-            setUnits(data);
-            console.log("Units in prep course:", units);
+            const [unitsData, statusData] = await Promise.all([
+                getCompletedUserUnits(),
+                getWeeklyReviewStatus(),
+            ]);
+            setUnits(unitsData);
+            setWeeklyReviewStatus(statusData);
         } catch (error) {
-            console.error("Error fetching units:", error);
-        }
-    };
-
-    const fetchWeeklyReviewStatus = async () => {
-        try {
-            const status = await getWeeklyReviewStatus();
-            setWeeklyReviewStatus(status);
-            console.log("Weekly review status:", status);
-        } catch (error) {
-            console.error("Error fetching weekly review status:", error);
+            console.error("Error fetching data:", error);
         }
     };
 
     useEffect(() => {
-        getUnits();
-        fetchWeeklyReviewStatus();
+        fetchData();
     }, []);
 
     return (
         <div className={styles.reviewContainer}>
             <h1>Review</h1>
-            <WeeklyReviewCard completed={weeklyReviewStatus}/>
+            <WeeklyReviewCard completed={weeklyReviewStatus} />
             <div>
                 <h3>Concept Review</h3>
                 {units.length === 0 && <p>No units to review</p>}
                 {units.map((unit, index) => (
-                    <ConceptReviewCard key={index} unitId={unit.id} unitTitle={unit.title} />
+                    <ConceptReviewCard
+                        key={unit.id}
+                        unitId={unit.id}
+                        unitTitle={unit.title}
+                    />
                 ))}
             </div>
-            <div>
-                <CodingChallengeReview />
-            </div>
+            <CodingChallengeReview />
         </div>
     );
 }

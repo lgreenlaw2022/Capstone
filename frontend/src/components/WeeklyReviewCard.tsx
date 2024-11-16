@@ -5,7 +5,6 @@ interface WeeklyReviewCardProps {
     completed: boolean;
 }
 
-// decide if completed should be a prop or not
 export default function WeeklyReviewCard({completed}: WeeklyReviewCardProps) {
     const router = useRouter();
 

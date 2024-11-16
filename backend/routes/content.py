@@ -204,6 +204,7 @@ def submit_quiz_scores(module_id):
         )
         return jsonify({"error": str(e)}), 500
 
+
 def update_quiz_questions_practiced_date(user_id, questions):
     for question in questions:
         # create UserQuizQuestion record if it does not exist
@@ -211,12 +212,11 @@ def update_quiz_questions_practiced_date(user_id, questions):
             user_id=user_id, question_id=question.id
         ).first()
         if user_question is None:
-            user_question = UserQuizQuestion(
-                user_id=user_id, question_id=question.id
-            )
+            user_question = UserQuizQuestion(user_id=user_id, question_id=question.id)
             db.session.add(user_question)
         user_question.last_practiced_date = db.func.current_timestamp()
     db.session.commit()
+
 
 @content_bp.route("/modules/<int:module_id>/complete", methods=["POST"])
 @jwt_required()
@@ -260,6 +260,9 @@ def mark_module_complete_and_open_next(module_id, user_id):
         user_module.completed_date = db.func.current_timestamp()
         db.session.commit()
         logger.info(f"Marked module {module_id} as complete")
+
+        if current_module.module_type == ModuleType.BONUS_CHALLENGE:
+            return {"message": "Bonus challenge marked as complete"}
 
         # If this module completes the unit, mark the unit as complete
         finished_unit = is_unit_newly_completed(unit_id, user_id)
@@ -329,6 +332,8 @@ def are_all_modules_completed(unit_id, user_id):
 
 
 def is_unit_newly_completed(unit_id, user_id):
+    # check if the unit is newly completed by checking db for unit and module records
+    # method is used to trigger events like badge checks
     logger.debug(f"Checking if unit {unit_id} is newly completed for user {user_id}")
     user_unit = UserUnit.query.filter_by(unit_id=unit_id, user_id=user_id).first()
     if user_unit is not None and user_unit.completed:
@@ -355,7 +360,7 @@ def complete_unit(unit_id, user_id):
         EventType.UNIT_COMPLETION, user_unit=user_unit
     )
 
-    # add bonus challenge questions to the users modules
+    # add bonus challenge questions to the user's modules
     bonus_challenge_modules = (
         db.session.query(Module)
         .filter_by(unit_id=unit_id, module_type=ModuleType.BONUS_CHALLENGE)
@@ -508,7 +513,6 @@ def get_bonus_challenges():
             )
             .all()
         )
-        logger.debug(f"bonus challenges: {bonus_challenges}")
         bonus_challenges_data = [
             {
                 "id": user_module.module_id,

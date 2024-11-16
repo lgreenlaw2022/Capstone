@@ -2,10 +2,12 @@ import Quiz from "@/components/Quiz";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { getWeeklyReviewQuestions, submitWeeklyReviewScore } from "@/api/api";
+import { QuizQuestion } from "@/types/QuestionTypes";
+
 
 export default function WeeklyReviewQuizPage() {
     const router = useRouter();
-    const [questions, setQuestions] = useState([]);
+    const [questions, setQuestions] = useState<QuizQuestion[]>([]);
 
     const fetchQuestions = async () => {
         try {
@@ -28,10 +30,14 @@ export default function WeeklyReviewQuizPage() {
     };
 
     return (
-        <Quiz
-            questions={questions}
-            moduleTitle="Weekly Review"
-            onSubmit={handleSubmit}
-        />
+        <>
+            {questions.length === 0 && (
+                <Quiz
+                    questions={questions}
+                    moduleTitle="Weekly Review"
+                    onSubmit={handleSubmit}
+                />
+            )}
+        </>
     );
-};
+}

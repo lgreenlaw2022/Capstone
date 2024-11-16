@@ -7,7 +7,7 @@ from enums import ModuleType
 
 import logging
 
-# TODO: this name may be coonfusing because the review page also uses content endpoints
+# TODO: this name may be confusing because the review page also uses content endpoints
 review_bp = Blueprint("review", __name__)
 
 logger = logging.getLogger(__name__)
@@ -46,7 +46,7 @@ def pick_weekly_review_questions(user_id):
         .filter(
             UserModule.user_id == user_id,
             UserModule.completed == True,
-            Module.module_type == ModuleType.QUIZ
+            Module.module_type == ModuleType.QUIZ,
         )
         .order_by(UserModule.completed_date.desc())
         .first()
@@ -106,13 +106,13 @@ def pick_weekly_review_questions(user_id):
     return questions
 
 
-def fetch_practiced_questions(user_id, three_months_ago):
+def fetch_practiced_questions(user_id, date_limit):
     practiced_questions = (
         db.session.query(UserQuizQuestion)
         .join(UserQuizQuestion.quiz_question)
         .filter(
             UserQuizQuestion.user_id == user_id,
-            UserQuizQuestion.last_practiced_date >= three_months_ago,
+            UserQuizQuestion.last_practiced_date >= date_limit,
         )
         .all()
     )
@@ -130,7 +130,6 @@ def fetch_practiced_questions(user_id, three_months_ago):
                 "last_practiced_date": user_question.last_practiced_date,
             }
         )
-    logger.debug(f"Practiced questions: {questions}")
 
     return questions
 
@@ -174,7 +173,6 @@ def submit_weekly_review():
             db.session.commit()
 
         logger.debug(f"Submitting weekly review data for user {user_id}")
-        # logger.debug(data)
         return jsonify({"message": "Weekly review data submitted successfully"}), 200
     except Exception as e:
         logger.error(f"An error occurred while submitting weekly review data: {str(e)}")
@@ -201,8 +199,6 @@ def get_unit_review_questions(unit_id):
             .filter(Module.unit_id == unit_id)
             .all()
         )
-
-        logger.debug(f"Fetched unit questions {unit_questions}")
 
         unit_review_questions = []
         for question in unit_questions:
