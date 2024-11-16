@@ -3,6 +3,7 @@ from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from models import Unit, User, db, UserModule, QuizQuestion, UserQuizQuestion, Module
 import random
+from enums import ModuleType
 
 import logging
 
@@ -38,10 +39,15 @@ def pick_weekly_review_questions(user_id):
     logger.debug(f"Fetching practiced questions for user {user_id}")
     practiced_questions = fetch_practiced_questions(user_id, three_months_ago)
 
-    # Identify the most recently completed module
+    # Identify the most recently completed quiz module
     most_recent_module = (
         db.session.query(UserModule)
-        .filter(UserModule.user_id == user_id, UserModule.completed == True)
+        .join(Module, UserModule.module_id == Module.id)
+        .filter(
+            UserModule.user_id == user_id,
+            UserModule.completed == True,
+            Module.module_type == ModuleType.QUIZ
+        )
         .order_by(UserModule.completed_date.desc())
         .first()
     )
@@ -77,8 +83,7 @@ def pick_weekly_review_questions(user_id):
     # shuffle the questions
     random.shuffle(selected_questions)
 
-    # get question data for chosen questions
-    # Serialize the data
+    # serialize the question data for chosen questions
     questions = []
     for question in selected_questions:
         question_obj = (
@@ -105,8 +110,6 @@ def fetch_practiced_questions(user_id, three_months_ago):
     practiced_questions = (
         db.session.query(UserQuizQuestion)
         .join(UserQuizQuestion.quiz_question)
-        .join(QuizQuestion.module)
-        .join(Module.unit)
         .filter(
             UserQuizQuestion.user_id == user_id,
             UserQuizQuestion.last_practiced_date >= three_months_ago,
@@ -115,7 +118,10 @@ def fetch_practiced_questions(user_id, three_months_ago):
     )
 
     questions = []
-    for user_question, question, module, unit in practiced_questions:
+    for user_question in practiced_questions:
+        question = user_question.quiz_question
+        module = question.module
+        unit = module.unit
         questions.append(
             {
                 "question_id": question.id,
