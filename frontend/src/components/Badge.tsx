@@ -1,5 +1,5 @@
 import React from "react";
-import badgeIcons from "../utils/badgeIcons";
+import icons from "../utils/icons";
 import styles from "../styles/Badge.module.css";
 import { BadgeType } from "../types/BadgeTypes";
 
@@ -9,7 +9,7 @@ interface BadgeProps {
 }
 
 const Badge: React.FC<BadgeProps> = ({ title, type }) => {
-    const iconSrc = badgeIcons[title] || "/assets/award-icons/flame.svg"; // Fallback to a default icon if not found
+    const iconSrc = icons[title] || "/assets/award-icons/flame.svg"; // Fallback to a default icon if not found
     const badgeClass =
         type === BadgeType.CONTENT ? styles.conceptBadge : styles.awardBadge;
 

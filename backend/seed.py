@@ -122,7 +122,7 @@ def add_quiz_questions(module_id, quiz_questions):
 def add_badges():
     badges_data = [
         {
-            "title": "Hash Tables",
+            "title": "Hash Maps",
             "description": "Awarded for completing the hash tables unit.",
             "type": BadgeType.CONTENT,
             "criteria_expression": "user_unit.completed == True and user_unit.unit_id == 1",  # TODO: don't hardcode?
