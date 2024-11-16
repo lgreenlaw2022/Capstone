@@ -65,8 +65,15 @@ class Badge(db.Model):
     title = db.Column(db.String(100), nullable=False, unique=True, index=True)
     description = db.Column(db.Text)
     type = db.Column(db.Enum(BadgeType), nullable=False)
-    criteria_expression = db.Column(db.String(255))  # Store criteria expression eg. streak >= 7
-    event_type = db.Column(db.Enum(EventType), default=EventType.STREAK_ACHIEVEMENT, nullable=False, index=True)  # Store event trigger type
+    criteria_expression = db.Column(
+        db.String(255)
+    )  # Store criteria expression eg. streak >= 7
+    event_type = db.Column(
+        db.Enum(EventType),
+        default=EventType.STREAK_ACHIEVEMENT,
+        nullable=False,
+        index=True,
+    )  # Store event trigger type
 
     users = db.relationship(
         "UserBadge", back_populates="badge", cascade="all, delete-orphan"
@@ -155,8 +162,8 @@ class Module(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     unit_id = db.Column(db.Integer, db.ForeignKey("units.id"), nullable=False)
     title = db.Column(db.String(255), nullable=False)
-    module_type = db.Column(db.Enum(ModuleType), nullable=False)
-    order = db.Column(db.Integer, nullable=False)  # order in unit
+    module_type = db.Column(db.Enum(ModuleType), nullable=False, index=True)
+    order = db.Column(db.Integer)  # order in unit
 
     # TODO: figure out what delete to use here
     unit = db.relationship("Unit", back_populates="modules")
@@ -180,6 +187,7 @@ class UserModule(db.Model):
     open = db.Column(
         db.Boolean, default=False
     )  # flag for if the user can start the module
+    completed_date = db.Column(db.DateTime, nullable=True) # used to help with review
 
     user = db.relationship("User", back_populates="modules")
     module = db.relationship("Module", back_populates="users")
@@ -231,6 +239,7 @@ class UserQuizQuestion(db.Model):
     )
     # used to determine when review is needed
     last_practiced_date = db.Column(db.DateTime)
+    # TODO: maybe track if they got it right or wrong
 
     user = db.relationship("User", back_populates="quiz_questions")
     quiz_question = db.relationship("QuizQuestion", back_populates="users")

@@ -1,8 +1,8 @@
-"""empty message
+"""recreate missing migrations
 
-Revision ID: 2acf22907e17
+Revision ID: e58c2666eab9
 Revises: 
-Create Date: 2024-11-05 16:47:34.777168
+Create Date: 2024-11-13 20:13:11.556314
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '2acf22907e17'
+revision = 'e58c2666eab9'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -23,9 +23,14 @@ def upgrade():
     sa.Column('title', sa.String(length=100), nullable=False),
     sa.Column('description', sa.Text(), nullable=True),
     sa.Column('type', sa.Enum('CONTENT', 'AWARD', name='badgetype'), nullable=False),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('title')
+    sa.Column('criteria_expression', sa.String(length=255), nullable=True),
+    sa.Column('event_type', sa.Enum('COMPLETE_MODULE', 'UNIT_COMPLETION', 'QUIZ_PERFECT_SCORE', 'STREAK_ACHIEVEMENT', name='eventtype'), nullable=False),
+    sa.PrimaryKeyConstraint('id')
     )
+    with op.batch_alter_table('badges', schema=None) as batch_op:
+        batch_op.create_index(batch_op.f('ix_badges_event_type'), ['event_type'], unique=False)
+        batch_op.create_index(batch_op.f('ix_badges_title'), ['title'], unique=True)
+
     op.create_table('courses',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('title', sa.String(length=255), nullable=False),
@@ -89,7 +94,7 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('unit_id', sa.Integer(), nullable=False),
     sa.Column('title', sa.String(length=255), nullable=False),
-    sa.Column('module_type', sa.Enum('CONCEPT_GUIDE', 'PYTHON_GUIDE', 'RECOGNITION_GUIDE', 'QUIZ', 'CHALLENGE', 'CHALLENGE_SOLUTION', name='moduletype'), nullable=False),
+    sa.Column('module_type', sa.Enum('CONCEPT_GUIDE', 'PYTHON_GUIDE', 'RECOGNITION_GUIDE', 'QUIZ', 'CHALLENGE', 'CHALLENGE_SOLUTION', 'BONUS_CHALLENGE', name='moduletype'), nullable=False),
     sa.Column('order', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['unit_id'], ['units.id'], ),
     sa.PrimaryKeyConstraint('id')
@@ -174,5 +179,9 @@ def downgrade():
     op.drop_table('users')
     op.drop_table('goals')
     op.drop_table('courses')
+    with op.batch_alter_table('badges', schema=None) as batch_op:
+        batch_op.drop_index(batch_op.f('ix_badges_title'))
+        batch_op.drop_index(batch_op.f('ix_badges_event_type'))
+
     op.drop_table('badges')
     # ### end Alembic commands ###

@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, jsonify
 import logging
 from models import (
     db,
@@ -42,7 +42,6 @@ def get_badges():
             .all()
         )
         json_badges = badge_schema.dump(user_badges)
-        logger.debug(f"User badges: {json_badges}")
         return jsonify(json_badges), 200
     except Exception as e:
         logger.error(f"An error occurred while fetching user badges: {str(e)}")

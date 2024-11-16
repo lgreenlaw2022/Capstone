@@ -45,6 +45,15 @@ h2 {
     line-height: normal;
 }
 
+
+h4 {
+    color: #000;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
 p {
     color: #000;
     font-size: 16px;
@@ -127,4 +136,15 @@ button:hover {
     border-radius: 4px;
     background: #e5e5e5;
     border: none;
+}
+
+.grayCard {
+    display: inline-flex;
+    align-items: center;
+    padding: 16px;
+    width: auto;
+
+    border-radius: 12px;
+    border: 2px solid #d9d9d9;
+    background: #f7f7f7;
 }

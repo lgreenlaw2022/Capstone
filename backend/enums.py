@@ -27,6 +27,7 @@ class ModuleType(Enum):
     QUIZ = "quiz"
     CHALLENGE = "challenge"
     CHALLENGE_SOLUTION = "solution_guide"
+    BONUS_CHALLENGE = "bonus_challenge"
 
 
 class BadgeType(Enum):

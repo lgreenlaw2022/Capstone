@@ -1,18 +1,11 @@
 import React, { useState, useEffect } from "react";
 import QuizOption from "./QuizOption";
 import styles from "../styles/QuizQuestion.module.css";
+import { QuizQuestion as QuizQuestionType } from "../types/QuestionTypes";
 
 // TODO: make quiz question a type
 interface QuizQuestionProps {
-    question: {
-        id: number;
-        title: string;
-        options: {
-            id: number;
-            option_text: string;
-            is_correct: boolean;
-        }[];
-    };
+    question: QuizQuestionType;
     handleNextQuestion: (isCorrect: boolean) => void;
 }
 

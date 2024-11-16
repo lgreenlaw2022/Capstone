@@ -174,6 +174,16 @@ export const getModuleTitle = async (moduleId: number) => {
     }
 };
 
+export const getUnitTitle = async (unitId: number) => {
+    try {
+        const response = await axiosInstance.get(`/content/units/${unitId}/title`);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching unit title:', error);
+        throw error;
+    }
+}
+
 export const submitQuizScore = async (moduleId: number, accuracy: number) => {
     try {
         const response = await axiosInstance.post(`content/modules/${moduleId}/quiz-scores`, {
@@ -216,15 +226,119 @@ export const getCodeChallenge = async (moduleId: number) => {
     }
 };
 
+export const getBonusCodingChallenges = async () => {
+    try {
+        console.log('Fetching coding challenges');
+        const response = await axiosInstance.get('/content/bonus-code-challenges');
+        return response.data;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error fetching bonus coding challenges:', error.message);
+        } else {
+            console.error('Unknown error fetching bonus coding challenges:', error);
+        }
+        throw error;
+    }
+}
+
+export const getCompletedUserUnits = async () => {
+    try {
+        const response = await axiosInstance.get('/content/units/completed');
+        return response.data;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error fetching completed units:', error.message);
+        } else {
+            console.error('Unknown error fetching completed units:', error);
+        }
+        throw error;
+    }
+}
+
 export const getBadges = async () => {
     try {
-        const response = await axiosInstance.get('/badges');
+        const response = await axiosInstance.get('/badges/user-badges');
         return response.data;
     } catch (error) {
         if (error instanceof Error) {
             console.error('Error fetching badges:', error.message);
         } else {
             console.error('Unknown error fetching badges:', error);
+        }
+        throw error;
+    }
+}
+
+export const getWeeklyReviewStatus = async () => {
+    try {
+        const response = await axiosInstance.get('/review/weekly-review/status');
+        return response.data;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error fetching weekly review status:', error.message);
+        } else {
+            console.error('Unknown error fetching weekly review status:', error);
+        }
+        throw error;
+    }
+}
+
+export const getWeeklyReviewQuestions = async () => {
+    try {
+        const response = await axiosInstance.get('/review/weekly-review/questions');
+        return response.data;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error fetching weekly review questions:', error.message);
+        } else {
+            console.error('Unknown error fetching weekly review questions:', error);
+        }
+        throw error;
+    }
+}
+
+export const submitWeeklyReviewScore = async (accuracy: number) => {
+    try {
+        const response = await axiosInstance.post('review/weekly-review/submit', {
+            accuracy: accuracy
+        });
+        return response.data;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error submitting weekly review score:', error.message);
+        } else {
+            console.error('Unknown error submitting weekly review score:', error);
+        }
+        throw error;
+    }
+}
+
+export const getUnitQuestions = async (unitId: number) => {
+    try {
+        console.log('Fetching unit questions');
+        const response = await axiosInstance.get(`/review/unit-review/${unitId}/questions`);
+        return response.data;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error fetching unit questions:', error.message);
+        } else {
+            console.error('Unknown error fetching unit questions:', error);
+        }
+        throw error;
+    }
+}
+
+export const submitUnitReviewScore = async (unitId: number, accuracy: number) => {
+    try {
+        const response = await axiosInstance.post(`/review/units/${unitId}/submit`, {
+            accuracy: accuracy
+        });
+        return response.data;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error submitting unit review score:', error.message);
+        } else {
+            console.error('Unknown error submitting unit review score:', error);
         }
         throw error;
     }
