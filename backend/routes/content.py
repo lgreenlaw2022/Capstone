@@ -1,3 +1,5 @@
+from config.constants import XP_FOR_COMPLETING_MODULE, XP_FOR_COMPLETING_CHALLENGE
+from services.user_activity_service import update_daily_xp
 from badge_awarding_service import BadgeAwardingService
 from enums import EventType, ModuleType
 from flask import Blueprint, request, jsonify, send_file, abort
@@ -260,6 +262,14 @@ def mark_module_complete_and_open_next(module_id, user_id):
         user_module.completed_date = db.func.current_timestamp()
         db.session.commit()
         logger.info(f"Marked module {module_id} as complete")
+        if (
+            current_module.module_type != ModuleType.BONUS_CHALLENGE
+            or current_module.module_type != ModuleType.CHALLENGE
+        ):
+            earned_xp = XP_FOR_COMPLETING_MODULE
+        else:  # Bonus and practice challenges have different XP values
+            earned_xp = XP_FOR_COMPLETING_CHALLENGE
+        update_daily_xp(user_id, earned_xp)
 
         if current_module.module_type == ModuleType.BONUS_CHALLENGE:
             return {"message": "Bonus challenge marked as complete"}

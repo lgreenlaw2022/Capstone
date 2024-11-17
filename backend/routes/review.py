@@ -4,6 +4,8 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from models import Unit, User, db, UserModule, QuizQuestion, UserQuizQuestion, Module
 import random
 from enums import ModuleType
+from services.user_activity_service import update_daily_xp
+from config.constants import XP_FOR_COMPLETING_REVIEW
 
 import logging
 
@@ -171,6 +173,7 @@ def submit_weekly_review():
             user.weekly_review_done = True
             # TODO: add XP
             db.session.commit()
+            update_daily_xp(user_id, XP_FOR_COMPLETING_REVIEW)
 
         logger.debug(f"Submitting weekly review data for user {user_id}")
         return jsonify({"message": "Weekly review data submitted successfully"}), 200
@@ -246,6 +249,7 @@ def submit_unit_quiz_score(unit_id):
                 .all()
             )
             update_quiz_questions_practiced_date(user_id, unit_questions)
+            update_daily_xp(user_id, XP_FOR_COMPLETING_REVIEW)
 
             return (
                 jsonify({"message": "Submitted unit review complete successfully"}),

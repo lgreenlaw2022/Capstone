@@ -23,6 +23,7 @@ class User(db.Model):
     # TODO: monitor if I want to index these
     streak = db.Column(db.Integer, default=0)
     gems = db.Column(db.Integer, default=0)
+    xp = db.Column(db.Integer, default=0)
     # TODO: uncomment once functionality is added
     # dark_mode = db.Column(db.Boolean, default=False)  # UI preference
     leaderboard_on = db.Column(db.Boolean, default=True)  # Show leaderboard
@@ -275,6 +276,7 @@ class DailyUserActivity(db.Model):
     # values will be regularly reaped for storage
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), primary_key=True)
     date = db.Column(db.Date, default=current_time, primary_key=True)
+    xp_earned = db.Column(db.Integer, default=0)  # xp earned on this day, not total
     gems_earned = db.Column(db.Integer, default=0)  # gems earned on this day, not total
     modules_completed = db.Column(db.Integer, default=0)
 

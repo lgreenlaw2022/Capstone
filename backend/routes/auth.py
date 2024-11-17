@@ -9,6 +9,7 @@ import logging
 
 from app import db
 from models import User
+from services.user_activity_service import reset_streak
 
 auth_bp = Blueprint("auth", __name__)
 
@@ -64,6 +65,9 @@ def login():
     # Check if the user exists and the password is correct
     if user and user.check_password(data["password"]):
         access_token = create_access_token(identity=user.id)
+        logger.info(f"User {user.id} logged in successfully")
+        if reset_streak(user):
+            logger.info(f"User {user.id} streak reset due to inactivity")
         return (
             jsonify({"message": "Login successful", "access_token": access_token}),
             200,
