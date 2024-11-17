@@ -39,7 +39,7 @@ export default function Leaderboard() {
         <div className={styles.leaderboardContainer}>
             {/* TODO: set up alternative view */}
             <div className={styles.headingContainer}>
-                <h1>Weekly Leaderboard</h1>
+                <h2>Weekly Leaderboard</h2>
                 <p>Top 5 win prizes</p>
                 {/* TODO: make dynamic */}
                 <p>3 days left</p>

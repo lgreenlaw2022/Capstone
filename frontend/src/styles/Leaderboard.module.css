@@ -4,6 +4,7 @@
     align-items: center;
     justify-content: center;
     gap: 15px;
+    max-width: 320px;
 }
 
 .headingContainer {
