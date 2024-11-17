@@ -1,5 +1,6 @@
 import styles from "../styles/Leaderboard.module.css";
 import { useState } from "react";
+import UserRankCard from "./UserRankCard";
 
 interface User {
     username: string;
@@ -15,6 +16,7 @@ export default function Leaderboard() {
         { username: "user3", xp: 300 },
         { username: "user4", xp: 400 },
         { username: "user5", xp: 500 },
+        { username: "user6", xp: 600 },
     ]);
 
     if (!showLeaderboard) {
@@ -44,13 +46,7 @@ export default function Leaderboard() {
             </div>
             <div className={styles.rankingsContainer}>
                 {users.map((user, index) => (
-                    <div key={index} className={styles.rankings}>
-                        <div className={styles.leftText}>
-                            <p>{index + 1}</p>
-                            <p>{user.username}</p>
-                        </div>
-                        <p>{user.xp}</p>
-                    </div>
+                    <UserRankCard user={user} index={index}/>
                 ))}
             </div>
             <div>
