@@ -6,7 +6,7 @@ import StatsComparePane from '@/components/StatsComparePane'
 export default function Stats() {
     return (
         <div className={styles.statsContainer}>
-            <StatsComparePane/>
+            {/* <StatsComparePane/> */}
             <Leaderboard/>
         </div>
     )

@@ -9,29 +9,34 @@ user_bp = Blueprint("user_info", __name__)
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
+
 # Retrieve bio data for the profile page and others
 @user_bp.route("/bio-data", methods=["GET"])
 @jwt_required()
 def get_user_bio_data():
     user_id = get_jwt_identity()
-    
+
     try:
         # Fetch only the required fields
-        user = User.query.with_entities(
-            User.username, User.email, User.created_date
-        ).filter_by(id=user_id).first()
+        user = (
+            User.query.with_entities(User.username, User.email, User.created_date)
+            .filter_by(id=user_id)
+            .first()
+        )
 
         if user:
             # Check if any of the fields are empty
             if not user.username or not user.email or not user.created_date:
                 return jsonify({"error": "User data is incomplete"}), 400
-                
+
             return (
                 jsonify(
                     {
                         "username": user.username,
                         "email": user.email,
-                        "created_date": user.created_date.strftime("%d-%m-%Y"),  # Format date as DD-MM-YYYY
+                        "created_date": user.created_date.strftime(
+                            "%d-%m-%Y"
+                        ),  # Format date as DD-MM-YYYY
                     }
                 ),
                 200,
@@ -62,3 +67,17 @@ def get_user_stats():
         )
     else:
         return jsonify({"error": "User not found"}), 404
+
+
+@user_bp.route("/xp", methods=["GET"])
+@jwt_required()
+def get_user_xp():
+    user_id = get_jwt_identity()
+    if user_id is None:
+        return jsonify({"error": "Invalid user identity"}), 400
+
+    user = User.query.get(user_id)
+    if user:
+        return jsonify({"xp": user.xp}), 200
+    else:
+        return jsonify({"error": "User xp not found"}), 404
