@@ -18,6 +18,46 @@ def get_most_recent_monday():
     return most_recent_monday
 
 
+def calculate_percent_shorter_streak(user_streak):
+    total_users = User.query.count() - 1 # subtract 1 to exclude the current user
+    # TODO: consider adding index to streak column
+    users_with_shorter_streak = User.query.filter(User.streak < user_streak).count()
+    percent_shorter_streak = (users_with_shorter_streak / total_users) * 100
+    return percent_shorter_streak
+
+
+def calculate_percent_fewer_modules(user_id, most_recent_monday):
+    total_users = User.query.count() - 1 # subtract 1 to exclude the current user
+    user_modules_completed = UserModule.query.filter(
+        UserModule.user_id == user_id, UserModule.completed_date >= most_recent_monday
+    ).count()
+    users_with_fewer_modules = (
+        User.query.join(UserModule)
+        .filter(UserModule.completed_date >= most_recent_monday)
+        .group_by(User.id)
+        .having(db.func.count(UserModule.module_id) < user_modules_completed)
+        .count()
+    )
+    percent_fewer_modules = (users_with_fewer_modules / total_users) * 100
+    return percent_fewer_modules
+
+
+def calculate_percent_fewer_goals(user_id, most_recent_monday):
+    total_users = User.query.count() - 1 # subtract 1 to exclude the current user
+    user_goals_completed = UserGoal.query.filter(
+        UserGoal.user_id == user_id, UserGoal.date_completed >= most_recent_monday
+    ).count()
+    users_with_fewer_goals = (
+        User.query.join(UserGoal)
+        .filter(UserGoal.date_completed >= most_recent_monday)
+        .group_by(User.id)
+        .having(db.func.count(UserGoal.goal_id) < user_goals_completed)
+        .count()
+    )
+    percent_fewer_goals = (users_with_fewer_goals / total_users) * 100
+    return percent_fewer_goals
+
+
 @leaderboard_bp.route("/days-left", methods=["GET"])
 @jwt_required()
 def get_days_left():
@@ -90,19 +130,23 @@ def get_weekly_comparison_stats():
             return jsonify({"error": "User not found"}), 404
         most_recent_monday = get_most_recent_monday()
 
-        streak = user.streak
-        modules_completed = UserModule.query.filter(
-            UserModule.user_id == user_id,
-            UserModule.completed_date <= most_recent_monday,
-        ).count()
-        goals_completed = UserGoal.query.filter(
-            UserGoal.user_id == user_id, UserGoal.completed_date <= most_recent_monday
-        ).count()
+        # Calculate the percentages
+        percent_shorter_streak = calculate_percent_shorter_streak(user.streak)
+        percent_fewer_modules = calculate_percent_fewer_modules(
+            user_id, most_recent_monday
+        )
+        percent_fewer_goals = calculate_percent_fewer_goals(user_id, most_recent_monday)
 
-        # calculate the percent of users with a shorter streak
-        # calculate the percent of users with fewer modules completed this week
-        # calculate the percent of users with fewer goals completed this week
-        return
+        logger.debug(
+            f"Percent shorter streak: {percent_shorter_streak}, Percent fewer modules: {percent_fewer_modules}, Percent fewer goals: {percent_fewer_goals}"
+        )
+        response = {
+            "percent_shorter_streak": percent_shorter_streak,
+            "percent_fewer_modules": percent_fewer_modules,
+            "percent_fewer_goals": percent_fewer_goals,
+        }
+
+        return jsonify(response), 200
     except Exception as e:
         logger.error(
             f"An error occurred while fetching weekly comparison stats: {str(e)}"

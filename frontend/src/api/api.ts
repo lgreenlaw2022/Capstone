@@ -386,3 +386,17 @@ export const getLeaderboardDaysLeft = async () => {
         throw error;
     }
 }
+
+export const getComparisonStats = async () => {
+    try {
+        const response = await axiosInstance.get('/leaderboard/weekly-comparison');
+        return response.data;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error fetching comparison stats:', error.message);
+        } else {
+            console.error('Unknown error fetching comparison stats:', error);
+        }
+        throw error;
+    }
+}
