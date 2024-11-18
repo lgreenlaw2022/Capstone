@@ -12,7 +12,8 @@ interface User {
 export default function Leaderboard() {
     const [showLeaderboard, setShowLeaderboard] = useState(true);
     const [daysLeft, setDaysLeft] = useState(0);
-    const [users, setUsers] = useState<User[]>([]
+    const [users, setUsers] = useState<User[]>(
+        []
         // [{ username: "user1", xp: 100 },
         // { username: "user2", xp: 200 },
         // { username: "user3", xp: 300 },
@@ -36,7 +37,6 @@ export default function Leaderboard() {
     useEffect(() => {
         fetchRankings();
     }, []);
-
 
     if (!showLeaderboard) {
         return (
@@ -65,7 +65,7 @@ export default function Leaderboard() {
             </div>
             <div className={styles.rankingsContainer}>
                 {users.map((user, index) => (
-                    <UserRankCard user={user} index={index}/>
+                    <UserRankCard key={index} user={user} index={index} />
                 ))}
             </div>
             <div>

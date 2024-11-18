@@ -279,5 +279,6 @@ class DailyUserActivity(db.Model):
     xp_earned = db.Column(db.Integer, default=0)  # xp earned on this day, not total
     gems_earned = db.Column(db.Integer, default=0)  # gems earned on this day, not total
     modules_completed = db.Column(db.Integer, default=0)
+    streak_extended = db.Column(db.Boolean, default=False)
 
     user = db.relationship("User", back_populates="activities")
