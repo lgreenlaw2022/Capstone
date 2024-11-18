@@ -16,7 +16,7 @@ export default function UserRankCard({ user, index }: UserRankProps) {
     return (
         <div
             key={index}     
-            className={`${styles.rankings} ${isTopFive ? styles.blueHighlight : ""}`}
+            className={`${styles.rankings} ${isTopFive ? styles.greenHighlight : ""}`}
         >
             <div className={styles.rankText}>
                 <h3>{rank}</h3>

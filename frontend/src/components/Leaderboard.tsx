@@ -6,21 +6,12 @@ import { getLeaderboard, getLeaderboardDaysLeft } from "@/api/api";
 interface User {
     username: string;
     xp: number;
-    // include rank?
 }
 
 export default function Leaderboard() {
     const [showLeaderboard, setShowLeaderboard] = useState(true);
     const [daysLeft, setDaysLeft] = useState(0);
-    const [users, setUsers] = useState<User[]>(
-        []
-        // [{ username: "user1", xp: 100 },
-        // { username: "user2", xp: 200 },
-        // { username: "user3", xp: 300 },
-        // { username: "user4", xp: 400 },
-        // { username: "user5", xp: 500 },
-        // { username: "user6", xp: 600 },]
-    );
+    const [users, setUsers] = useState<User[]>([]);
 
     const fetchRankings = async () => {
         try {
@@ -40,12 +31,11 @@ export default function Leaderboard() {
 
     if (!showLeaderboard) {
         return (
-            <div>
+            <div className={styles.noLeaderboardContainer}>
                 <div className={styles.headingContainer}>
-                    <h1>Weekly Leaderboard</h1>
-                    <p>Want to compete?</p>
+                    <h2>Weekly Leaderboard</h2>
+                    <p className={styles.emphasisText}>Want to compete?</p>
                     <p>Top 5 win prizes</p>
-                    {/* TODO: make dynamic */}
                 </div>
                 <button onClick={() => setShowLeaderboard(true)}>
                     Show Leaderboard
@@ -56,12 +46,11 @@ export default function Leaderboard() {
 
     return (
         <div className={styles.leaderboardContainer}>
-            {/* TODO: set up alternative view */}
             <div className={styles.headingContainer}>
                 <h2>Weekly Leaderboard</h2>
                 <p>Top 5 win prizes</p>
                 {/* TODO: make dynamic */}
-                <p>{daysLeft} days left</p>
+                <p className={styles.emphasisText}>{daysLeft} days left</p>
             </div>
             <div className={styles.rankingsContainer}>
                 {users.map((user, index) => (
