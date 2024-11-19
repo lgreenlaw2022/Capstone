@@ -5,7 +5,6 @@ from datetime import datetime, timedelta, timezone
 
 from models import User, db, DailyUserActivity, UserModule, UserGoal
 
-# TODO: this name may be confusing because the review page also uses content endpoints
 leaderboard_bp = Blueprint("leaderboard", __name__)
 
 logger = logging.getLogger(__name__)
@@ -19,7 +18,8 @@ def get_most_recent_monday():
 
 
 def calculate_percent_shorter_streak(user_streak):
-    total_users = User.query.count() - 1 # subtract 1 to exclude the current user
+    # calculate the percentage of users who have a shorter streak than the current user
+    total_users = User.query.count() - 1  # subtract 1 to exclude the current user
     # TODO: consider adding index to streak column
     users_with_shorter_streak = User.query.filter(User.streak < user_streak).count()
     percent_shorter_streak = (users_with_shorter_streak / total_users) * 100
@@ -27,7 +27,8 @@ def calculate_percent_shorter_streak(user_streak):
 
 
 def calculate_percent_fewer_modules(user_id, most_recent_monday):
-    total_users = User.query.count() - 1 # subtract 1 to exclude the current user
+    # calculate the percentage of users who have completed fewer modules this week than the current user
+    total_users = User.query.count() - 1  # subtract 1 to exclude the current user
     user_modules_completed = UserModule.query.filter(
         UserModule.user_id == user_id, UserModule.completed_date >= most_recent_monday
     ).count()
@@ -43,7 +44,8 @@ def calculate_percent_fewer_modules(user_id, most_recent_monday):
 
 
 def calculate_percent_fewer_goals(user_id, most_recent_monday):
-    total_users = User.query.count() - 1 # subtract 1 to exclude the current user
+    # calculate the percentage of users who have completed fewer goals this week than the current user
+    total_users = User.query.count() - 1  # subtract 1 to exclude the current user
     user_goals_completed = UserGoal.query.filter(
         UserGoal.user_id == user_id, UserGoal.date_completed >= most_recent_monday
     ).count()
@@ -64,11 +66,8 @@ def get_days_left():
     try:
         # Calculate the date of the most recent Monday
         most_recent_monday = get_most_recent_monday()
-        logger.debug(f"Most recent Monday: {most_recent_monday}")
-
         # Calculate the number of days left in the week
         days_left = 7 - (datetime.now(timezone.utc).date() - most_recent_monday).days
-        logger.debug(f"Days left in the week: {days_left}")
 
         return jsonify(days_left), 200
 
@@ -83,14 +82,7 @@ def get_weekly_rankings():
     try:
         # Calculate the date of the most recent Monday
         most_recent_monday = get_most_recent_monday()
-        logger.debug(f"Most recent Monday: {most_recent_monday}")
 
-        all_users = User.query.all()
-        logger.debug(f"Number of users: {len(all_users)}")
-        all_daily_user_activities = DailyUserActivity.query.all()
-        logger.debug(
-            f"Number of daily user activities: {len(all_daily_user_activities)}"
-        )
         # Query to get users with activity since the most recent Monday and non-zero XP
         # order by xp earned in descending order
         users = (
@@ -108,7 +100,6 @@ def get_weekly_rankings():
             return jsonify({"error": "No users found"}), 404
         # serialize the users data
         users_data = [{"username": user.username, "xp": user.xp} for user in users]
-        logger.debug(f"Users data: {users_data}")
         return jsonify(users_data), 200
 
     except Exception as e:

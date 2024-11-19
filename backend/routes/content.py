@@ -261,7 +261,6 @@ def mark_module_complete_and_open_next(module_id, user_id):
         user_module.completed = True
         user_module.completed_date = db.func.current_timestamp()
         db.session.commit()
-        logger.info(f"Marked module {module_id} as complete")
 
         # Update the user's daily XP
         if (

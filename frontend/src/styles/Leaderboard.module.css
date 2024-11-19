@@ -34,33 +34,6 @@
     gap: 3px;
 }
 
-.rankings {
-    display: flex;
-    width: 294px;
-    justify-content: space-between;
-    align-items: center;
-    padding: 4px 6px;
-    border-radius: 4px;
-}
-
-.greenHighlight {
-    background: rgba(144, 234, 136, 0.50);
-}
-
-.rankText {
-    display: flex;
-    gap: 4px;
-}
-
-.rankText p {
-    font-size: 18px;
-}
-
-.xpText {
-    color: #777;
-    font-size: 16px;
-}
-
 .emphasisText {
     color: #3c4dff;
     font-weight: 700;

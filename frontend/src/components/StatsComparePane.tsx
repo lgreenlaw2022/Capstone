@@ -49,8 +49,8 @@ export default function StatsComparePane() {
                         You have a longer streak than{" "}
                         <span className={styles.boldText}>
                             {percentShorterStreak}%
-                        </span>
-                        {" "}of users
+                        </span>{" "}
+                        of users
                     </p>
                 </div>
                 <div>
@@ -59,8 +59,8 @@ export default function StatsComparePane() {
                         You have completed more modules this week than{" "}
                         <span className={styles.boldText}>
                             {percentFewerModules}%
-                        </span>
-                        {" "}of users
+                        </span>{" "}
+                        of users
                     </p>
                 </div>
                 <div>
@@ -69,11 +69,10 @@ export default function StatsComparePane() {
                         You have completed more goals this week than{" "}
                         <span className={styles.boldText}>
                             {percentFewerGoals}%
-                        </span>
-                        {" "}of users
+                        </span>{" "}
+                        of users
                     </p>
                 </div>
-                {/* TODO: update h3 style here */}
             </div>
         </div>
     );

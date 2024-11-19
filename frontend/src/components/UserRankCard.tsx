@@ -1,4 +1,4 @@
-import styles from "../styles/Leaderboard.module.css";
+import styles from "../styles/UserRankCard.module.css";
 
 interface UserRankProps {
     // TODO: make this a type?

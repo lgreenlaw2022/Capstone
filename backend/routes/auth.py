@@ -65,7 +65,6 @@ def login():
     # Check if the user exists and the password is correct
     if user and user.check_password(data["password"]):
         access_token = create_access_token(identity=user.id)
-        logger.info(f"User {user.id} logged in successfully")
         if reset_streak(user):
             logger.info(f"User {user.id} streak reset due to inactivity")
         return (
