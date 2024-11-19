@@ -97,6 +97,7 @@ def get_weekly_rankings():
             User.query.with_entities(User.username, User.xp)
             .join(DailyUserActivity, User.id == DailyUserActivity.user_id)
             .filter(DailyUserActivity.date >= most_recent_monday, User.xp > 0)
+            .distinct(User.username)
             .order_by(User.xp.desc())
             .all()
         )
