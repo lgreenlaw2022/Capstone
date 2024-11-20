@@ -1,12 +1,15 @@
-import styles from "../styles/UserRankCard.module.css";
+import Image from "next/image";
 
+import styles from "../styles/UserRankCard.module.css";
+import giftIcon from "../../public/assets/gift-small.svg";
+    
 interface UserRankProps {
     // TODO: make this a type?
     user: {
         username: string;
         xp: number;
     };
-    index: number; // safe to use index?
+    index: number;
 }
 
 export default function UserRankCard({ user, index }: UserRankProps) {
@@ -15,14 +18,11 @@ export default function UserRankCard({ user, index }: UserRankProps) {
 
     return (
         <div
-            key={index}     
             className={`${styles.rankings} ${isTopFive ? styles.greenHighlight : ""}`}
         >
             <div className={styles.rankText}>
                 <h3>{rank}</h3>
-                {isTopFive ? (
-                    <img src="../assets/gift-small.svg" alt="gift" />
-                ) : null}
+                {isTopFive ? <Image src={giftIcon} alt="gift" width={25} height={24} /> : null}
                 <p>{user.username}</p>
             </div>
             <p className={styles.xpText}>{user.xp} XP</p>

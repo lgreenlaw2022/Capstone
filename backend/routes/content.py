@@ -315,7 +315,7 @@ def mark_module_complete_and_open_next(module_id, user_id):
         logger.error(
             f"Error marking module {module_id} as complete and opening next modules: {str(e)}"
         )
-        return {"error": str(e)}
+        raise
 
 
 def are_all_modules_completed(unit_id, user_id):

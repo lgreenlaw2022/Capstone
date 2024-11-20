@@ -20,6 +20,8 @@ def get_most_recent_monday():
 def calculate_percent_shorter_streak(user_streak):
     # calculate the percentage of users who have a shorter streak than the current user
     total_users = User.query.count() - 1  # subtract 1 to exclude the current user
+    if total_users < 1:
+        return 100.0  # If the user is the only one, they are ahead of 100% of users
     # TODO: consider adding index to streak column
     users_with_shorter_streak = User.query.filter(User.streak < user_streak).count()
     percent_shorter_streak = (users_with_shorter_streak / total_users) * 100
@@ -29,6 +31,8 @@ def calculate_percent_shorter_streak(user_streak):
 def calculate_percent_fewer_modules(user_id, most_recent_monday):
     # calculate the percentage of users who have completed fewer modules this week than the current user
     total_users = User.query.count() - 1  # subtract 1 to exclude the current user
+    if total_users < 1:
+        return 100.0  # If the user is the only one, they are ahead of 100% of users
     user_modules_completed = UserModule.query.filter(
         UserModule.user_id == user_id, UserModule.completed_date >= most_recent_monday
     ).count()
@@ -46,6 +50,8 @@ def calculate_percent_fewer_modules(user_id, most_recent_monday):
 def calculate_percent_fewer_goals(user_id, most_recent_monday):
     # calculate the percentage of users who have completed fewer goals this week than the current user
     total_users = User.query.count() - 1  # subtract 1 to exclude the current user
+    if total_users < 1:
+        return 100.0  # If the user is the only one, they are ahead of 100% of users
     user_goals_completed = UserGoal.query.filter(
         UserGoal.user_id == user_id, UserGoal.date_completed >= most_recent_monday
     ).count()
@@ -60,17 +66,18 @@ def calculate_percent_fewer_goals(user_id, most_recent_monday):
     return percent_fewer_goals
 
 
+def get_days_until_next_sunday():
+    today = datetime.now(timezone.utc).date()
+    days_until_sunday = (6 - today.weekday()) % 7
+    return days_until_sunday
+
+
 @leaderboard_bp.route("/days-left", methods=["GET"])
-@jwt_required()
 def get_days_left():
     try:
-        # Calculate the date of the most recent Monday
-        most_recent_monday = get_most_recent_monday()
         # Calculate the number of days left in the week
-        days_left = 7 - (datetime.now(timezone.utc).date() - most_recent_monday).days
-
+        days_left = get_days_until_next_sunday()
         return jsonify(days_left), 200
-
     except Exception as e:
         logger.error(f"An error occurred while fetching days left: {str(e)}")
         return jsonify({"error": "An error occurred while fetching days left"}), 500

@@ -72,12 +72,18 @@ def get_user_stats():
 @user_bp.route("/xp", methods=["GET"])
 @jwt_required()
 def get_user_xp():
-    user_id = get_jwt_identity()
-    if user_id is None:
-        return jsonify({"error": "Invalid user identity"}), 400
+    try:
+        user_id = get_jwt_identity()
+        if user_id is None:
+            logger.error("Invalid user identity when fetching XP")
+            return jsonify({"error": "Invalid user identity"}), 400
 
-    user = User.query.get(user_id)
-    if user:
-        return jsonify({"xp": user.xp}), 200
-    else:
-        return jsonify({"error": "User xp not found"}), 404
+        user = User.query.get(user_id)
+        if user:
+            return jsonify({"xp": user.xp}), 200
+        else:
+            logger.error(f"User not found when fetching XP: {user_id}")
+            return jsonify({"error": "User not found"}), 404
+    except Exception as e:
+        logger.error(f"An error occurred while fetching user XP: {str(e)}")
+        return jsonify({"error": "An error occurred while fetching user XP"}), 500

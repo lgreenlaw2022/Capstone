@@ -15,11 +15,12 @@ export default function Leaderboard() {
 
     const fetchRankings = async () => {
         try {
-            // fetch xp from backend
-            const data = await getLeaderboard();
-            const days = await getLeaderboardDaysLeft();
+            const [data, days] = await Promise.all([
+                getLeaderboard(),
+                getLeaderboardDaysLeft()
+            ]);
             setUsers(data);
-            setDaysLeft(days);
+            setDaysLeft(days);  
         } catch (error) {
             console.error("Error fetching xp", error);
         }
@@ -54,7 +55,7 @@ export default function Leaderboard() {
             </div>
             <div className={styles.rankingsContainer}>
                 {users.map((user, index) => (
-                    <UserRankCard key={index} user={user} index={index} />
+                    <UserRankCard key={user.username} user={user} index={index} />
                 ))}
             </div>
             <div>
