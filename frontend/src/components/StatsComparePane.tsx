@@ -8,31 +8,23 @@ export default function StatsComparePane() {
     const [percentFewerModules, setPercentFewerModules] = useState<number>(0);
     const [percentFewerGoals, setPercentFewerGoals] = useState<number>(0);
 
-    const fetchXp = async () => {
+    const fetchData = async () => {
         try {
-            // fetch xp from backend
-            const data = await getUserXp();
-            setXp(data["xp"]);
+            const [xpData, comparisonStats] = await Promise.all([
+                getUserXp(),
+                getComparisonStats(),
+            ]);
+            setXp(xpData["xp"]);
+            setPercentShorterStreak(comparisonStats["percent_shorter_streak"]);
+            setPercentFewerModules(comparisonStats["percent_fewer_modules"]);
+            setPercentFewerGoals(comparisonStats["percent_fewer_goals"]);
         } catch (error) {
-            console.error("Error fetching xp", error);
-        }
-    };
-
-    const fetchComparisonStats = async () => {
-        try {
-            // fetch comparison stats from backend
-            const stats = await getComparisonStats();
-            setPercentShorterStreak(stats["percent_shorter_streak"]);
-            setPercentFewerModules(stats["percent_fewer_modules"]);
-            setPercentFewerGoals(stats["percent_fewer_goals"]);
-        } catch (error) {
-            console.error("Error fetching comparison stats", error);
+            console.error("Error fetching comparison stats data", error);
         }
     };
 
     useEffect(() => {
-        fetchXp();
-        fetchComparisonStats();
+        fetchData();
     }, []);
 
     return (

@@ -65,8 +65,12 @@ def login():
     # Check if the user exists and the password is correct
     if user and user.check_password(data["password"]):
         access_token = create_access_token(identity=user.id)
-        if reset_streak(user):
-            logger.info(f"User {user.id} streak reset due to inactivity")
+        try: 
+            if reset_streak(user):
+                logger.info(f"User {user.id} streak reset due to inactivity")
+        except Exception as e:
+            logger.error(f"Error resetting streak for user {user.id}: {str(e)}")
+            # continue with login despite streak failure
         return (
             jsonify({"message": "Login successful", "access_token": access_token}),
             200,

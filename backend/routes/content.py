@@ -263,10 +263,7 @@ def mark_module_complete_and_open_next(module_id, user_id):
         db.session.commit()
 
         # Update the user's daily XP
-        if (
-            current_module.module_type != ModuleType.BONUS_CHALLENGE
-            or current_module.module_type != ModuleType.CHALLENGE
-        ):
+        if current_module.module_type not in [ModuleType.BONUS_CHALLENGE, ModuleType.CHALLENGE]:
             earned_xp = XP_FOR_COMPLETING_MODULE
         else:  # Bonus and practice challenges have different XP values
             earned_xp = XP_FOR_COMPLETING_CHALLENGE

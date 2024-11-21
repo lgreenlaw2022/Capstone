@@ -5,7 +5,7 @@ from models import Unit, User, db, UserModule, QuizQuestion, UserQuizQuestion, M
 import random
 from enums import ModuleType
 from services.user_activity_service import update_daily_xp
-from config.constants import XP_FOR_COMPLETING_REVIEW
+from config.constants import XP_FOR_COMPLETING_REVIEW, QUIZ_ACCURACY_THRESHOLD
 
 import logging
 
@@ -164,17 +164,15 @@ def submit_weekly_review():
             return jsonify({"error": "Accuracy is required"}), 400
         if not (0 <= accuracy <= 100):
             return jsonify({"error": "Accuracy must be between 0 and 100"}), 400
-        ACCURACY_THRESHOLD = 80  # TODO Define the threshold for passing as a constant
 
         # mark module as complete if accuracy is above passing threshold
-        if accuracy >= ACCURACY_THRESHOLD:
+        if accuracy >= QUIZ_ACCURACY_THRESHOLD:
             user_id = get_jwt_identity()
             user = User.query.get(user_id)
             user.weekly_review_done = True
-            # TODO: add XP
-            db.session.commit()
             update_daily_xp(user_id, XP_FOR_COMPLETING_REVIEW)
-
+            db.session.commit()
+            
         logger.debug(f"Submitting weekly review data for user {user_id}")
         return jsonify({"message": "Weekly review data submitted successfully"}), 200
     except Exception as e:
@@ -236,9 +234,8 @@ def submit_unit_quiz_score(unit_id):
             return jsonify({"error": "Accuracy is required"}), 400
         if not (0 <= accuracy <= 100):
             return jsonify({"error": "Accuracy must be between 0 and 100"}), 400
-        ACCURACY_THRESHOLD = 80  # TODO Define the threshold for passing as a constant
 
-        if accuracy >= ACCURACY_THRESHOLD:
+        if accuracy >= QUIZ_ACCURACY_THRESHOLD:
             user_id = get_jwt_identity()
             # TODO: reward XP
             # mark questions as practiced (assuming they got all questions correct)

@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import CheckConstraint
 from datetime import datetime, timezone
 from enums import BadgeType, MetricType, TimePeriodType, ModuleType, QuizType, EventType
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -17,9 +18,7 @@ class User(db.Model):
     username = db.Column(db.String(40), nullable=False, unique=True)
     password = db.Column(db.String(100), nullable=False)  # hashed passwords
     email = db.Column(db.String(100), nullable=False, unique=True)
-    # TODO: do I need the time here as well?
     created_date = db.Column(db.DateTime, default=current_time)  # Set upon creation
-    # TODO: monitor if this is redundant with the DailyUserActivity table
     # TODO: monitor if I want to index these
     streak = db.Column(db.Integer, default=0)
     gems = db.Column(db.Integer, default=0)
@@ -27,8 +26,12 @@ class User(db.Model):
     # TODO: uncomment once functionality is added
     # dark_mode = db.Column(db.Boolean, default=False)  # UI preference
     leaderboard_on = db.Column(db.Boolean, default=True)  # Show leaderboard
-    # TODO: consider if this should be stored in the DailyUserActivity table
     weekly_review_done = db.Column(db.Boolean, default=False)  # complete/incomplete
+
+    __table_args__ = (
+        CheckConstraint('gems >= 0', name='check_gems_non_negative'),
+        CheckConstraint('xp >= 0', name='check_xp_non_negative'),
+    )
 
     # need to add the relationships to all the other tables
     # eg. user.badges + cascade delete
