@@ -1,4 +1,6 @@
-from badge_awarding_service import BadgeAwardingService
+from config.constants import XP_FOR_COMPLETING_MODULE, XP_FOR_COMPLETING_CHALLENGE
+from services.user_activity_service import update_daily_xp
+from services.badge_awarding_service import BadgeAwardingService
 from enums import EventType, ModuleType
 from flask import Blueprint, request, jsonify, send_file, abort
 import logging
@@ -259,7 +261,14 @@ def mark_module_complete_and_open_next(module_id, user_id):
         user_module.completed = True
         user_module.completed_date = db.func.current_timestamp()
         db.session.commit()
-        logger.info(f"Marked module {module_id} as complete")
+
+        # Update the user's daily XP
+        if current_module.module_type not in [ModuleType.BONUS_CHALLENGE, ModuleType.CHALLENGE]:
+            earned_xp = XP_FOR_COMPLETING_MODULE
+        else:  # Bonus and practice challenges have different XP values
+            earned_xp = XP_FOR_COMPLETING_CHALLENGE
+        logger.debug(f"User {user_id} earned {earned_xp} XP for completing a module")
+        update_daily_xp(user_id, earned_xp)
 
         if current_module.module_type == ModuleType.BONUS_CHALLENGE:
             return {"message": "Bonus challenge marked as complete"}
@@ -303,7 +312,7 @@ def mark_module_complete_and_open_next(module_id, user_id):
         logger.error(
             f"Error marking module {module_id} as complete and opening next modules: {str(e)}"
         )
-        return jsonify({"error": str(e)}), 500
+        raise
 
 
 def are_all_modules_completed(unit_id, user_id):

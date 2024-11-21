@@ -50,12 +50,14 @@ def create_app():
     from routes.content import content_bp
     from routes.badges import badges_bp
     from routes.review import review_bp
+    from routes.leaderboard import leaderboard_bp
 
     app.register_blueprint(user_bp, url_prefix="/user")
     app.register_blueprint(auth_bp, url_prefix="/auth")
     app.register_blueprint(content_bp, url_prefix="/content")
     app.register_blueprint(badges_bp, url_prefix="/badges")
     app.register_blueprint(review_bp, url_prefix="/review")
+    app.register_blueprint(leaderboard_bp, url_prefix="/leaderboard")
 
     # Create all database tables within the application context
     # custom CLI command to run the seed script

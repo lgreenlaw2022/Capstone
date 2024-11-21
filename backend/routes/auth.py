@@ -9,6 +9,7 @@ import logging
 
 from app import db
 from models import User
+from services.user_activity_service import reset_streak
 
 auth_bp = Blueprint("auth", __name__)
 
@@ -38,7 +39,7 @@ def register():
         return jsonify({"error": "Email already exists"}), 400
 
     # Create a new user
-    new_user = User(username=data["username"], email=data["email"])
+    new_user = User(username=data["username"], email=data["email"], xp=0)
     new_user.set_password(data["password"])  # use a secure hashed password
 
     # Add the user to the database
@@ -64,6 +65,12 @@ def login():
     # Check if the user exists and the password is correct
     if user and user.check_password(data["password"]):
         access_token = create_access_token(identity=user.id)
+        try: 
+            if reset_streak(user):
+                logger.info(f"User {user.id} streak reset due to inactivity")
+        except Exception as e:
+            logger.error(f"Error resetting streak for user {user.id}: {str(e)}")
+            # continue with login despite streak failure
         return (
             jsonify({"message": "Login successful", "access_token": access_token}),
             200,

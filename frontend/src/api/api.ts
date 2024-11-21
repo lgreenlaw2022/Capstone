@@ -30,6 +30,20 @@ export const getUserStats = async () => {
     }
 };
 
+export const getUserXp = async () => {
+    try {
+        const response = await axiosInstance.get('/user/xp');
+        return response.data;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error fetching user xp:', error.message);
+        } else {
+            console.error('Unknown error fetching user xp:', error);
+        }
+        throw error;
+    }
+};
+
 export const registerUser = async (username: string, email: string, password: string) => {
     try {
         await logoutUser(); // Ensure users are logged out before registering
@@ -339,6 +353,49 @@ export const submitUnitReviewScore = async (unitId: number, accuracy: number) =>
             console.error('Error submitting unit review score:', error.message);
         } else {
             console.error('Unknown error submitting unit review score:', error);
+        }
+        throw error;
+    }
+}
+
+export const getLeaderboard = async () => {
+    try {
+        console.log('Fetching leaderboard');
+        const response = await axiosInstance.get('/leaderboard/weekly-rankings');
+        return response.data;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error fetching leaderboard:', error.message);
+        } else {
+            console.error('Unknown error fetching leaderboard:', error);
+        }
+        throw error;
+    }
+}
+
+export const getLeaderboardDaysLeft = async () => {
+    try {
+        const response = await axiosInstance.get('/leaderboard/days-left');
+        return response.data;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error fetching leaderboard days left:', error.message);
+        } else {
+            console.error('Unknown error fetching leaderboard days left:', error);
+        }
+        throw error;
+    }
+}
+
+export const getComparisonStats = async () => {
+    try {
+        const response = await axiosInstance.get('/leaderboard/weekly-comparison');
+        return response.data;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error fetching comparison stats:', error.message);
+        } else {
+            console.error('Unknown error fetching comparison stats:', error);
         }
         throw error;
     }

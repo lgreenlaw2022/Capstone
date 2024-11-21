@@ -12,17 +12,12 @@ const QuizScore: React.FC<QuizScoreProps> = ({
     numQuestions,
     onContinue,
 }) => {
-    const XP_PER_QUESTION = 10;
+    const XP_PER_QUIZ = 10;
     const ACCURACY_THRESHOLD = 80; // Threshold for passing
 
     // Calculate accuracy percentage
     const accuracy = Math.round((numCorrectAnswers / numQuestions) * 100);
     const passed = accuracy >= ACCURACY_THRESHOLD;
-
-    // Calculate XP earned
-    const xpEarned = Math.round(
-        (accuracy / 100) * numQuestions * XP_PER_QUESTION
-    );
 
     // Determine feedback text
     const feedbackTitle = passed ? "Good work!" : "Not quite";
@@ -38,7 +33,7 @@ const QuizScore: React.FC<QuizScoreProps> = ({
                 </div>
                 {passed ? (
                     <div>
-                        <h1 className={styles.stat}>{xpEarned}</h1>
+                        <h1 className={styles.stat}>{XP_PER_QUIZ}</h1>
                         <p>XP Earned</p>
                     </div>
                 ) : (

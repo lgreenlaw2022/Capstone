@@ -1,0 +1,8 @@
+.statsContainer {
+    display: flex;
+    justify-content: center;
+    gap: 105px;
+    padding: 50px;
+    /* TODO: resolve centering hack in global styles */
+    margin-right: -100px;
+}

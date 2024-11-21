@@ -10,6 +10,7 @@ from models import (
     Badge,
     UserBadge,
     UserUnit,
+    DailyUserActivity,
 )
 from enums import ModuleType, BadgeType, EventType
 import logging
@@ -215,6 +216,11 @@ def clear_badges():
     db.session.commit()
 
 
+def clear_daily_user_activity():
+    db.session.query(DailyUserActivity).delete()
+    db.session.commit()
+
+
 def seed_data():
     with app.app_context():
 
@@ -222,6 +228,7 @@ def seed_data():
         clear_user_modules()
         clear_user_badges()
         clear_user_units()
+        clear_daily_user_activity()
 
         # Check if the course already exists
         course = Course.query.filter_by(title="Technical Interview Prep").first()
