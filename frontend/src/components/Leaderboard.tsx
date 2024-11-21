@@ -5,7 +5,7 @@ import { getLeaderboard, getLeaderboardDaysLeft } from "@/api/api";
 
 interface User {
     username: string;
-    xp: number;
+    weekly_xp: number;
 }
 
 export default function Leaderboard() {

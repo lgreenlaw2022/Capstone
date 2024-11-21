@@ -7,7 +7,7 @@ interface UserRankProps {
     // TODO: make this a type?
     user: {
         username: string;
-        xp: number;
+        weekly_xp: number;
     };
     index: number;
 }
@@ -25,7 +25,7 @@ export default function UserRankCard({ user, index }: UserRankProps) {
                 {isTopFive ? <Image src={giftIcon} alt="gift" width={25} height={24} /> : null}
                 <p>{user.username}</p>
             </div>
-            <p className={styles.xpText}>{user.xp} XP</p>
+            <p className={styles.xpText}>{user.weekly_xp} XP</p>
         </div>
     );
 }

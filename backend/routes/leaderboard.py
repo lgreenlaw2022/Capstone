@@ -93,11 +93,11 @@ def get_weekly_rankings():
         # Query to get users with activity since the most recent Monday and non-zero XP
         # order by xp earned in descending order
         users = (
-            User.query.with_entities(User.username, User.xp)
+            db.session.query(User.username, db.func.sum(DailyUserActivity.xp_earned).label('weekly_xp'))
             .join(DailyUserActivity, User.id == DailyUserActivity.user_id)
             .filter(DailyUserActivity.date >= most_recent_monday)
-            .distinct(User.username)
-            .order_by(User.xp.desc())
+            .group_by(User.username)
+            .order_by(db.func.sum(DailyUserActivity.xp_earned).desc())
             .all()
         )
 
@@ -106,7 +106,7 @@ def get_weekly_rankings():
             logger.error("No users found")
             return jsonify({"error": "No users found"}), 404
         # serialize the users data
-        users_data = [{"username": user.username, "xp": user.xp} for user in users]
+        users_data = [{"username": user.username, "weekly_xp": user.weekly_xp} for user in users]
         return jsonify(users_data), 200
 
     except Exception as e:
