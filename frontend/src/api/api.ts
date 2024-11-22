@@ -400,3 +400,17 @@ export const getComparisonStats = async () => {
         throw error;
     }
 }
+
+export const getNumGoalsCompletedThisWeek = async () => {
+    try {
+        const response = await axiosInstance.get('/goals/week-completed-count');
+        return response.data;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error fetching num goals completed this week:', error.message);
+        } else {
+            console.error('Unknown error fetching num goals completed this week:', error);
+        }
+        throw error;
+    }
+}

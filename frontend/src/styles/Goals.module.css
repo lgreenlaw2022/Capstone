@@ -1,7 +1,14 @@
 .goalsContainer {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     padding: 50px;
+    gap: 25px;
+}
+
+.containerRow {
+    display: flex;
+    align-items: center;
     gap: 34px;
 }
