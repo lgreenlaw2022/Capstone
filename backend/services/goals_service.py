@@ -1,9 +1,14 @@
 from datetime import datetime, timedelta, timezone, date
+import logging
 from utils import get_most_recent_monday
 from enums import MetricType, TimePeriodType
 from typing import Dict, List, Tuple
 from models import db, DailyUserActivity, Goal, UserGoal
-from sqlalchemy import and_, func # TODO: what is and_?
+from sqlalchemy import and_, func  # TODO: what is and_?
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+
 
 # TODO: should I rename this file to match closer?
 class GoalProgressCalculator:
@@ -19,21 +24,35 @@ class GoalProgressCalculator:
         self, user_id: int, time_period: TimePeriodType
     ) -> List[Dict]:
         """Calculate progress for goals filtered by time period."""
+        logger.debug(
+            f"Inside goals service for user {user_id} and time period {time_period}"
+        )
+        # TODO: CRASHES HERE
+        all_goals = db.query(Goal).all()
+        logger.debug(f"all_goals: {all_goals}")
+        user_goals = db.query(UserGoal).filter(UserGoal.user_id == user_id).all()
+        logger.debug(f"user_goals: {user_goals}")
 
         # get all active goals for the user
-        open_goals = db.query(UserGoal).filter(
-            and_(UserGoal.user_id == user_id, UserGoal.date_completed.is_(None))
+        open_goals = (
+            db.query(UserGoal)
+            .filter(UserGoal.user_id == user_id)
+            .filter(UserGoal.date_completed.is_(None))
         )
+        logger.debug(f"open_goals: {open_goals}")
 
         query = open_goals.join(Goal).filter(Goal.time_period == time_period)
         active_goals = query.all()
+        logger.debug(f"active_goals: {active_goals}")
 
         # calculate progress for each goal
         progress_results = []
         for user_goal in active_goals:
+            logger.debug(f"Calculating progress for goal: {user_goal.goal.title}")
             progress = self._calculate_single_goal_progress(user_goal)
             if progress["is_completed"]:  # TODO: do I want to keep this value?
                 self._mark_goal_completed(user_goal)
+                logger.info(f"Goal completed: {progress['title']}")
             progress_results.append(progress)
 
         return progress_results
@@ -61,14 +80,16 @@ class GoalProgressCalculator:
             "title": goal.title,
             "current_value": current_value,
             "target_value": target_value,
-            "progress_percentage": progress_percentage, # TODO: decide if I want to keep this
+            "progress_percentage": progress_percentage,  # TODO: decide if I want to keep this
             "time_period": goal.time_period.value,
-            "is_completed": progress_percentage >= 100, # TODO: decide if I want to keep this
+            "is_completed": progress_percentage
+            >= 100,  # TODO: decide if I want to keep this
         }
 
     def _calculate_modules_progress(
         self, user_id: int, start_date: date, target: int
     ) -> Tuple[int, int]:
+        logger.debug(f"Calculating modules progress for user {user_id}")
         total_modules_completed = (
             db.query(func.sum(DailyUserActivity.modules_completed))
             .filter(
@@ -86,6 +107,7 @@ class GoalProgressCalculator:
     def _calculate_gems_progress(
         self, user_id: int, start_date: date, target: int
     ) -> Tuple[int, int]:
+        logger.debug(f"Calculating gems progress for user {user_id}")
         total_gems_earned = (
             db.query(func.sum(DailyUserActivity.gems_earned))
             .filter(
@@ -103,6 +125,7 @@ class GoalProgressCalculator:
         self, user_id: int, start_date: date, target: int
     ) -> Tuple[int, int]:
         """Calculate the number of days a user has extended their streak."""
+        logger.debug(f"Calculating streak progress for user {user_id}")
         # TODO: this name is confusing because its just measuring days the user completed something, not necessarily "extended" if they broke it within the time period
         streak_days = (
             db.query(func.count(DailyUserActivity.date))
@@ -122,23 +145,32 @@ class GoalProgressCalculator:
         self, assigned_date: date, time_period: TimePeriodType
     ) -> date:
         """Calculate the start of the current time period."""
-        now = datetime.now(timezone.utc).date()
+        logger.debug(f"Calculating time period start for {time_period}")
         if time_period == TimePeriodType.DAILY:
-            return now
+            return assigned_date
         elif time_period == TimePeriodType.WEEKLY:
-            return get_most_recent_monday(now) # TODO: verify this works
+            return get_most_recent_monday(assigned_date)  # TODO: verify this works
+        elif time_period == TimePeriodType.MONTHLY:
+            return assigned_date.replace(day=1)
         return assigned_date
 
     def _get_time_period_end(
         self, start_date: date, time_period: TimePeriodType
     ) -> date:
         """Calculate the end of the current time period."""
+        logger.debug(f"Calculating time period end for {time_period}")
         if time_period == TimePeriodType.DAILY:
             return start_date + timedelta(days=1)
         elif time_period == TimePeriodType.WEEKLY:
             # Calculate the number of days until the next Sunday
-            days_until_sunday = 6 - start_date.weekday() # TODO: verify this isn't a day off
+            days_until_sunday = (
+                6 - start_date.weekday()
+            )  # TODO: verify this isn't a day off
             return start_date + timedelta(days=days_until_sunday)
+        elif time_period == TimePeriodType.MONTHLY:
+            # Calculate the last day of the month
+            next_month = start_date.replace(day=28) + timedelta(days=4)
+            return next_month - timedelta(days=next_month.day)
         return None
 
     def _mark_goal_completed(self, user_goal: UserGoal) -> None:
@@ -146,52 +178,3 @@ class GoalProgressCalculator:
         if not user_goal.date_completed:
             user_goal.date_completed = datetime.now(timezone.utc)
             db.session.commit()
-
-
-class GoalService:
-    # TODO: why is this necessary? -- why not just call the calculators from the routes directly?
-    # TODO: again, why session?
-    def __init__(self, db_session: Session):
-        self.db = db_session
-        self.calculator = GoalProgressCalculator(db_session)
-
-    def get_daily_goals_progress(self, user_id: int) -> Dict:
-        """Get daily goals progress for a user."""
-        progress_data = self.calculator.calculate_user_goals_progress(
-            user_id, TimePeriodType.DAILY
-        )
-
-        return {
-            "goals": progress_data,
-            "last_updated": datetime.now(timezone.utc).isoformat(),
-            # TODO: why would I want this?
-            "next_refresh": self._get_next_daily_refresh().isoformat(),
-        }
-
-    def get_weekly_goals_progress(self, user_id: int) -> Dict:
-        """Get weekly goals progress for a user."""
-        progress_data = self.calculator.calculate_user_goals_progress(
-            user_id, TimePeriodType.WEEKLY
-        )
-
-        return {
-            "goals": progress_data,
-            "last_updated": datetime.now(timezone.utc).isoformat(),
-            # TODO: why would I want this?
-            "next_refresh": self._get_next_weekly_refresh().isoformat(),
-        }
-
-    def _get_next_daily_refresh(self) -> datetime:
-        """Get the next time daily goals should refresh."""
-        now = datetime.now(timezone.utc)
-        tomorrow = now + timedelta(days=1)
-        # TODO: again, why not just use the date?
-        return tomorrow.replace(hour=0, minute=0, second=0, microsecond=0)
-
-    def _get_next_weekly_refresh(self) -> datetime:
-        """Get the next time weekly goals should refresh."""
-        now = datetime.now(timezone.utc)
-        days_until_next_week = 7 - now.weekday()
-        next_week = now + timedelta(days=days_until_next_week)
-        # TODO: again, why not just use the date?
-        return next_week.replace(hour=0, minute=0, second=0, microsecond=0)

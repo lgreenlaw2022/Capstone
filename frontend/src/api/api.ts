@@ -414,3 +414,45 @@ export const getNumGoalsCompletedThisWeek = async () => {
         throw error;
     }
 }
+
+export const getDailyGoals = async () => {
+    try {
+        const response = await axiosInstance.get('/goals/daily');
+        return response.data;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error fetching daily goals:', error.message);
+        } else {
+            console.error('Unknown error fetching daily goals:', error);
+        }
+        throw error;
+    }
+}
+
+export const getWeeklyGoals = async () => {
+    try {
+        const response = await axiosInstance.get('/goals/weekly');
+        return response.data;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error fetching weekly goals:', error.message);
+        } else {
+            console.error('Unknown error fetching weekly goals:', error);
+        }
+        throw error;
+    }
+}
+
+export const getMonthlyGoals = async () => {
+    try {
+        const response = await axiosInstance.get('/goals/monthly');
+        return response.data;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error fetching monthly goals:', error.message);
+        } else {
+            console.error('Unknown error fetching monthly goals:', error);
+        }
+        throw error;
+    }
+}

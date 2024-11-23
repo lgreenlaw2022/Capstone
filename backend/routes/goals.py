@@ -25,6 +25,7 @@ def get_daily_goals():
             return jsonify({"error": "User not found"}), 404
 
         calculator = GoalProgressCalculator()
+        logger.debug("Using calculator to calculate daily goals")
         daily_goals = calculator.calculate_user_goals_progress(
             user_id, TimePeriodType.DAILY
         )
@@ -62,6 +63,32 @@ def get_weekly_goals():
     except Exception as e:
         logger.error("An error occurred while fetching weekly goals")
         return jsonify({"error": "An error occured while fetching weekly goals"}), 500
+
+
+@goals_bp.route("/monthly", methods=["GET"])
+@jwt_required()
+def get_monthly_goals():
+    try:
+        user_id = get_jwt_identity()
+        # TODO: is it a waste to query the user here?
+        user = User.query.get(user_id)
+        if user is None:
+            return jsonify({"error": "User not found"}), 404
+
+        calculator = GoalProgressCalculator()
+        logger.debug("Using calculator to calculate monthly goals")
+        monthly_goals = calculator.calculate_user_goals_progress(
+            user_id, TimePeriodType.MONTHLY
+        )
+
+        if len(monthly_goals) == 0:
+            logger.info("No monthly goals found")
+            return jsonify([]), 200
+
+        return jsonify(monthly_goals), 200
+    except Exception as e:
+        logger.error("An error occurred while fetching monthly goals")
+        return jsonify({"error": "An error occured while fetching monthly goals"}), 500
 
 
 @goals_bp.route("/week-completed-count", methods=["GET"])

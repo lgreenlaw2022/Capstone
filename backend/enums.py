@@ -11,6 +11,7 @@ class MetricType(Enum):
 
 class TimePeriodType(Enum):
     DAILY = "daily"
+    WEEKLY = "weekly"
     MONTHLY = "monthly"
 
 

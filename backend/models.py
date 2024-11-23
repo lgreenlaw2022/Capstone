@@ -29,8 +29,8 @@ class User(db.Model):
     weekly_review_done = db.Column(db.Boolean, default=False)  # complete/incomplete
 
     __table_args__ = (
-        CheckConstraint('gems >= 0', name='check_gems_non_negative'),
-        CheckConstraint('xp >= 0', name='check_xp_non_negative'),
+        CheckConstraint("gems >= 0", name="check_gems_non_negative"),
+        CheckConstraint("xp >= 0", name="check_xp_non_negative"),
     )
 
     # need to add the relationships to all the other tables
@@ -192,7 +192,7 @@ class UserModule(db.Model):
     open = db.Column(
         db.Boolean, default=False
     )  # flag for if the user can start the module
-    completed_date = db.Column(db.DateTime, nullable=True) # used to help with review
+    completed_date = db.Column(db.DateTime, nullable=True)  # used to help with review
 
     user = db.relationship("User", back_populates="modules")
     module = db.relationship("Module", back_populates="users")
