@@ -99,6 +99,7 @@ class Goal(db.Model):
     __tablename__ = "goals"
 
     id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.Text, nullable=False)
     metric = db.Column(db.Enum(MetricType), nullable=False)
     requirement = db.Column(
         db.Integer, nullable=False

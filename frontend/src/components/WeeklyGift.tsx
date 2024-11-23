@@ -7,11 +7,15 @@ import { getNumGoalsCompletedThisWeek } from "@/api/api";
 
 export default function WeeklyGift() {
     const [numGoalsCompleted, setNumGoalsCompleted] = useState(0);
+    const [percentage, setPercentage] = useState(0);
 
     const fetchData = async () => {
         const data = await getNumGoalsCompletedThisWeek();
         setNumGoalsCompleted(data);
-    }
+        const calculatedPercentage =
+            data.numGoalsCompleted > 0 ? (data.numGoalsCompleted / 7) * 100 : 0;
+        setPercentage(calculatedPercentage);
+    };
 
     useEffect(() => {
         fetchData();
@@ -29,7 +33,7 @@ export default function WeeklyGift() {
                 <div>
                     <div>
                         {/* TODO: figure out why this is expanding to the full width */}
-                        <ProgressBar percentage={25} />
+                        <ProgressBar percentage={percentage} />
                     </div>
                     <p>{numGoalsCompleted} / 7</p>
                 </div>

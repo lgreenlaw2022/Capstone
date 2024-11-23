@@ -1,8 +1,9 @@
+from services.goals_service import GoalProgressCalculator
 from utils import get_most_recent_monday
 from flask import Blueprint, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 import logging
-from datetime import datetime, timedelta, timezone
+from datetime import timedelta
 from enums import TimePeriodType
 
 from models import User, Goal, UserGoal
@@ -18,29 +19,49 @@ logger.setLevel(logging.DEBUG)
 def get_daily_goals():
     try:
         user_id = get_jwt_identity()
+        # TODO: is it a waste to query the user here?
         user = User.query.get(user_id)
         if user is None:
             return jsonify({"error": "User not found"}), 404
 
-        daily_goals = (
-            UserGoal.query.join(Goal)
-            .filter(
-                UserGoal.user_id == user_id,
-                Goal.time_period == TimePeriodType.DAILY,
-                UserGoal.date_assigned == datetime.now(timezone.utc).date(),
-            )
-            .all()
+        calculator = GoalProgressCalculator()
+        daily_goals = calculator.calculate_user_goals_progress(
+            user_id, TimePeriodType.DAILY
         )
 
-        if not daily_goals:
+        if len(daily_goals) == 0:
             logger.info("No daily goals found")
             return jsonify([]), 200
 
-        daily_goals = [goal.serialize() for goal in daily_goals]
         return jsonify(daily_goals), 200
     except Exception as e:
-        logger.error(e)
-        return jsonify({"error": "Internal server error"}), 500
+        logger.error("An error occurred while fetching daily goals")
+        return jsonify({"error": "An error occured while fetching daily goals"}), 500
+
+
+@goals_bp.route("/weekly", methods=["GET"])
+@jwt_required()
+def get_weekly_goals():
+    try:
+        user_id = get_jwt_identity()
+        # TODO: is it a waste to query the user here?
+        user = User.query.get(user_id)
+        if user is None:
+            return jsonify({"error": "User not found"}), 404
+
+        calculator = GoalProgressCalculator()
+        daily_goals = calculator.calculate_user_goals_progress(
+            user_id, TimePeriodType.WEEKLY
+        )
+
+        if len(daily_goals) == 0:
+            logger.info("No weekly goals found")
+            return jsonify([]), 200
+
+        return jsonify(daily_goals), 200
+    except Exception as e:
+        logger.error("An error occurred while fetching weekly goals")
+        return jsonify({"error": "An error occured while fetching weekly goals"}), 500
 
 
 @goals_bp.route("/week-completed-count", methods=["GET"])
