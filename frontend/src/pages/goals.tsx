@@ -3,19 +3,22 @@ import styles from "../styles/Goals.module.css";
 import WeeklyGift from "@/components/WeeklyGift";
 import { useEffect, useState } from "react";
 import { getDailyGoals, getMonthlyGoals } from "@/api/api";
+import { Goal } from "../types/GoalTypes";
 
 export default function Goals() {
-    const [dailyGoals, setDailyGoals] = useState([]);
-    const [monthlyGoals, setMonthlyGoals] = useState([]);
-    
+    const [dailyGoals, setDailyGoals] = useState<Goal[]>([]);
+    const [monthlyGoals, setMonthlyGoals] = useState<Goal[]>([]);
+
     const fetchGoals = async () => {
         const [dailyData, monthlyData] = await Promise.all([
             getDailyGoals(),
-            getMonthlyGoals()
+            getMonthlyGoals(),
         ]);
         setDailyGoals(dailyData);
         setMonthlyGoals(monthlyData);
-    }
+        console.log(dailyData);
+        console.log(monthlyData);
+    };
 
     useEffect(() => {
         fetchGoals();
@@ -26,14 +29,14 @@ export default function Goals() {
             <div className={styles.containerRow}>
                 <div>
                     <h2>Daily Goals</h2>
-                    <GoalsList />
+                    <GoalsList goals={dailyGoals} />
                 </div>
-                <WeeklyGift/>
+                <WeeklyGift />
             </div>
             <div className={styles.containerRow}>
                 <div>
                     <h2>Monthly Goals</h2>
-                    <GoalsList />
+                    <GoalsList goals={monthlyGoals} />
                 </div>
                 <h2>Calendar</h2>
             </div>

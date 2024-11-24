@@ -1,8 +1,13 @@
 import styles from "../styles/GoalCard.module.css";
 import ProgressBar from "./ProgressBar";
+import { Goal } from "@/types/GoalTypes";
 
-export default function GoalCard() {
-    const completed = true;
+interface GoalCardProps {
+    goal: Goal;
+}
+
+export default function GoalCard({ goal }: GoalCardProps) {
+    const completed = goal.completed;
 
     return (
         <div className={styles.goalCard}>
@@ -16,10 +21,12 @@ export default function GoalCard() {
                 )}
             </div>
             <div>
-                <h4>Complete a module 7 days in a row</h4>
-                <ProgressBar percentage={25}/>
-                <p>numerical progress</p>
+                <h4>{goal.title}</h4>
+                <ProgressBar percentage={goal.progressPercentage} />
+                <p>
+                    {goal.currentValue} / {goal.targetValue}
+                </p>
             </div>
         </div>
-    )
+    );
 }

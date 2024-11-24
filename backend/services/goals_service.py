@@ -27,19 +27,15 @@ class GoalProgressCalculator:
         logger.debug(
             f"Inside goals service for user {user_id} and time period {time_period}"
         )
-        # TODO: CRASHES HERE
-        all_goals = db.query(Goal).all()
+        all_goals = Goal.query.all()
         logger.debug(f"all_goals: {all_goals}")
-        user_goals = db.query(UserGoal).filter(UserGoal.user_id == user_id).all()
+        user_goals = UserGoal.query.filter(UserGoal.user_id == user_id).all()
         logger.debug(f"user_goals: {user_goals}")
 
         # get all active goals for the user
-        open_goals = (
-            db.query(UserGoal)
-            .filter(UserGoal.user_id == user_id)
-            .filter(UserGoal.date_completed.is_(None))
+        open_goals = UserGoal.query.filter(UserGoal.user_id == user_id).filter(
+            UserGoal.date_completed.is_(None)
         )
-        logger.debug(f"open_goals: {open_goals}")
 
         query = open_goals.join(Goal).filter(Goal.time_period == time_period)
         active_goals = query.all()
@@ -50,7 +46,7 @@ class GoalProgressCalculator:
         for user_goal in active_goals:
             logger.debug(f"Calculating progress for goal: {user_goal.goal.title}")
             progress = self._calculate_single_goal_progress(user_goal)
-            if progress["is_completed"]:  # TODO: do I want to keep this value?
+            if progress["completed"]:  # TODO: do I want to keep this value?
                 self._mark_goal_completed(user_goal)
                 logger.info(f"Goal completed: {progress['title']}")
             progress_results.append(progress)
@@ -76,13 +72,13 @@ class GoalProgressCalculator:
         )
 
         return {
-            "goal_id": goal.id,
+            "goalId": goal.id,
             "title": goal.title,
-            "current_value": current_value,
-            "target_value": target_value,
-            "progress_percentage": progress_percentage,  # TODO: decide if I want to keep this
+            "currentValue": current_value,
+            "targetValue": target_value,
+            "progressPercentage": progress_percentage,  # TODO: decide if I want to keep this
             "time_period": goal.time_period.value,
-            "is_completed": progress_percentage
+            "completed": progress_percentage
             >= 100,  # TODO: decide if I want to keep this
         }
 
@@ -91,14 +87,11 @@ class GoalProgressCalculator:
     ) -> Tuple[int, int]:
         logger.debug(f"Calculating modules progress for user {user_id}")
         total_modules_completed = (
-            db.query(func.sum(DailyUserActivity.modules_completed))
-            .filter(
-                # NOTE: this relies on there being no goals being added to UserGoals ahead of the current date
-                and_(
-                    DailyUserActivity.user_id == user_id,
-                    DailyUserActivity.date >= start_date,
-                )
+            DailyUserActivity.query.with_entities(
+                func.sum(DailyUserActivity.modules_completed)
             )
+            .filter(DailyUserActivity.user_id == user_id)
+            .filter(DailyUserActivity.date >= start_date)
             .scalar()
             or 0
         )
@@ -109,13 +102,11 @@ class GoalProgressCalculator:
     ) -> Tuple[int, int]:
         logger.debug(f"Calculating gems progress for user {user_id}")
         total_gems_earned = (
-            db.query(func.sum(DailyUserActivity.gems_earned))
-            .filter(
-                and_(
-                    DailyUserActivity.user_id == user_id,
-                    DailyUserActivity.date >= start_date,
-                )
+            DailyUserActivity.query.with_entities(
+                func.sum(DailyUserActivity.gems_earned)
             )
+            .filter(DailyUserActivity.user_id == user_id)
+            .filter(DailyUserActivity.date >= start_date)
             .scalar()
             or 0
         )
@@ -128,14 +119,10 @@ class GoalProgressCalculator:
         logger.debug(f"Calculating streak progress for user {user_id}")
         # TODO: this name is confusing because its just measuring days the user completed something, not necessarily "extended" if they broke it within the time period
         streak_days = (
-            db.query(func.count(DailyUserActivity.date))
-            .filter(
-                and_(
-                    DailyUserActivity.user_id == user_id,
-                    DailyUserActivity.date >= start_date,
-                    DailyUserActivity.streak_extended.is_(True),
-                )
-            )
+            DailyUserActivity.query.with_entities(func.count(DailyUserActivity.date))
+            .filter(DailyUserActivity.user_id == user_id)
+            .filter(DailyUserActivity.date >= start_date)
+            .filter(DailyUserActivity.streak_extended.is_(True))
             .scalar()
             or 0
         )

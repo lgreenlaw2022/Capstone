@@ -1,14 +1,17 @@
 import styles from "../styles/GoalsList.module.css";
 import GoalCard from "./GoalCard";
+import { Goal } from "@/types/GoalTypes";
 
-export default function GoalsList() {
+interface GoalListProps {
+    goals: Goal[];
+}
 
+export default function GoalsList({ goals }: GoalListProps) {
     return (
         <div className={styles.goalsList}>
-            <GoalCard/>
-            {/* <span className={styles.line}/> */}
-            <p> List item 2</p>
-            <p> List item 3</p>
+            {goals.map((goal) => (
+                <GoalCard key={goal.id} goal={goal} />
+            ))}
         </div>
-    )
+    );
 }

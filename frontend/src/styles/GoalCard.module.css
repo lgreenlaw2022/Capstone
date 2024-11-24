@@ -1,7 +1,7 @@
 .goalCard {
     display: flex;
     gap: 16px;
-    max-width: 445px;
+    width: 100%;
     padding: 12px 16px;
     border-radius: 12px;
     align-items: center;
