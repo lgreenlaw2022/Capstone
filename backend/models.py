@@ -118,8 +118,8 @@ class UserGoal(db.Model):
     # TODO: when developing queries, check if these columns are in the right tables for efficiency
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), primary_key=True)
     goal_id = db.Column(db.Integer, db.ForeignKey("goals.id"), primary_key=True)
-    date_assigned = db.Column(db.DateTime, default=current_time, nullable=False)
-    date_completed = db.Column(db.DateTime, nullable=True)
+    date_assigned = db.Column(db.Date, default=current_time, nullable=False)
+    date_completed = db.Column(db.Date, nullable=True)
 
     user = db.relationship("User", back_populates="goals")
     goal = db.relationship("Goal", back_populates="users")

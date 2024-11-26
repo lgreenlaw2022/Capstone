@@ -6,7 +6,7 @@ class MetricType(Enum):
     EARN_GEMS = "earn_gems"
     EXTEND_STREAK = "streak_length"
     # Add more metrics as needed
-    # consider: goals completed
+    # consider: goals completed, unit completed
 
 
 class TimePeriodType(Enum):

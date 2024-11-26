@@ -1,3 +1,4 @@
+from datetime import datetime, timezone
 from config.constants import XP_FOR_COMPLETING_MODULE, XP_FOR_COMPLETING_CHALLENGE
 from services.user_activity_service import update_daily_xp
 from services.badge_awarding_service import BadgeAwardingService
@@ -5,6 +6,7 @@ from enums import EventType, ModuleType
 from flask import Blueprint, request, jsonify, send_file, abort
 import logging
 from models import (
+    DailyUserActivity,
     UserQuizQuestion,
     UserUnit,
     db,
@@ -257,13 +259,12 @@ def mark_module_complete_and_open_next(module_id, user_id):
 
         if user_module is None:
             raise ValueError(f"UserModule with module_id {module_id} not found")
-        # Update user module status to completed
-        user_module.completed = True
-        user_module.completed_date = db.func.current_timestamp()
-        db.session.commit()
 
         # Update the user's daily XP
-        if current_module.module_type not in [ModuleType.BONUS_CHALLENGE, ModuleType.CHALLENGE]:
+        if current_module.module_type not in [
+            ModuleType.BONUS_CHALLENGE,
+            ModuleType.CHALLENGE,
+        ]:
             earned_xp = XP_FOR_COMPLETING_MODULE
         else:  # Bonus and practice challenges have different XP values
             earned_xp = XP_FOR_COMPLETING_CHALLENGE
@@ -272,6 +273,27 @@ def mark_module_complete_and_open_next(module_id, user_id):
 
         if current_module.module_type == ModuleType.BONUS_CHALLENGE:
             return {"message": "Bonus challenge marked as complete"}
+
+        # Check if the module is already marked as complete
+        if user_module.completed:
+            return {"message": "Module already marked as complete"}
+
+        # Update user module status to completed
+        user_module.completed = True
+        current_date = datetime.now(timezone.utc).date()
+        user_module.completed_date = current_date
+
+        # add daily activity record for completing a module
+        # TODO: do I want this to only be for the first time a module is completed?
+        today_activity = DailyUserActivity.query.filter_by(
+            user_id=user_id, date=current_date
+        ).first()
+        if today_activity is None:
+            today_activity = DailyUserActivity(user_id=user_id, date=current_date)
+            db.session.add(today_activity)
+        today_activity.modules_completed += 1
+
+        db.session.commit()
 
         # If this module completes the unit, mark the unit as complete
         finished_unit = is_unit_newly_completed(unit_id, user_id)

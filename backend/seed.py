@@ -197,9 +197,9 @@ def add_user_badges(user_id):
 def add_goals():
     goals_data = [
         {
-            "title": "Complete 1 modules",
+            "title": "Complete 2 modules",
             "metric": MetricType.COMPLETE_MODULES,
-            "requirement": 1,
+            "requirement": 2,
             "time_period": TimePeriodType.DAILY,
         },
         {
@@ -209,9 +209,27 @@ def add_goals():
             "time_period": TimePeriodType.DAILY,
         },
         {
-            "title": "Extend streak for 15 days",
+            "title": "Extend streak by 1 day",
+            "metric": MetricType.EXTEND_STREAK,
+            "requirement": 1,
+            "time_period": TimePeriodType.DAILY,
+        },
+        {
+            "title": "Practice for 15 days",
             "metric": MetricType.EXTEND_STREAK,
             "requirement": 15,
+            "time_period": TimePeriodType.MONTHLY,
+        },
+        {
+            "title": "Complete 10 modules",
+            "metric": MetricType.COMPLETE_MODULES,
+            "requirement": 10,
+            "time_period": TimePeriodType.MONTHLY,
+        },
+        {
+            "title": "Earn 50 gems",
+            "metric": MetricType.EARN_GEMS,
+            "requirement": 50,
             "time_period": TimePeriodType.MONTHLY,
         },
     ]
@@ -244,8 +262,8 @@ def add_user_goals():
         return
 
     # Assign goals to a user
-    user = User.query.first()
-    if not user:
+    users = User.query.limit(3).all()
+    if not users:
         user = User(
             username="testuser", email="testuser@example.com", password="password"
         )
@@ -253,13 +271,14 @@ def add_user_goals():
         db.session.commit()
 
     user_goals_to_add = []
-    for goal in goals:
-        user_goal = UserGoal(
-            user_id=user.id,
-            goal_id=goal.id,
-            date_assigned=datetime.now(timezone.utc).date(),
-        )
-        user_goals_to_add.append(user_goal)
+    for user in users:
+        for goal in goals:
+            user_goal = UserGoal(
+                user_id=user.id,
+                goal_id=goal.id,
+                date_assigned=datetime.now(timezone.utc).date(),
+            )
+            user_goals_to_add.append(user_goal)
 
     db.session.bulk_save_objects(user_goals_to_add)
     db.session.commit()
@@ -271,6 +290,11 @@ def bulk_insert(objects_to_add):
     if objects_to_add:
         db.session.bulk_save_objects(objects_to_add)
         db.session.commit()
+
+
+def clear_users():
+    db.session.query(User).delete()
+    db.session.commit()
 
 
 def clear_user_modules():
@@ -302,13 +326,15 @@ def seed_data():
     with app.app_context():
 
         # Reset user progress
-        # clear_user_modules()
+        # clear_users()
+        # clear_user_units()
+        clear_user_modules()
         # clear_user_badges()
         # clear_user_units()
-        # clear_daily_user_activity()
+        clear_daily_user_activity()
         # db.session.query(Goal).delete()
-        # db.session.query(UserGoal).delete()
-        # db.session.commit()
+        db.session.query(UserGoal).delete()
+        db.session.commit()
 
         # Check if the course already exists
         course = Course.query.filter_by(title="Technical Interview Prep").first()

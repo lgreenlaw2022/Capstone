@@ -10,6 +10,8 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
 
+# TODO: have to figure out how to tell if goal is newly completed and to triger notification
+# TODO: add badge check?
 # TODO: should I rename this file to match closer?
 class GoalProgressCalculator:
     def __init__(self):
@@ -33,26 +35,25 @@ class GoalProgressCalculator:
         logger.debug(f"user_goals: {user_goals}")
 
         # get all active goals for the user
-        open_goals = UserGoal.query.filter(UserGoal.user_id == user_id).filter(
-            UserGoal.date_completed.is_(None)
-        )
+        goals = UserGoal.query.filter(UserGoal.user_id == user_id)
 
-        query = open_goals.join(Goal).filter(Goal.time_period == time_period)
+        query = goals.join(Goal).filter(Goal.time_period == time_period)
         active_goals = query.all()
         logger.debug(f"active_goals: {active_goals}")
 
         # calculate progress for each goal
         progress_results = []
         for user_goal in active_goals:
-            logger.debug(f"Calculating progress for goal: {user_goal.goal.title}")
+            logger.debug(f"Calculating progress for goal: {user_goal.goal.title}, on {user_goal.date_assigned}")
             progress = self._calculate_single_goal_progress(user_goal)
-            if progress["completed"]:  # TODO: do I want to keep this value?
+            if progress["is_newly_completed"]:  # TODO: do I want to keep this value?
                 self._mark_goal_completed(user_goal)
                 logger.info(f"Goal completed: {progress['title']}")
             progress_results.append(progress)
 
         return progress_results
 
+    # TODO: it seems there is an issue tracking goal progress with the calculators for daily goals
     def _calculate_single_goal_progress(self, user_goal: UserGoal) -> Dict:
         """Calculate progress for a single goal."""
         goal = user_goal.goal
@@ -71,6 +72,8 @@ class GoalProgressCalculator:
             (current_value / target_value * 100) if target_value > 0 else 0, 100
         )
 
+        is_newly_completed = progress_percentage >= 100 and not user_goal.date_completed
+
         return {
             "goalId": goal.id,
             "title": goal.title,
@@ -78,14 +81,14 @@ class GoalProgressCalculator:
             "targetValue": target_value,
             "progressPercentage": progress_percentage,  # TODO: decide if I want to keep this
             "time_period": goal.time_period.value,
-            "completed": progress_percentage
-            >= 100,  # TODO: decide if I want to keep this
+            "completed": progress_percentage >= 100,
+            "is_newly_completed": is_newly_completed,
         }
 
     def _calculate_modules_progress(
         self, user_id: int, start_date: date, target: int
     ) -> Tuple[int, int]:
-        logger.debug(f"Calculating modules progress for user {user_id}")
+        logger.debug(f"Calculating modules progress for user {user_id}, {start_date}")
         total_modules_completed = (
             DailyUserActivity.query.with_entities(
                 func.sum(DailyUserActivity.modules_completed)
@@ -95,12 +98,13 @@ class GoalProgressCalculator:
             .scalar()
             or 0
         )
+        logger.debug(f"total_modules_completed: {total_modules_completed}, {target}")
         return total_modules_completed, target
 
     def _calculate_gems_progress(
         self, user_id: int, start_date: date, target: int
     ) -> Tuple[int, int]:
-        logger.debug(f"Calculating gems progress for user {user_id}")
+        logger.debug(f"Calculating gems progress for user {user_id}, {start_date}")
         total_gems_earned = (
             DailyUserActivity.query.with_entities(
                 func.sum(DailyUserActivity.gems_earned)
@@ -110,13 +114,14 @@ class GoalProgressCalculator:
             .scalar()
             or 0
         )
+        logger.debug(f"total_gems_earned: {total_gems_earned}, {target}")
         return total_gems_earned, target
 
     def _calculate_streak_progress(
         self, user_id: int, start_date: date, target: int
     ) -> Tuple[int, int]:
         """Calculate the number of days a user has extended their streak."""
-        logger.debug(f"Calculating streak progress for user {user_id}")
+        logger.debug(f"Calculating streak progress for user {user_id}, {start_date}")
         # TODO: this name is confusing because its just measuring days the user completed something, not necessarily "extended" if they broke it within the time period
         streak_days = (
             DailyUserActivity.query.with_entities(func.count(DailyUserActivity.date))
@@ -126,6 +131,7 @@ class GoalProgressCalculator:
             .scalar()
             or 0
         )
+        logger.debug(f"streak_days: {streak_days}, {target}")
         return streak_days, target
 
     def _get_time_period_start(
@@ -163,5 +169,5 @@ class GoalProgressCalculator:
     def _mark_goal_completed(self, user_goal: UserGoal) -> None:
         """Mark a goal as completed if it hasn't been already."""
         if not user_goal.date_completed:
-            user_goal.date_completed = datetime.now(timezone.utc)
+            user_goal.date_completed = datetime.now(timezone.utc).date()
             db.session.commit()

@@ -456,3 +456,17 @@ export const getMonthlyGoals = async () => {
         throw error;
     }
 }
+
+export const addGoalReward = async (goalId: number) => {
+    try {
+        const response = await axiosInstance.post(`/goals/${goalId}/add-gems`);
+        return response.data;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error fetching goal reward:', error.message);
+        } else {
+            console.error('Unknown error fetching goal reward:', error);
+        }
+        throw error;
+    }
+}

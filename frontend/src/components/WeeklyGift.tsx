@@ -12,14 +12,17 @@ export default function WeeklyGift() {
     const fetchData = async () => {
         const data = await getNumGoalsCompletedThisWeek();
         setNumGoalsCompleted(data);
-        const calculatedPercentage =
-            data.numGoalsCompleted > 0 ? (data.numGoalsCompleted / 7) * 100 : 0;
-        setPercentage(calculatedPercentage);
     };
 
     useEffect(() => {
         fetchData();
     }, []);
+
+    useEffect(() => {
+        setPercentage(
+            numGoalsCompleted > 0 ? (numGoalsCompleted / 7) * 100 : 0
+        );
+    }, [numGoalsCompleted]);
 
     return (
         <div className={styles.weeklyGiftContainer}>
