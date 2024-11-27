@@ -10,6 +10,7 @@ export default function Goals() {
     const [dailyGoals, setDailyGoals] = useState<Goal[]>([]);
     const [monthlyGoals, setMonthlyGoals] = useState<Goal[]>([]);
     const [newlyCompletedGoals, setNewlyCompletedGoals] = useState<Goal[]>([]);
+    const [goalsReviewed, setGoalsReviewed] = useState(false);
 
     const fetchGoals = async () => {
         const [dailyData, monthlyData] = await Promise.all([
@@ -33,9 +34,9 @@ export default function Goals() {
         setNewlyCompletedGoals((prevGoals) =>
             prevGoals.filter((goal) => goal.goalId !== goalId)
         );
-        // TODO: UX bug?, page doesn't reload after all the newly completed goals are processed
+        // TODO: UX bug, page doesn't reload after all the newly completed goals are processed
         if (newlyCompletedGoals.length === 0) {
-            fetchGoals();
+            setGoalsReviewed(true);
         }
     };
 

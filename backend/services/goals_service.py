@@ -44,7 +44,9 @@ class GoalProgressCalculator:
         # calculate progress for each goal
         progress_results = []
         for user_goal in active_goals:
-            logger.debug(f"Calculating progress for goal: {user_goal.goal.title}, on {user_goal.date_assigned}")
+            logger.debug(
+                f"Calculating progress for goal: {user_goal.goal.title}, on {user_goal.date_assigned}"
+            )
             progress = self._calculate_single_goal_progress(user_goal)
             if progress["is_newly_completed"]:  # TODO: do I want to keep this value?
                 self._mark_goal_completed(user_goal)
@@ -171,3 +173,56 @@ class GoalProgressCalculator:
         if not user_goal.date_completed:
             user_goal.date_completed = datetime.now(timezone.utc).date()
             db.session.commit()
+
+
+class GoalService:
+    def __init__(self):
+        pass
+
+    def populate_daily_goals(self, user_id: int):
+        today = datetime.now(timezone.utc).date()
+        # assign 3 random daily goals to the user
+        daily_goals = (
+            Goal.query.filter_by(time_period=TimePeriodType.DAILY)
+            .order_by(func.random())
+            .limit(3)
+            .all()
+        )
+        user_goals = [
+            UserGoal(user_id=user_id, goal_id=goal.id, date_assigned=today)
+            for goal in daily_goals
+        ]
+        db.session.bulk_save_objects(user_goals)
+        db.session.commit()
+
+    def populate_monthly_goals(self, user_id: int):
+        first_of_month = datetime.now(timezone.utc).date().replace(day=1)
+        # assign 3 random monthly goals to the user
+        monthly_goals = (
+            Goal.query.filter_by(time_period=TimePeriodType.MONTHLY)
+            .order_by(func.random())
+            .limit(3)
+            .all()
+        )
+        user_goals = [
+            UserGoal(user_id=user_id, goal_id=goal.id, date_assigned=first_of_month)
+            for goal in monthly_goals
+        ]
+        db.session.bulk_save_objects(user_goals)
+        db.session.commit()
+
+    def check_and_populate_goals(self, user_id: int):
+        today = datetime.now(timezone.utc).date()
+        first_of_month = today.replace(day=1)
+
+        # Check and populate daily goals
+        if not UserGoal.query.filter_by(user_id=user_id, date_assigned=today).first():
+            self.populate_daily_goals(user_id)
+
+        # Check and populate monthly goals
+        if not UserGoal.query.filter_by(
+            user_id=user_id, date_assigned=first_of_month
+        ).first():
+            self.populate_monthly_goals(user_id)
+
+        logger.info("New goals populated successfully")

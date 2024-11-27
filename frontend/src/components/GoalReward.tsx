@@ -27,7 +27,7 @@ export default function GoalReward({ goal, onContinue }: GoalProps) {
                     width={118}
                     height={118}
                 />
-                <p>You earned 20 gems</p>
+                <p>You earned 5 gems</p>
                 <button onClick={handleContinue} className={styles.text}>
                     Keep it Going!
                 </button>

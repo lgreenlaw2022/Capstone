@@ -444,7 +444,6 @@ def seed_data():
         add_badges()
         # add goals and assign to user
         add_goals()
-        add_user_goals()
 
         # hardcode some user badges for testing
         # bulk_insert(add_user_badges(1))
