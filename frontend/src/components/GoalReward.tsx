@@ -11,10 +11,8 @@ interface GoalProps {
 
 export default function GoalReward({ goal, onContinue }: GoalProps) {
     const handleContinue = async () => {
-        await addGoalReward(goal.id);
-        // I think this is making it close too quickly -- but it shouldn't be because I haven't hit the button
-        // could be result of testing with various bugs, try again with new goal complete
-        // onContinue(goal.id);
+        await addGoalReward(goal.goalId);
+        onContinue(goal.goalId);
     };
 
     return (

@@ -23,6 +23,7 @@ def get_daily_goals():
         # TODO: is it a waste to query the user here?
         user = User.query.get(user_id)
         if user is None:
+            logger.error("User not found")
             return jsonify({"error": "User not found"}), 404
 
         calculator = GoalProgressCalculator()
@@ -56,7 +57,7 @@ def get_daily_goals():
             200,
         )
     except Exception as e:
-        logger.error("An error occurred while fetching daily goals")
+        logger.error(f"An error occurred while fetching daily goals, {str(e)}")
         return jsonify({"error": "An error occured while fetching daily goals"}), 500
 
 
@@ -91,7 +92,7 @@ def get_weekly_goals():
             200,
         )
     except Exception as e:
-        logger.error("An error occurred while fetching weekly goals")
+        logger.error(f"An error occurred while fetching weekly goals, {str(e)}")
         return jsonify({"error": "An error occured while fetching weekly goals"}), 500
 
 
@@ -127,7 +128,7 @@ def get_monthly_goals():
             200,
         )
     except Exception as e:
-        logger.error("An error occurred while fetching monthly goals")
+        logger.error(f"An error occurred while fetching monthly goals, {str(e)}")
         return jsonify({"error": "An error occured while fetching monthly goals"}), 500
 
 
@@ -155,7 +156,7 @@ def get_num_goals_completed_weekly():
         return jsonify(num_completed), 200
     except Exception as e:
         logger.error(
-            "An error occurred while fetching the number of goals completed this week"
+            f"An error occurred while fetching the number of goals completed this week, {str(e)}"
         )
         return (
             jsonify(
@@ -172,6 +173,13 @@ def get_num_goals_completed_weekly():
 def add_gems_for_newly_completed_goal(goal_id):
     try:
         user_id = get_jwt_identity()
+
+        user = User.query.get(user_id)
+        if user is None:
+            logger.error("User not found")
+            return jsonify({"error": "User not found"}), 404
+
+        logger.debug(f"Adding gems for newly completed goal for {user_id}")
         # validating the request
         user_goal = UserGoal.query.filter_by(user_id=user_id, goal_id=goal_id).first()
         if user_goal is None:
@@ -179,8 +187,6 @@ def add_gems_for_newly_completed_goal(goal_id):
             return jsonify({"error": "User goal not found"}), 404
         # TODO: verify this goal hasn't already been awarded?
 
-        # add gems to user
-        user = User.query.get(user_id)
         # TODO: use different amount for daily vs. monthly goals?
         user.gems += GEMS_FOR_COMPLETING_GOAL
 
@@ -189,10 +195,23 @@ def add_gems_for_newly_completed_goal(goal_id):
         today_activity = DailyUserActivity.query.filter_by(
             user_id=user_id, date=today
         ).first()
-        today_activity.gems += GEMS_FOR_COMPLETING_GOAL
+
+        # TODO: this should never occur, should I try to handle it?
+        if today_activity is None:
+            logger.error("Daily user activity not found")
+            return jsonify({"error": "Daily user activity not found"}), 404
+
+        # TODO: this should also never occur
+        if today_activity.gems_earned is None:
+            today_activity.gems_earned = 0
+            logger.debug(f"today activity gems was None, set to 0")
+
+        today_activity.gems_earned += GEMS_FOR_COMPLETING_GOAL
+
         db.session.commit()
+
         logger.info("Gems for goal added successfully")
         return jsonify({"message": "Gems added successfully"}), 200
     except Exception as e:
-        logger.error("An error occurred while finishing a goal")
+        logger.error(f"An error occurred while finishing a goal, {str(e)}")
         return jsonify({"error": "An error occurred while finishing a goal"}), 500

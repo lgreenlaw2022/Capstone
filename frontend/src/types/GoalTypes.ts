@@ -1,5 +1,5 @@
 export interface Goal {
-    id: number;
+    goalId: number;
     title: string;
     currentValue: string;
     targetValue: string;

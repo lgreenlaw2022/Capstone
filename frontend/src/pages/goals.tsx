@@ -31,36 +31,39 @@ export default function Goals() {
 
     const handleContinue = (goalId: number) => {
         setNewlyCompletedGoals((prevGoals) =>
-            prevGoals.filter((goal) => goal.id !== goalId)
+            prevGoals.filter((goal) => goal.goalId !== goalId)
         );
+        // TODO: UX bug?, page doesn't reload after all the newly completed goals are processed
+        if (newlyCompletedGoals.length === 0) {
+            fetchGoals();
+        }
     };
 
     return (
-        <div className={styles.goalsContainer}>
-            {newlyCompletedGoals.length > 0 ? (
+        <>
+            {newlyCompletedGoals.length > 0 && (
                 <GoalReward
-                    key={newlyCompletedGoals[0].id}
+                    key={newlyCompletedGoals[0].goalId}
                     goal={newlyCompletedGoals[0]}
                     onContinue={handleContinue}
                 />
-            ) : (
-                <>
-                    <div className={styles.containerRow}>
-                        <div>
-                            <h2>Daily Goals</h2>
-                            <GoalsList goals={dailyGoals} />
-                        </div>
-                        <WeeklyGift />
-                    </div>
-                    <div className={styles.containerRow}>
-                        <div>
-                            <h2>Monthly Goals</h2>
-                            <GoalsList goals={monthlyGoals} />
-                        </div>
-                        {/* <h2>Calendar</h2> */}
-                    </div>
-                </>
             )}
-        </div>
+            <div className={styles.goalsContainer}>
+                <div className={styles.containerRow}>
+                    <div>
+                        <h2>Daily Goals</h2>
+                        <GoalsList goals={dailyGoals} />
+                    </div>
+                    <WeeklyGift />
+                </div>
+                <div className={styles.containerRow}>
+                    <div>
+                        <h2>Monthly Goals</h2>
+                        <GoalsList goals={monthlyGoals} />
+                    </div>
+                    {/* <h2>Calendar</h2> */}
+                </div>
+            </div>
+        </>
     );
 }
