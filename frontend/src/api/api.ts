@@ -400,3 +400,73 @@ export const getComparisonStats = async () => {
         throw error;
     }
 }
+
+export const getNumGoalsCompletedThisWeek = async () => {
+    try {
+        const response = await axiosInstance.get('/goals/week-completed-count');
+        return response.data;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error fetching num goals completed this week:', error.message);
+        } else {
+            console.error('Unknown error fetching num goals completed this week:', error);
+        }
+        throw error;
+    }
+}
+
+export const getDailyGoals = async () => {
+    try {
+        const response = await axiosInstance.get('/goals/daily');
+        return response.data;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error fetching daily goals:', error.message);
+        } else {
+            console.error('Unknown error fetching daily goals:', error);
+        }
+        throw error;
+    }
+}
+
+export const getWeeklyGoals = async () => {
+    try {
+        const response = await axiosInstance.get('/goals/weekly');
+        return response.data;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error fetching weekly goals:', error.message);
+        } else {
+            console.error('Unknown error fetching weekly goals:', error);
+        }
+        throw error;
+    }
+}
+
+export const getMonthlyGoals = async () => {
+    try {
+        const response = await axiosInstance.get('/goals/monthly');
+        return response.data;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error fetching monthly goals:', error.message);
+        } else {
+            console.error('Unknown error fetching monthly goals:', error);
+        }
+        throw error;
+    }
+}
+
+export const addGoalReward = async (goalId: number) => {
+    try {
+        const response = await axiosInstance.post(`/goals/${goalId}/add-gems`);
+        return response.data;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error fetching goal reward:', error.message);
+        } else {
+            console.error('Unknown error fetching goal reward:', error);
+        }
+        throw error;
+    }
+}

@@ -1,0 +1,30 @@
+.rewardContainer {
+    width: 249px;
+    height: 324px;
+    flex-shrink: 0;
+    z-index: 101;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px 42px;
+    gap: 20px;
+
+    border-radius: 12px;
+    border: 3px solid #d9d9d9;
+    background: #f7f7f7;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 100;
+}

@@ -20,7 +20,9 @@ def update_daily_xp(user_id, xp):
         ).first()
         if not activity:
             logger.debug(f"Creating new activity for user {user_id} on {current_date}")
-            activity = DailyUserActivity(user_id=user_id, date=current_date, xp_earned=xp)
+            activity = DailyUserActivity(
+                user_id=user_id, date=current_date, xp_earned=xp
+            )
             db.session.add(activity)
         else:
             logger.debug(f"Updating activity for user {user_id} on {current_date}")
@@ -39,7 +41,7 @@ def update_daily_xp(user_id, xp):
 
 def update_user_streak(user, streak_already_extended):
     # function is called to update the streak of a user after XP is earned
-    try: 
+    try:
         logger.debug(f"streak already extended: {streak_already_extended}")
         # Check if the user has a streak
         if not streak_already_extended:
@@ -48,9 +50,13 @@ def update_user_streak(user, streak_already_extended):
                 user.streak = 0
             user.streak += 1
             # mark streak as updated in db
+            today = datetime.now(timezone.utc).date()
             daily_activity = DailyUserActivity.query.filter_by(
-                user_id=user.id, date=datetime.now(timezone.utc).date()
+                user_id=user.id, date=today
             ).first()
+            if daily_activity is None:
+                daily_activity = DailyUserActivity(user_id=user.id, date=today)
+                db.session.add(daily_activity)
             daily_activity.streak_extended = True
             db.session.commit()
     except Exception as e:

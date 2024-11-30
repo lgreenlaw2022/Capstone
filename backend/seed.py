@@ -1,5 +1,9 @@
+from datetime import datetime, timezone
 from app import create_app
 from models import (
+    Goal,
+    User,
+    UserGoal,
     db,
     Unit,
     Course,
@@ -12,7 +16,7 @@ from models import (
     UserUnit,
     DailyUserActivity,
 )
-from enums import ModuleType, BadgeType, EventType
+from enums import MetricType, ModuleType, BadgeType, EventType, TimePeriodType
 import logging
 
 logger = logging.getLogger(__name__)
@@ -190,10 +194,107 @@ def add_user_badges(user_id):
     return user_badges_to_add
 
 
+def add_goals():
+    goals_data = [
+        {
+            "title": "Complete 2 modules",
+            "metric": MetricType.COMPLETE_MODULES,
+            "requirement": 2,
+            "time_period": TimePeriodType.DAILY,
+        },
+        {
+            "title": "Earn 5 gems",
+            "metric": MetricType.EARN_GEMS,
+            "requirement": 5,
+            "time_period": TimePeriodType.DAILY,
+        },
+        {
+            "title": "Extend streak by 1 day",
+            "metric": MetricType.EXTEND_STREAK,
+            "requirement": 1,
+            "time_period": TimePeriodType.DAILY,
+        },
+        {
+            "title": "Practice for 15 days",
+            "metric": MetricType.EXTEND_STREAK,
+            "requirement": 15,
+            "time_period": TimePeriodType.MONTHLY,
+        },
+        {
+            "title": "Complete 10 modules",
+            "metric": MetricType.COMPLETE_MODULES,
+            "requirement": 10,
+            "time_period": TimePeriodType.MONTHLY,
+        },
+        {
+            "title": "Earn 50 gems",
+            "metric": MetricType.EARN_GEMS,
+            "requirement": 50,
+            "time_period": TimePeriodType.MONTHLY,
+        },
+    ]
+
+    goals_to_add = []
+    for goal_data in goals_data:
+        existing_goal = Goal.query.filter_by(title=goal_data["title"]).first()
+        if existing_goal:
+            continue
+        goal = Goal(
+            title=goal_data["title"],
+            metric=goal_data["metric"],
+            requirement=goal_data["requirement"],
+            time_period=goal_data["time_period"],
+        )
+        goals_to_add.append(goal)
+
+    db.session.bulk_save_objects(goals_to_add)
+    db.session.commit()
+
+    print("Goals added successfully.")
+
+
+def add_user_goals():
+    # Query the goals back to get their IDs
+    goals = Goal.query.all()
+
+    if not goals:
+        print("No goals found.")
+        return
+
+    # Assign goals to a user
+    users = User.query.limit(3).all()
+    if not users:
+        user = User(
+            username="testuser", email="testuser@example.com", password="password"
+        )
+        db.session.add(user)
+        db.session.commit()
+
+    user_goals_to_add = []
+    for user in users:
+        for goal in goals:
+            user_goal = UserGoal(
+                user_id=user.id,
+                goal_id=goal.id,
+                date_assigned=datetime.now(timezone.utc).date(),
+            )
+            user_goals_to_add.append(user_goal)
+
+    db.session.bulk_save_objects(user_goals_to_add)
+    db.session.commit()
+
+    print("User goals added successfully.")
+
+
 def bulk_insert(objects_to_add):
     if objects_to_add:
         db.session.bulk_save_objects(objects_to_add)
         db.session.commit()
+
+
+def clear_users():
+    db.session.query(User).delete()
+    db.session.commit()
 
 
 def clear_user_modules():
@@ -224,11 +325,15 @@ def clear_daily_user_activity():
 def seed_data():
     with app.app_context():
 
-        # Clear the user_modules table
-        clear_user_modules()
-        clear_user_badges()
-        clear_user_units()
-        clear_daily_user_activity()
+        # Reset user progress
+        # clear_users()
+        # clear_user_units()
+        # clear_user_modules()
+        # clear_user_badges()
+        # clear_user_units()
+        # clear_daily_user_activity()
+        db.session.query(UserGoal).delete()
+        db.session.commit()
 
         # Check if the course already exists
         course = Course.query.filter_by(title="Technical Interview Prep").first()
@@ -336,6 +441,8 @@ def seed_data():
 
         # Add badges
         add_badges()
+        # add goals
+        add_goals()
 
         # hardcode some user badges for testing
         # bulk_insert(add_user_badges(1))

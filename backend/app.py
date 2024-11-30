@@ -51,6 +51,7 @@ def create_app():
     from routes.badges import badges_bp
     from routes.review import review_bp
     from routes.leaderboard import leaderboard_bp
+    from routes.goals import goals_bp
 
     app.register_blueprint(user_bp, url_prefix="/user")
     app.register_blueprint(auth_bp, url_prefix="/auth")
@@ -58,6 +59,7 @@ def create_app():
     app.register_blueprint(badges_bp, url_prefix="/badges")
     app.register_blueprint(review_bp, url_prefix="/review")
     app.register_blueprint(leaderboard_bp, url_prefix="/leaderboard")
+    app.register_blueprint(goals_bp, url_prefix="/goals")
 
     # Create all database tables within the application context
     # custom CLI command to run the seed script

@@ -1,7 +1,8 @@
 from flask import Blueprint, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 import logging
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timezone
+from utils import get_most_recent_monday
 
 from models import User, db, DailyUserActivity, UserModule, UserGoal
 
@@ -9,12 +10,6 @@ leaderboard_bp = Blueprint("leaderboard", __name__)
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
-
-
-def get_most_recent_monday():
-    today = datetime.now(timezone.utc).date()
-    most_recent_monday = today - timedelta(days=today.weekday())
-    return most_recent_monday
 
 
 def calculate_percent_shorter_streak(user_streak):
@@ -93,7 +88,10 @@ def get_weekly_rankings():
         # Query to get users with activity since the most recent Monday and non-zero XP
         # order by xp earned in descending order
         users = (
-            db.session.query(User.username, db.func.sum(DailyUserActivity.xp_earned).label('weekly_xp'))
+            db.session.query(
+                User.username,
+                db.func.sum(DailyUserActivity.xp_earned).label("weekly_xp"),
+            )
             .join(DailyUserActivity, User.id == DailyUserActivity.user_id)
             .filter(DailyUserActivity.date >= most_recent_monday)
             .group_by(User.username)
@@ -106,7 +104,9 @@ def get_weekly_rankings():
             logger.error("No users found")
             return jsonify({"error": "No users found"}), 404
         # serialize the users data
-        users_data = [{"username": user.username, "weekly_xp": user.weekly_xp} for user in users]
+        users_data = [
+            {"username": user.username, "weekly_xp": user.weekly_xp} for user in users
+        ]
         return jsonify(users_data), 200
 
     except Exception as e:

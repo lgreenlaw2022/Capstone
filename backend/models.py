@@ -7,8 +7,11 @@ from werkzeug.security import generate_password_hash, check_password_hash
 db = SQLAlchemy()
 
 
-def current_time():
+def current_datetime():
     return datetime.now(timezone.utc)
+
+def current_date():
+    return datetime.now(timezone.utc).date()
 
 
 class User(db.Model):
@@ -18,7 +21,7 @@ class User(db.Model):
     username = db.Column(db.String(40), nullable=False, unique=True)
     password = db.Column(db.String(100), nullable=False)  # hashed passwords
     email = db.Column(db.String(100), nullable=False, unique=True)
-    created_date = db.Column(db.DateTime, default=current_time)  # Set upon creation
+    created_date = db.Column(db.DateTime, default=current_datetime)  # Set upon creation
     # TODO: monitor if I want to index these
     streak = db.Column(db.Integer, default=0)
     gems = db.Column(db.Integer, default=0)
@@ -29,8 +32,8 @@ class User(db.Model):
     weekly_review_done = db.Column(db.Boolean, default=False)  # complete/incomplete
 
     __table_args__ = (
-        CheckConstraint('gems >= 0', name='check_gems_non_negative'),
-        CheckConstraint('xp >= 0', name='check_xp_non_negative'),
+        CheckConstraint("gems >= 0", name="check_gems_non_negative"),
+        CheckConstraint("xp >= 0", name="check_xp_non_negative"),
     )
 
     # need to add the relationships to all the other tables
@@ -89,7 +92,7 @@ class UserBadge(db.Model):
 
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), primary_key=True)
     badge_id = db.Column(db.Integer, db.ForeignKey("badges.id"), primary_key=True)
-    date_earned = db.Column(db.DateTime, default=current_time, nullable=False)
+    date_earned = db.Column(db.DateTime, default=current_datetime, nullable=False)
 
     user = db.relationship("User", back_populates="badges")
     badge = db.relationship("Badge", back_populates="users")
@@ -99,6 +102,7 @@ class Goal(db.Model):
     __tablename__ = "goals"
 
     id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.Text, nullable=False)
     metric = db.Column(db.Enum(MetricType), nullable=False)
     requirement = db.Column(
         db.Integer, nullable=False
@@ -117,8 +121,8 @@ class UserGoal(db.Model):
     # TODO: when developing queries, check if these columns are in the right tables for efficiency
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), primary_key=True)
     goal_id = db.Column(db.Integer, db.ForeignKey("goals.id"), primary_key=True)
-    date_assigned = db.Column(db.DateTime, default=current_time, nullable=False)
-    date_completed = db.Column(db.DateTime, nullable=True)
+    date_assigned = db.Column(db.Date, default=current_date, primary_key=True)
+    date_completed = db.Column(db.Date, nullable=True)
 
     user = db.relationship("User", back_populates="goals")
     goal = db.relationship("Goal", back_populates="users")
@@ -191,7 +195,7 @@ class UserModule(db.Model):
     open = db.Column(
         db.Boolean, default=False
     )  # flag for if the user can start the module
-    completed_date = db.Column(db.DateTime, nullable=True) # used to help with review
+    completed_date = db.Column(db.DateTime, nullable=True)  # used to help with review
 
     user = db.relationship("User", back_populates="modules")
     module = db.relationship("Module", back_populates="users")
@@ -278,7 +282,7 @@ class DailyUserActivity(db.Model):
     # these values are used to help with assessing goal completion
     # values will be regularly reaped for storage
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), primary_key=True)
-    date = db.Column(db.Date, default=current_time, primary_key=True)
+    date = db.Column(db.Date, default=current_date, primary_key=True)
     xp_earned = db.Column(db.Integer, default=0)  # xp earned on this day, not total
     gems_earned = db.Column(db.Integer, default=0)  # gems earned on this day, not total
     modules_completed = db.Column(db.Integer, default=0)
