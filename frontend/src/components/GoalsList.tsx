@@ -10,7 +10,7 @@ export default function GoalsList({ goals }: GoalListProps) {
     return (
         <div className={styles.goalsList}>
             {goals.map((goal) => (
-                <GoalCard key={goal.id} goal={goal} />
+                <GoalCard key={goal.goalId} goal={goal} />
             ))}
         </div>
     );

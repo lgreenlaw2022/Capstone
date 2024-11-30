@@ -67,6 +67,10 @@ a {
     color: #3c4dff;
 }
 
+ol {
+    padding-left: 20px;
+}
+
 ul {
     padding-left: 20px;
 }
@@ -78,6 +82,7 @@ ul {
     /* this additional right offset accounts for the sidebar throwing off centering*/
     padding-right: 100px;
     width: 100vw;
+    line-height: 24px;
 }
 
 .auth-layout {

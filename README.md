@@ -1,11 +1,12 @@
 # Capstone
+
 **Project Title**: Mastering Technical Interviews Through Gamified Learning: An Evidence-Based Educational Platform
 
 This repo is a senior capstone project for Minerva University. It will be completed in Spring 2025.
 
 ## Project Abstract
 
- Technical interviews are a critical step in securing a software engineering role. However, technical interview preparation resources are often fragmented and narrowly focused, lacking an effective and cohesive program. This fragmentation leads to inefficient study practices and decreased motivation among users. Further, practice resources like LeetCode questions typically focus on memorizing problem solutions and do not promote deep strategy-based learning. This web application addresses these issues by centralizing study resources—including practice questions, coding challenges, and topic study guides—into a comprehensive curriculum. The website will utilize the principles of science of learning to foster deep and transferable knowledge. By integrating learning techniques such as spaced practice and interleaving, and incorporating gamification elements like points, leaderboards, and badges, the application aims to enhance user engagement and motivation. These feature choices are supported by research demonstrating that well-designed gamification elements increase user engagement and motivation to learn. The deliverable is a full-stack website with an asynchronous learning journey that allows users to track their progress and maximize their time with increased enjoyment. The ultimate goal is to elevate the efficacy and appeal of technical interview preparation through a scientifically grounded, gamified learning experience.
+Technical interviews are a critical step in securing a software engineering role. However, technical interview preparation resources are often fragmented and narrowly focused, lacking an effective and cohesive program. This fragmentation leads to inefficient study practices and decreased motivation among users. Further, practice resources like LeetCode questions typically focus on memorizing problem solutions and do not promote deep strategy-based learning. This web application addresses these issues by centralizing study resources—including practice questions, coding challenges, and topic study guides—into a comprehensive curriculum. The website will utilize the principles of science of learning to foster deep and transferable knowledge. By integrating learning techniques such as spaced practice and interleaving, and incorporating gamification elements like points, leaderboards, and badges, the application aims to enhance user engagement and motivation. These feature choices are supported by research demonstrating that well-designed gamification elements increase user engagement and motivation to learn. The deliverable is a full-stack website with an asynchronous learning journey that allows users to track their progress and maximize their time with increased enjoyment. The ultimate goal is to elevate the efficacy and appeal of technical interview preparation through a scientifically grounded, gamified learning experience.
 
 ## Tech Stack
 
@@ -24,7 +25,7 @@ This repo is a senior capstone project for Minerva University. It will be comple
 7. Badges
 8. Leaderboards
 9. Weekly concept reviews (review questions from all completed skills)
-11. Gems as rewards to unlock hints and extra code challenges
+10. Gems as rewards to unlock hints and extra code challenges
 
 ## Getting Started
 
@@ -55,12 +56,18 @@ This repo is a senior capstone project for Minerva University. It will be comple
   ```
 - install packages:
 
-  ```bash 
+  ```bash
   pip install -r requirements.txt
   ```
 
+- seed your local db instance with data
+
+  ```bash
+  flask seed
+  ```
+
 - run the backend server:
-  ```bash 
+  ```bash
   flask run
   ```
 
@@ -68,18 +75,18 @@ This repo is a senior capstone project for Minerva University. It will be comple
 
 - Navigate to the frontend directory
 
-  ```bash 
+  ```bash
   cd ../frontend
   ```
 
 - install the required packages:
 
-  ```bash 
+  ```bash
   npm install
   ```
 
 - run the frontend development server:
-  ```bash 
+  ```bash
   npm run dev
   ```
 
