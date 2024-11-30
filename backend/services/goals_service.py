@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta, timezone, date
 import logging
+import random
 from utils import get_most_recent_monday
 from enums import MetricType, TimePeriodType
 from typing import Dict, List, Tuple
@@ -161,12 +162,18 @@ class GoalService:
     def populate_daily_goals(self, user_id: int):
         today = datetime.now(timezone.utc).date()
         # assign 3 random daily goals to the user
-        daily_goals = (
-            Goal.query.filter_by(time_period=TimePeriodType.DAILY)
-            .order_by(func.random())
-            .limit(3)
-            .all()
-        )
+        total_daily_goals = Goal.query.filter_by(
+            time_period=TimePeriodType.DAILY
+        ).count()
+        random_indices = random.sample(range(total_daily_goals), 3)
+        daily_goals = []
+        for index in random_indices:
+            daily_goals.append(
+                Goal.query.filter_by(time_period=TimePeriodType.DAILY)
+                .offset(index)
+                .limit(1)
+                .one()
+            )
         user_goals = [
             UserGoal(user_id=user_id, goal_id=goal.id, date_assigned=today)
             for goal in daily_goals
@@ -177,12 +184,18 @@ class GoalService:
     def populate_monthly_goals(self, user_id: int):
         first_of_month = datetime.now(timezone.utc).date().replace(day=1)
         # assign 3 random monthly goals to the user
-        monthly_goals = (
-            Goal.query.filter_by(time_period=TimePeriodType.MONTHLY)
-            .order_by(func.random())
-            .limit(3)
-            .all()
-        )
+        total_monthly_goals = Goal.query.filter_by(
+            time_period=TimePeriodType.MONTHLY
+        ).count()
+        random_indices = random.sample(range(total_monthly_goals), 3)
+        monthly_goals = []
+        for index in random_indices:
+            monthly_goals.append(
+                Goal.query.filter_by(time_period=TimePeriodType.MONTHLY)
+                .offset(index)
+                .limit(1)
+                .one()
+            )
         user_goals = [
             UserGoal(user_id=user_id, goal_id=goal.id, date_assigned=first_of_month)
             for goal in monthly_goals
