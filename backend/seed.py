@@ -328,11 +328,10 @@ def seed_data():
         # Reset user progress
         # clear_users()
         # clear_user_units()
-        clear_user_modules()
+        # clear_user_modules()
         # clear_user_badges()
         # clear_user_units()
-        clear_daily_user_activity()
-        # db.session.query(Goal).delete()
+        # clear_daily_user_activity()
         db.session.query(UserGoal).delete()
         db.session.commit()
 
@@ -442,7 +441,7 @@ def seed_data():
 
         # Add badges
         add_badges()
-        # add goals and assign to user
+        # add goals
         add_goals()
 
         # hardcode some user badges for testing

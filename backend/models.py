@@ -121,7 +121,7 @@ class UserGoal(db.Model):
     # TODO: when developing queries, check if these columns are in the right tables for efficiency
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), primary_key=True)
     goal_id = db.Column(db.Integer, db.ForeignKey("goals.id"), primary_key=True)
-    date_assigned = db.Column(db.Date, default=current_date, nullable=False)
+    date_assigned = db.Column(db.Date, default=current_date, primary_key=True)
     date_completed = db.Column(db.Date, nullable=True)
 
     user = db.relationship("User", back_populates="goals")

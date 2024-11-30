@@ -153,6 +153,8 @@ def get_num_goals_completed_weekly():
             UserGoal.user_id == user_id,
             UserGoal.date_completed.between(start_of_week, end_of_week),
         ).count()
+        
+        logger.info(f"Number of goals completed this week: {num_completed}")
         return jsonify(num_completed), 200
     except Exception as e:
         logger.error(
@@ -179,7 +181,6 @@ def add_gems_for_newly_completed_goal(goal_id):
             logger.error("User not found")
             return jsonify({"error": "User not found"}), 404
 
-        logger.debug(f"Adding gems for newly completed goal for {user_id}")
         # validating the request
         user_goal = UserGoal.query.filter_by(user_id=user_id, goal_id=goal_id).first()
         if user_goal is None:
