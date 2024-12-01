@@ -23,27 +23,55 @@ export default function LeetCodeInstructions() {
                 />
             </div>
             {isVisible && (
-                <ol>
-                    <li>
-                        Create a LeetCode account at leetcode.com if you haven't
-                        already
-                    </li>
-                    <li>
-                        Navigate to the problem on LeetCode that matches our
-                        problem description
-                    </li>
-                    <li>
-                        Use LeetCode's built-in editor to write and test your
-                        solution
-                    </li>
-                    <li>Run the provided test cases to verify your solution</li>
-                    <li>Submit your code to check it against all test cases</li>
-                    <li>Review the execution time and memory usage metrics</li>
-                    <li>
-                        Study the solution discussions after successfully
-                        solving the problem
-                    </li>
-                </ol>
+                <>
+                    <p className="boldPoint">
+                        For a complete beginners guide to solving problems in
+                        LeetCode, visit{" "}
+                        <a
+                            href="https://leetcode.com/explore/featured/card/the-leetcode-beginners-guide/678/sql-data-structure/4352/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            this link
+                        </a>{" "}
+                    </p>
+                    <ol>
+                        <li>
+                            Create a LeetCode account at{" "}
+                            <a
+                                href="https://leetcode.com"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                leetcode.com
+                            </a>{" "}
+                            if you haven't already
+                        </li>
+                        <li>
+                            Use the LeetCode link at the top of this page to
+                            access the problem
+                        </li>
+                        <li>
+                            Use LeetCode's built-in editor to write and test
+                            your solution
+                        </li>
+                        <li>
+                            Run the provided test cases to verify your solution
+                        </li>
+                        <li>
+                            Submit your code to check it against all test cases
+                        </li>
+
+                        <li>
+                            Review the execution time and memory usage metrics
+                        </li>
+                        <li>
+                            Study the solution discussions after successfully
+                            solving the problem to understand alternative
+                            approaches
+                        </li>
+                    </ol>
+                </>
             )}
         </div>
     );

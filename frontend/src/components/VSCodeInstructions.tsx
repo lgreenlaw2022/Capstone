@@ -27,9 +27,37 @@ export default function VSCodeInstructions() {
                 <ol>
                     <li>Set up your local development environment:</li>
                     <ul>
-                        <li>Install VSCode from code.visualstudio.com</li>
+                        <p className="boldPoint">
+                            For an official Getting Started tutorial, visit{" "}
+                            <a
+                                href="https://code.visualstudio.com/docs/getstarted/getting-started"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                this link
+                            </a>
+                        </p>
                         <li>
-                            Install the necessary language extensions (Python)
+                            Install VSCode from{" "}
+                            <a
+                                href="https://code.visualstudio.com"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                code.visualstudio.com
+                            </a>
+                        </li>
+                        <li>
+                            Install the necessary language extensions (install
+                            Python{" "}
+                            <a
+                                href="https://marketplace.visualstudio.com/items?itemName=ms-python.python"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                at this link
+                            </a>{" "}
+                            or from the Extensions tab in VSCode)
                         </li>
                         <li>Set up a dedicated folder for coding practice</li>
                     </ul>
@@ -49,15 +77,34 @@ export default function VSCodeInstructions() {
                     <ul>
                         <li>
                             Implement a solution class/function as specified in
-                            the problem
+                            code snippet above
                         </li>
-                        <li>Write a main function to run test cases</li>
+                        <li>
+                            Write a{" "}
+                            <a
+                                href="https://realpython.com/python-main-function/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                main function
+                            </a>{" "}
+                            to run test cases
+                        </li>
                         <li>
                             Use print statements or the debugger to verify your
                             solution
                         </li>
                         <li>
-                            Run your code using VSCode's integrated terminal
+                            Run your code using VSCode's integrated terminal.
+                            For help, visit{" "}
+                            <a
+                                href="https://code.visualstudio.com/docs/terminal/basics"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                this page
+                            </a>
+                            .
                         </li>
                     </ul>
                     <li>Tips for an interview-like experience</li>
