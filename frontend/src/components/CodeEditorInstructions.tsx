@@ -11,7 +11,7 @@ export default function CodeEditorInstructions() {
                 LeetCode or an IDE like VSCode. By practicing in these
                 environments, you'll build familiarity with the tools you'll
                 encounter during interviews. This approach ensures you're
-                comfortable with industry-standard coding environments not a
+                comfortable with industry-standard coding environments, not a
                 custom editor you won't see in actual interviews.
             </p>
             <LeetCodeInstructions />

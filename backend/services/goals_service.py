@@ -131,7 +131,7 @@ class GoalProgressCalculator:
     def _get_time_period_start(
         self, assigned_date: date, time_period: TimePeriodType
     ) -> date:
-        """Calculate the start of the current time period ."""
+        """Calculate the start of the current time period."""
         if time_period == TimePeriodType.DAILY:
             return assigned_date  # TODO: should I change this to today?
         elif time_period == TimePeriodType.WEEKLY:

@@ -121,6 +121,10 @@ button:hover {
     font-weight: bold;
 }
 
+.guideContainer a:hover {
+    text-decoration: underline;
+}
+
 .boldPoint {
     color: #000;
     font-size: 16px;

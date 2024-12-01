@@ -71,14 +71,12 @@ const CodeChallengePage: React.FC = () => {
                     }}
                 />
             </div>
-            <div>
-                <p>Hint component will go here</p>
-            </div>
-            <CodeEditorInstructions />
             {/* TODO: hint component */}
             <div>
                 <p>Hint component will go here</p>
             </div>
+            <CodeEditorInstructions />
+
             <button
                 onClick={handleComplete}
                 aria-label="Mark module as complete"

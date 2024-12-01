@@ -38,29 +38,35 @@ Technical interviews are a critical step in securing a software engineering role
 
 ### Installation
 
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/your-username/capstone.git
-   cd capstone
-   ```
+1. **Clone the repository**
+
+  ```bash
+  git clone https://github.com/your-username/capstone.git
+  cd capstone
+  ```
+
 2. **Backend setup**
 
 - Navigate to the backend directory:
+
   ```bash
   cd backend
   ```
+
 - create a virtual environment:
+
   ```bash
   python -m venv venv
   source venv/bin/activate  # On Windows use venv\Scripts\activate
   ```
+
 - install packages:
 
   ```bash
   pip install -r requirements.txt
   ```
 
-- seed your local db instance with data
+- seed your local db instance with data (includes course content, badges, and goals)
 
   ```bash
   flask seed
@@ -86,6 +92,7 @@ Technical interviews are a critical step in securing a software engineering role
   ```
 
 - run the frontend development server:
+
   ```bash
   npm run dev
   ```
