@@ -5,6 +5,7 @@ import * as monaco from "monaco-editor";
 
 import { getCodeChallenge, submitCompleteModule } from "../../../api/api";
 import styles from "@/styles/Content.module.css";
+import CodeEditorInstructions from "@/components/CodeEditorInstructions";
 
 const CodeChallengePage: React.FC = () => {
     const router = useRouter();
@@ -71,7 +72,11 @@ const CodeChallengePage: React.FC = () => {
                 />
             </div>
             {/* TODO: hint component */}
-            <p>Hint component will go here</p>
+            <div>
+                <p>Hint component will go here</p>
+            </div>
+            <CodeEditorInstructions />
+
             <button
                 onClick={handleComplete}
                 aria-label="Mark module as complete"

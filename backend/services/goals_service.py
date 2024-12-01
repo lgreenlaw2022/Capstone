@@ -27,10 +27,18 @@ class GoalProgressCalculator:
         """Calculate progress for goals filtered by time period."""
 
         # get all active goals for the user
-        goals = UserGoal.query.filter(UserGoal.user_id == user_id)
+        goals = (
+            UserGoal.query.join(Goal)
+            .filter(UserGoal.user_id == user_id)
+            .filter(Goal.time_period == time_period)
+        )
 
-        query = goals.join(Goal).filter(Goal.time_period == time_period)
-        active_goals = query.all()
+        # ensure the goals evaluated are for the right date
+        if time_period == TimePeriodType.DAILY:
+            current_date = datetime.now(timezone.utc).date()
+            goals = goals.filter(UserGoal.date_assigned == current_date)
+
+        active_goals = goals.all()
 
         # calculate progress for each goal
         progress_results = []
@@ -125,7 +133,7 @@ class GoalProgressCalculator:
     ) -> date:
         """Calculate the start of the current time period."""
         if time_period == TimePeriodType.DAILY:
-            return assigned_date
+            return assigned_date  # TODO: should I change this to today?
         elif time_period == TimePeriodType.WEEKLY:
             return get_most_recent_monday(assigned_date)
         elif time_period == TimePeriodType.MONTHLY:
@@ -174,6 +182,11 @@ class GoalService:
                 .limit(1)
                 .one()
             )
+        existing_goals = UserGoal.query.filter_by(user_id=user_id).all()
+        for goal in existing_goals:
+            if goal.goal.time_period == TimePeriodType.DAILY:
+                logger.debug(f"existing goal: {goal.goal.title}, {goal.date_assigned}")
+
         user_goals = [
             UserGoal(user_id=user_id, goal_id=goal.id, date_assigned=today)
             for goal in daily_goals
