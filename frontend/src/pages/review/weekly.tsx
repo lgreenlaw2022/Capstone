@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { getWeeklyReviewQuestions, submitWeeklyReviewScore } from "@/api/api";
 import { QuizQuestion } from "@/types/QuestionTypes";
 
-
 export default function WeeklyReviewQuizPage() {
     const router = useRouter();
     const [questions, setQuestions] = useState<QuizQuestion[]>([]);
@@ -13,7 +12,6 @@ export default function WeeklyReviewQuizPage() {
         try {
             const data = await getWeeklyReviewQuestions();
             setQuestions(data);
-            console.log("Weekly review questions:", questions);
         } catch (error) {
             console.error("Error fetching questions:", error);
         }
@@ -31,7 +29,7 @@ export default function WeeklyReviewQuizPage() {
 
     return (
         <>
-            {questions.length === 0 && (
+            {questions.length !== 0 && (
                 <Quiz
                     questions={questions}
                     moduleTitle="Weekly Review"
