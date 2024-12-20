@@ -4,6 +4,7 @@ import { getModulesInUnit } from "../api/api";
 import { useEffect, useState } from "react";
 import Module from "./Module";
 import { ModuleType } from "../types/ModuleTypes";
+import { useRouter } from "next/router";
 
 interface UnitProps {
     unitId: number;
@@ -19,6 +20,7 @@ interface Module {
 }
 
 export default function Unit({ unitId, title }: UnitProps) {
+    const router = useRouter();
     const [modules, setModules] = useState<Module[]>([]);
     const [completionPercentage, setCompletionPercentage] = useState<number>(0);
 
@@ -45,6 +47,10 @@ export default function Unit({ unitId, title }: UnitProps) {
         }
     };
 
+    const handleReviewClick = () => {
+        router.push(`/review/${unitId}`);
+    };
+
     useEffect(() => {
         fetchModules(unitId);
     }, [unitId]);
@@ -59,7 +65,13 @@ export default function Unit({ unitId, title }: UnitProps) {
                     {completionPercentage}% completed
                 </div>
                 {completionPercentage === 100 && (
-                    <button className={styles.reviewButton}>Review</button>
+                    <button
+                        type="button"
+                        className={styles.reviewButton}
+                        onClick={handleReviewClick}
+                    >
+                        Review
+                    </button>
                 )}
             </div>
             <div className={styles.unitModules}>
