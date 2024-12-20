@@ -3,7 +3,7 @@ import Image from "next/image";
 import gem from "../../public/assets/gem.svg";
 import styles from "../styles/Hints.module.css";
 
-import { getUserChallengeHints } from "../api/api";
+import { getUserChallengeHints, buyHint } from "../api/api";
 
 interface Hint {
     hintId: number;
@@ -29,11 +29,11 @@ export default function Hints({ moduleId }: { moduleId: number }) {
         }
     };
 
-    const handleBuy = () => {
+    const handleBuy = async () => {
         // Handle the buy action
         if (lockedHints.length > 0) {
             const hintToUnlock = lockedHints[0];
-            // await buyHint(hintToUnlock.hintId);
+            await buyHint(hintToUnlock.hintId);
             setLockedHints(lockedHints.slice(1));
             setUnlockedHints([...unlockedHints, hintToUnlock]);
         }

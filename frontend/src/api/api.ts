@@ -484,3 +484,17 @@ export const getUserChallengeHints = async (moduleId: number) => {
         throw error;
     }
 };
+
+export const buyHint = async (hintId: number) => {
+    try {
+        const response = await axiosInstance.post(`/content/hints/${hintId}/buy`);
+        return response.data;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error buying hint:', error.message);
+        } else {
+            console.error('Unknown error buying hint:', error);
+        }
+        throw error;
+    }
+}

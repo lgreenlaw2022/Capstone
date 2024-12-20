@@ -1,5 +1,9 @@
 from datetime import datetime, timezone
-from config.constants import XP_FOR_COMPLETING_MODULE, XP_FOR_COMPLETING_CHALLENGE
+from config.constants import (
+    XP_FOR_COMPLETING_MODULE,
+    XP_FOR_COMPLETING_CHALLENGE,
+    GEMS_FOR_HINT,
+)
 from services.user_activity_service import update_daily_xp
 from services.badge_awarding_service import BadgeAwardingService
 from enums import EventType, ModuleType
@@ -7,6 +11,7 @@ from flask import Blueprint, request, jsonify, send_file, abort
 import logging
 from models import (
     DailyUserActivity,
+    User,
     UserHint,
     UserQuizQuestion,
     UserUnit,
@@ -595,4 +600,27 @@ def get_user_challenge_hints(module_id):
         return jsonify(user_hints_data), 200
     except Exception as e:
         logger.error(f"Error fetching hints for challenge {module_id}: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+
+
+@content_bp.route("/hints/<int:hint_id>/buy", methods=["POST"])
+@jwt_required()
+def buy_hint(hint_id):
+    try:
+        user_id = get_jwt_identity()
+        user_hint = UserHint.query.filter_by(user_id=user_id, hint_id=hint_id).first()
+        if user_hint is None:
+            user_hint = UserHint(user_id=user_id, hint_id=hint_id)
+        # deduct gems for hint purchase
+        user = User.query.get(user_id)
+        if user.gems < GEMS_FOR_HINT:
+            return jsonify({"error": "Insufficient gems to buy hint"}), 400
+
+        user.gems -= GEMS_FOR_HINT
+        user_hint.unlocked = True
+        db.session.add(user_hint)
+        db.session.commit()
+        return jsonify({"message": "Hint unlocked successfully"}), 200
+    except Exception as e:
+        logger.error(f"Error unlocking hint {hint_id}: {str(e)}")
         return jsonify({"error": str(e)}), 500
