@@ -279,8 +279,13 @@ class Hint(db.Model):
 
     def validate_module_type(self):
         module = Module.query.get(self.module_id)
-        if module and module.module_type not in [ModuleType.CHALLENGE, ModuleType.BONUS_CHALLENGE]:
-            raise ValueError("Associated module must be of type 'challenge'")
+        if module and module.module_type not in [
+            ModuleType.CHALLENGE,
+            ModuleType.BONUS_CHALLENGE,
+        ]:
+            raise ValueError(
+                "Associated module must be of type 'CHALLENGE' or 'BONUS_CHALLENGE'"
+            )
 
 
 class UserHint(db.Model):

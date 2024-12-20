@@ -11,6 +11,7 @@ from flask import Blueprint, request, jsonify, send_file, abort
 import logging
 from models import (
     DailyUserActivity,
+    Hint,
     User,
     UserHint,
     UserQuizQuestion,
@@ -578,7 +579,7 @@ def get_user_challenge_hints(module_id):
         module = db.session.query(Module).filter(Module.id == module_id).first()
         if module is None:
             return jsonify({"error": "Module not found"}), 404
-        elif module.module_type not in [
+        if module.module_type not in [
             ModuleType.CHALLENGE,
             ModuleType.BONUS_CHALLENGE,
         ]:
@@ -611,6 +612,11 @@ def get_user_challenge_hints(module_id):
 def buy_hint(hint_id):
     try:
         user_id = get_jwt_identity()
+        # Validate hint exists
+        hint = Hint.query.get(hint_id)
+        if hint is None:
+            return jsonify({"error": "Hint not found"}), 404
+
         user_hint = UserHint.query.filter_by(user_id=user_id, hint_id=hint_id).first()
         if user_hint is None:
             user_hint = UserHint(user_id=user_id, hint_id=hint_id)

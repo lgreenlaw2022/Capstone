@@ -27,6 +27,7 @@ export default function Hints({ moduleId }: { moduleId: number }) {
             setUnlockedHints(data.filter((hint: Hint) => hint.unlocked));
         } catch (error) {
             console.error("Error fetching hints:", error);
+            setErrorMessage("Failed to load hints.");
         }
     };
 
@@ -56,7 +57,7 @@ export default function Hints({ moduleId }: { moduleId: number }) {
 
     useEffect(() => {
         fetchHints();
-    }, []);
+    }, [moduleId]);
 
     return (
         <div className={styles.hintsContainer}>
@@ -72,7 +73,7 @@ export default function Hints({ moduleId }: { moduleId: number }) {
                     <div className={styles.modal}>
                         <h4>Unlock Hint</h4>
                         <div className={styles.buttons}>
-                            <button onClick={handleBuy}>
+                            <button type="button" onClick={handleBuy}>
                                 <Image
                                     src={gem}
                                     alt="gem"
@@ -81,11 +82,11 @@ export default function Hints({ moduleId }: { moduleId: number }) {
                                 />
                                 5
                             </button>
-                            <button onClick={closeModal}>Cancel</button>
+                            <button type="button" onClick={closeModal}>Cancel</button>
                         </div>
                     </div>
                 ) : (
-                    <button onClick={openModal}>Unlock Hint</button>
+                    <button type="button" onClick={openModal}>Unlock Hint</button>
                 ))}
             {errorMessage && <p className={styles.error}>{errorMessage}</p>}
         </div>
