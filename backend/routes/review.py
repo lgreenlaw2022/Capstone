@@ -42,7 +42,7 @@ def pick_weekly_review_questions(user_id):
     practiced_questions = fetch_practiced_questions(user_id, three_months_ago)
 
     # Identify the most recently completed quiz module
-    # TODO: switch to unit, make frontend show text if returned list is []
+    # Note. the completed date is based on original completion date, not the last practiced date
     most_recent_module = (
         db.session.query(UserModule)
         .join(Module, UserModule.module_id == Module.id)
@@ -54,11 +54,6 @@ def pick_weekly_review_questions(user_id):
         .order_by(UserModule.completed_date.desc())
         .first()
     )
-
-    # most_recent_completed_unit = (
-    # can't do this because UserUnit doesn't have a completed_date field
-    #     db.session.query(UserUnit)
-    # )
 
     if not most_recent_module:
         # user has not practiced any question to review
