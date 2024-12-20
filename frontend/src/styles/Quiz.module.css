@@ -9,3 +9,11 @@
     align-content: center;
     gap: 19px;
 }
+
+.noQuestionsContainer {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 20px;
+    margin: 50px;
+}

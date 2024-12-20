@@ -42,6 +42,7 @@ def pick_weekly_review_questions(user_id):
     practiced_questions = fetch_practiced_questions(user_id, three_months_ago)
 
     # Identify the most recently completed quiz module
+    # Note. the completed date is based on original completion date, not the last practiced date
     most_recent_module = (
         db.session.query(UserModule)
         .join(Module, UserModule.module_id == Module.id)
@@ -55,6 +56,8 @@ def pick_weekly_review_questions(user_id):
     )
 
     if not most_recent_module:
+        # user has not practiced any question to review
+        logger.debug("User does not have any questions to review")
         return []
 
     logger.debug(
@@ -72,6 +75,9 @@ def pick_weekly_review_questions(user_id):
         most_recent_questions,
         min(num_most_recent_questions, len(most_recent_questions)),
     )
+    logger.debug(
+        f"Selected {len(selected_questions)} questions from the most recent unit"
+    )
 
     # Select the remaining 35% of questions from other units, weighted by the longest date since they were last reviewed
     remaining_questions = [
@@ -80,6 +86,7 @@ def pick_weekly_review_questions(user_id):
     remaining_questions.sort(key=lambda q: q["last_practiced_date"])
     num_remaining_questions = TOTAL_QUESTIONS - len(selected_questions)
     selected_questions.extend(remaining_questions[:num_remaining_questions])
+    logger.debug(f"Selecting {num_remaining_questions} questions from others")
     # TODO: if there are not enough other questions, add more from the most recent unit
 
     # shuffle the questions
@@ -104,7 +111,6 @@ def pick_weekly_review_questions(user_id):
             ],
         }
         questions.append(question_data)
-
     return questions
 
 
@@ -172,7 +178,7 @@ def submit_weekly_review():
             user.weekly_review_done = True
             update_daily_xp(user_id, XP_FOR_COMPLETING_REVIEW)
             db.session.commit()
-            
+
         logger.debug(f"Submitting weekly review data for user {user_id}")
         return jsonify({"message": "Weekly review data submitted successfully"}), 200
     except Exception as e:

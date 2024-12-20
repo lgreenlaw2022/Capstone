@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { getWeeklyReviewQuestions, submitWeeklyReviewScore } from "@/api/api";
 import { QuizQuestion } from "@/types/QuestionTypes";
-
+import styles from "../../styles/Quiz.module.css";
 
 export default function WeeklyReviewQuizPage() {
     const router = useRouter();
@@ -13,7 +13,6 @@ export default function WeeklyReviewQuizPage() {
         try {
             const data = await getWeeklyReviewQuestions();
             setQuestions(data);
-            console.log("Weekly review questions:", questions);
         } catch (error) {
             console.error("Error fetching questions:", error);
         }
@@ -31,12 +30,22 @@ export default function WeeklyReviewQuizPage() {
 
     return (
         <>
-            {questions.length === 0 && (
+            {questions.length !== 0 ? (
                 <Quiz
                     questions={questions}
                     moduleTitle="Weekly Review"
                     onSubmit={handleSubmit}
                 />
+            ) : (
+                <div className={styles.noQuestionsContainer}>
+                    <p>No questions to review. Please complete more modules.</p>
+                    <button
+                        type="button"
+                        onClick={() => router.push("/review")}
+                    >
+                        Back to Review Page
+                    </button>
+                </div>
             )}
         </>
     );
