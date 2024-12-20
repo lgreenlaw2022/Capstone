@@ -50,7 +50,6 @@ export default function Leaderboard() {
             <div className={styles.headingContainer}>
                 <h2>Weekly Leaderboard</h2>
                 <p>Top 5 win prizes</p>
-                {/* TODO: make dynamic */}
                 <p className={styles.emphasisText}>{daysLeft} days left</p>
             </div>
             <div className={styles.rankingsContainer}>

@@ -2,6 +2,7 @@ from datetime import datetime, timezone
 from app import create_app
 from models import (
     Goal,
+    Hint,
     User,
     UserGoal,
     db,
@@ -20,7 +21,7 @@ from enums import MetricType, ModuleType, BadgeType, EventType, TimePeriodType
 import logging
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 
 app = create_app()
 
@@ -286,6 +287,48 @@ def add_user_goals():
     print("User goals added successfully.")
 
 
+def add_hints():
+    # Fetch all CHALLENGE modules
+    challenge_modules = (
+        db.session.query(Module)
+        .filter(
+            Module.module_type.in_([ModuleType.CHALLENGE, ModuleType.BONUS_CHALLENGE])
+        )
+        .all()
+    )
+    hints_data_template = [
+        {
+            "text": "This is hint 1",
+            "order": 1,
+        },
+        {
+            "text": "This is hint 2",
+            "order": 2,
+        },
+        {
+            "text": "This is hint 3",
+            "order": 3,
+        },
+    ]
+
+    hints_to_add = []
+    for module in challenge_modules:
+        # Check if hints already exist for this module
+        existing_hints = db.session.query(Hint).filter_by(module_id=module.id).all()
+        if existing_hints:
+            continue
+
+        for hint_data in hints_data_template:
+            hint = Hint(
+                text=hint_data["text"],
+                order=hint_data["order"],
+                module_id=module.id,
+            )
+            hints_to_add.append(hint)
+
+    bulk_insert(hints_to_add)
+
+
 def bulk_insert(objects_to_add):
     if objects_to_add:
         db.session.bulk_save_objects(objects_to_add)
@@ -324,7 +367,6 @@ def clear_daily_user_activity():
 
 def seed_data():
     with app.app_context():
-
         # Reset user progress
         # clear_users()
         # clear_user_units()
@@ -334,7 +376,6 @@ def seed_data():
         # clear_daily_user_activity()
         db.session.query(UserGoal).delete()
         db.session.commit()
-
         # Check if the course already exists
         course = Course.query.filter_by(title="Technical Interview Prep").first()
         if not course:
@@ -443,6 +484,7 @@ def seed_data():
         add_badges()
         # add goals
         add_goals()
+        add_hints()
 
         # hardcode some user badges for testing
         # bulk_insert(add_user_badges(1))

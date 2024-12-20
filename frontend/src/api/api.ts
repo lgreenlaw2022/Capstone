@@ -470,3 +470,35 @@ export const addGoalReward = async (goalId: number) => {
         throw error;
     }
 }
+
+export const getUserChallengeHints = async (moduleId: number) => {
+    try {
+        const response = await axiosInstance.get(`/content/hints/${moduleId}`);
+        return response.data;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error fetching user challenge hints:', error.message);
+        } else {
+            console.error('Unknown error fetching user challenge hints:', error);
+        }
+        throw error;
+    }
+};
+
+export const buyHint = async (hintId: number) => {
+    try {
+        const response = await axiosInstance.post(`/content/hints/${hintId}/buy`);
+        return response.data;
+    } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+            if (error.response.status === 400) {
+                // Return a message for users
+                return { error: "Insufficient funds" };
+            }
+            console.error('Error buying hint:', error.response.data.error);
+        } else {
+            console.error('Unknown error buying hint:', error);
+        }
+        throw error;
+    }
+}

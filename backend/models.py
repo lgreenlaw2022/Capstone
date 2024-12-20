@@ -10,6 +10,7 @@ db = SQLAlchemy()
 def current_datetime():
     return datetime.now(timezone.utc)
 
+
 def current_date():
     return datetime.now(timezone.utc).date()
 
@@ -55,6 +56,9 @@ class User(db.Model):
     )
     quiz_questions = db.relationship(
         "UserQuizQuestion", back_populates="user", cascade="all, delete-orphan"
+    )
+    user_hints = db.relationship(
+        "UserHint", back_populates="user", cascade="all, delete-orphan"
     )
 
     # Set and check for password using Werkzeug functions.
@@ -262,6 +266,9 @@ class Hint(db.Model):
     module_id = db.Column(db.Integer, db.ForeignKey("modules.id"), nullable=False)
 
     module = db.relationship("Module", back_populates="hints")
+    user_hints = db.relationship(
+        "UserHint", back_populates="hint", cascade="all, delete-orphan"
+    )
 
     # Check constraint ensuring that the associated module is of type 'CHALLENGE'
     def __init__(self, text, order, module_id):
@@ -272,8 +279,23 @@ class Hint(db.Model):
 
     def validate_module_type(self):
         module = Module.query.get(self.module_id)
-        if module and module.module_type != "challenge":
-            raise ValueError("Associated module must be of type 'challenge'")
+        if module and module.module_type not in [
+            ModuleType.CHALLENGE,
+            ModuleType.BONUS_CHALLENGE,
+        ]:
+            raise ValueError(
+                "Associated module must be of type 'CHALLENGE' or 'BONUS_CHALLENGE'"
+            )
+
+
+class UserHint(db.Model):
+    __tablename__ = "user_hints"
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), primary_key=True)
+    hint_id = db.Column(db.Integer, db.ForeignKey("hints.id"), primary_key=True)
+    unlocked = db.Column(db.Boolean, default=False)
+
+    hint = db.relationship("Hint", back_populates="user_hints")
+    user = db.relationship("User", back_populates="user_hints")
 
 
 class DailyUserActivity(db.Model):

@@ -6,6 +6,7 @@ import * as monaco from "monaco-editor";
 import { getCodeChallenge, submitCompleteModule } from "../../../api/api";
 import styles from "@/styles/Content.module.css";
 import CodeEditorInstructions from "@/components/CodeEditorInstructions";
+import Hints from "@/components/Hints";
 
 const CodeChallengePage: React.FC = () => {
     const router = useRouter();
@@ -71,10 +72,7 @@ const CodeChallengePage: React.FC = () => {
                     }}
                 />
             </div>
-            {/* TODO: hint component */}
-            <div>
-                <p>Hint component will go here</p>
-            </div>
+            <Hints moduleId={Number(moduleId)}/> 
             <CodeEditorInstructions />
 
             <button
