@@ -578,7 +578,10 @@ def get_user_challenge_hints(module_id):
         module = db.session.query(Module).filter(Module.id == module_id).first()
         if module is None:
             return jsonify({"error": "Module not found"}), 404
-        elif module.module_type != ModuleType.CHALLENGE:
+        elif module.module_type not in [
+            ModuleType.CHALLENGE,
+            ModuleType.BONUS_CHALLENGE,
+        ]:
             return jsonify({"error": "Module is not a challenge"}), 400
 
         hints = module.hints
@@ -614,6 +617,7 @@ def buy_hint(hint_id):
         # deduct gems for hint purchase
         user = User.query.get(user_id)
         if user.gems < GEMS_FOR_HINT:
+            logger.error(f"Insufficient gems to buy hint for user {user_id}")
             return jsonify({"error": "Insufficient gems to buy hint"}), 400
 
         user.gems -= GEMS_FOR_HINT

@@ -16,6 +16,7 @@ export default function Hints({ moduleId }: { moduleId: number }) {
     const [lockedHints, setLockedHints] = useState<Hint[]>([]);
     const [unlockedHints, setUnlockedHints] = useState<Hint[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
     const fetchHints = async () => {
         try {
@@ -33,9 +34,14 @@ export default function Hints({ moduleId }: { moduleId: number }) {
         // Handle the buy action
         if (lockedHints.length > 0) {
             const hintToUnlock = lockedHints[0];
-            await buyHint(hintToUnlock.hintId);
-            setLockedHints(lockedHints.slice(1));
-            setUnlockedHints([...unlockedHints, hintToUnlock]);
+            const result = await buyHint(hintToUnlock.hintId);
+            if (result.error) {
+                setErrorMessage(result.error);
+            } else {
+                setLockedHints(lockedHints.slice(1));
+                setUnlockedHints([...unlockedHints, hintToUnlock]);
+                setErrorMessage(null);
+            }
         }
         closeModal();
     };
@@ -81,6 +87,7 @@ export default function Hints({ moduleId }: { moduleId: number }) {
                 ) : (
                     <button onClick={openModal}>Unlock Hint</button>
                 ))}
+            {errorMessage && <p className={styles.error}>{errorMessage}</p>}
         </div>
     );
 }

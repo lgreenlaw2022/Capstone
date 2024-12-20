@@ -490,8 +490,12 @@ export const buyHint = async (hintId: number) => {
         const response = await axiosInstance.post(`/content/hints/${hintId}/buy`);
         return response.data;
     } catch (error) {
-        if (error instanceof Error) {
-            console.error('Error buying hint:', error.message);
+        if (axios.isAxiosError(error) && error.response) {
+            if (error.response.status === 400) {
+                // Return a message for users
+                return { error: "Insufficient funds" };
+            }
+            console.error('Error buying hint:', error.response.data.error);
         } else {
             console.error('Unknown error buying hint:', error);
         }
