@@ -72,7 +72,7 @@ const CodeChallengePage: React.FC = () => {
                     }}
                 />
             </div>
-            <Hints />
+            <Hints moduleId={Number(moduleId)}/> 
             <CodeEditorInstructions />
 
             <button

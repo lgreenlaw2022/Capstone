@@ -470,3 +470,17 @@ export const addGoalReward = async (goalId: number) => {
         throw error;
     }
 }
+
+export const getUserChallengeHints = async (moduleId: number) => {
+    try {
+        const response = await axiosInstance.get(`/content/hints/${moduleId}`);
+        return response.data;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error fetching user challenge hints:', error.message);
+        } else {
+            console.error('Unknown error fetching user challenge hints:', error);
+        }
+        throw error;
+    }
+};

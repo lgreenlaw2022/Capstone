@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import gem from "../../public/assets/gem.svg";
-
 import styles from "../styles/Hints.module.css";
+
+import { getUserChallengeHints } from "../api/api";
 
 interface Hint {
     hintId: number;
@@ -11,31 +12,18 @@ interface Hint {
     unlocked: boolean;
 }
 
-export default function Hints() {
-    const [lockedHints, setLockedHints] = useState<Hint[]>([
-        {
-            hintId: 2,
-            hint: "This is another hint",
-            order: 2,
-            unlocked: false,
-        },
-    ]);
-    const [unlockedHints, setUnlockedHints] = useState<Hint[]>([
-        {
-            hintId: 1,
-            hint: "This is a hint",
-            order: 1,
-            unlocked: true,
-        },
-    ]);
+export default function Hints({ moduleId }: { moduleId: number }) {
+    const [lockedHints, setLockedHints] = useState<Hint[]>([]);
+    const [unlockedHints, setUnlockedHints] = useState<Hint[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const fetchHints = async () => {
         try {
-            // const data = await getHints();
+            const data = await getUserChallengeHints(moduleId);
+            console.log("Hints:", data);
             // order the hints by order
-            // setLockedHints(data.filter((hint) => !hint.unlocked));
-            // setUnlockedHints(data.filter((hint) => hint.unlocked));
+            setLockedHints(data.filter((hint: Hint) => !hint.unlocked));
+            setUnlockedHints(data.filter((hint: Hint) => hint.unlocked));
         } catch (error) {
             console.error("Error fetching hints:", error);
         }

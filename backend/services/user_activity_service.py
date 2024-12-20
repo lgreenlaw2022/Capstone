@@ -5,7 +5,7 @@ import logging
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
-
+# TODO: should this be a class?
 def update_daily_xp(user_id, xp):
     try:
         current_date = datetime.now(timezone.utc).date()
@@ -33,6 +33,7 @@ def update_daily_xp(user_id, xp):
         db.session.commit()
 
         # Update the user's streak
+        # maybe I can move this into the if not activity clause?
         update_user_streak(user, activity.streak_extended)
 
     except Exception as e:
