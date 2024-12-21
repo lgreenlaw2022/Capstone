@@ -130,11 +130,13 @@ def get_weekly_comparison_stats():
         most_recent_monday = get_most_recent_monday()
 
         # Calculate the percentages
-        percent_shorter_streak = calculate_percent_shorter_streak(user.streak)
-        percent_fewer_modules = calculate_percent_fewer_modules(
-            user_id, most_recent_monday
+        percent_shorter_streak = round(calculate_percent_shorter_streak(user.streak))
+        percent_fewer_modules = round(
+            calculate_percent_fewer_modules(user_id, most_recent_monday)
         )
-        percent_fewer_goals = calculate_percent_fewer_goals(user_id, most_recent_monday)
+        percent_fewer_goals = round(
+            calculate_percent_fewer_goals(user_id, most_recent_monday)
+        )
 
         logger.debug(
             f"Percent shorter streak: {percent_shorter_streak}, Percent fewer modules: {percent_fewer_modules}, Percent fewer goals: {percent_fewer_goals}"
