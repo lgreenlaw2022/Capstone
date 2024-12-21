@@ -372,9 +372,10 @@ def seed_data():
         # clear_user_units()
         # clear_user_modules()
         # clear_user_badges()
-        # clear_user_units()
         # clear_daily_user_activity()
-        db.session.query(UserGoal).delete()
+        # db.session.query(UserGoal).delete()
+        # db.session.query(Module).delete()
+        # db.session.query(Unit).delete()
         db.session.commit()
         # Check if the course already exists
         course = Course.query.filter_by(title="Technical Interview Prep").first()
@@ -411,7 +412,13 @@ def seed_data():
             },
             {
                 "title": "Two Sum",
+                "order": -1,
                 "module_type": ModuleType.BONUS_CHALLENGE,
+            },
+            {
+                "title": "Hash Maps Code Challenge 1 Solution",
+                "order": 4,
+                "module_type": ModuleType.CHALLENGE_SOLUTION,
             },
         ]
         # Get the "Hash Maps" unit
