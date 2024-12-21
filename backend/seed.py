@@ -370,11 +370,11 @@ def seed_data():
         # Reset user progress
         # clear_users()
         # clear_user_units()
-        # clear_user_modules()
+        clear_user_modules()
         # clear_user_badges()
         # clear_daily_user_activity()
         # db.session.query(UserGoal).delete()
-        # db.session.query(Module).delete()
+        db.session.query(Module).delete()
         # db.session.query(Unit).delete()
         db.session.commit()
         # Check if the course already exists
@@ -475,6 +475,48 @@ def seed_data():
                         },
                         {
                             "option_text": "O(log n)",
+                            "is_correct": False,
+                            "option_type": "CONCEPT",
+                        },
+                    ],
+                },
+                {
+                    "module_id": quiz_module.id,
+                    "title": "What is the time complexity of inserting in a Hash Map?",
+                    "options": [
+                        {
+                            "option_text": "O(1)",
+                            "is_correct": True,
+                            "option_type": "CONCEPT",
+                        },
+                        {
+                            "option_text": "O(n)",
+                            "is_correct": False,
+                            "option_type": "CONCEPT",
+                        },
+                        {
+                            "option_text": "O(log n)",
+                            "is_correct": False,
+                            "option_type": "CONCEPT",
+                        },
+                    ],
+                },
+                {
+                    "module_id": quiz_module.id,
+                    "title": "What kind of hash function minimizes collisions in a hash table?",
+                    "options": [
+                        {
+                            "option_text": "A function that returns a constant value.",
+                            "is_correct": False,
+                            "option_type": "CONCEPT",
+                        },
+                        {
+                            "option_text": "A function that evenly distributes keys across all array indices.",
+                            "is_correct": True,
+                            "option_type": "CONCEPT",
+                        },
+                        {
+                            "option_text": "A function that increases linearly with the number of entries.",
                             "is_correct": False,
                             "option_type": "CONCEPT",
                         },

@@ -3,11 +3,15 @@
 
     <h2>Understand the problem</h2>
     <p><strong>Clarifying Questions</strong></p>
-    <p> Q: Are there any time or space restrictions?</p>
-    <p> A: There are no space restrictions but the task should be accomplished in linear time.</p>
+    <dl>
+        <dt>Are there any time or space restrictions?</dt>
+        <dd>There are no space restrictions but the task should be accomplished in linear time.</dd>
+    </dl>
     <p class="boldPoint">This indicates a hash table (dictionary) is a good approach to solve the problem.</p>
-    <p> Q: Is it possible for the array to be empty and what should be returned in that case? </p>
-    <p> A: No, there will be at least a single number. </p>
+    <dl>
+        <dt>Is it possible for the array to be empty and what should be returned in that case?</dt>
+        <dd>No, there will be at least a single number.</dd>
+    </dl>
 
     <p><strong>Test Cases</strong></p>
     <p>
@@ -24,7 +28,7 @@
     </ol>
 
     <h2>Plan</h2>
-    <ol>
+    <ol role="list" aria-label="Solution steps">
         <li>Make a dictionary</li>
         <li>For each number in num
             <ol>
@@ -37,9 +41,9 @@
     </ol>
 
     <h2>Complexity Analysis</h2>
-    <p><strong>Time Complexity:<strong></p>
+    <p><strong>Time Complexity:</strong></p>
     <p> O(n) because we only iterate over the array once and hash table operations are in constant time.</p>
-    <p><strong>Space Complexity:<strong></p>   
+    <p><strong>Space Complexity:</strong></p>   
     <p> O(n) because the size of the dictionary scales with the length of the array.</p>
     
     <h2>Code Solution </h2>
