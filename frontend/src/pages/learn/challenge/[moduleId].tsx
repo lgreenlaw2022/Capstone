@@ -81,7 +81,7 @@ const CodeChallengePage: React.FC = () => {
             >
                 Complete
             </button>
-            {/* TODO: add a continue to solution button */}
+            {/* TODO: add a continue to solution button -- this will be necessary for bonus challenges*/}
         </div>
     );
 };

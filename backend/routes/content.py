@@ -283,6 +283,7 @@ def mark_module_complete_and_open_next(module_id, user_id):
 
         # Check if the module is already marked as complete
         if user_module.completed:
+            logger.debug(f"Module {module_id} is already marked as complete")
             return {"message": "Module already marked as complete"}
 
         # Update user module status to completed
@@ -331,6 +332,7 @@ def mark_module_complete_and_open_next(module_id, user_id):
             # Update the UserModule entry to open
             else:
                 user_module_next.open = True
+
         db.session.commit()
         logger.info("Next modules opened successfully")
 

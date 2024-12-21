@@ -1,0 +1,50 @@
+<div class="guideContainer">
+    <h1>Solution Walkthrough: Contains Duplicate</h1>
+
+    <h2>Understand the problem</h2>
+    <p><strong>Clarifying Questions</strong></p>
+    <dl>
+        <dt>Are there any time or space restrictions?</dt>
+        <dd>There are no space restrictions but the task should be accomplished in linear time.</dd>
+    </dl>
+    <p class="boldPoint">This indicates a hash table (dictionary) is a good approach to solve the problem.</p>
+    <dl>
+        <dt>Is it possible for the array to be empty and what should be returned in that case?</dt>
+        <dd>No, there will be at least a single number.</dd>
+    </dl>
+
+    <p><strong>Test Cases</strong></p>
+    <p>
+        Input: nums = [1,2,3,1]<br />
+        Output: true, there are two 1's in the array.
+    </p>
+    
+    <h2>Match</h2>
+    <p><strong>Common solutions to strings and array problems:</strong></p>
+    <ol>
+        <li>Sort. We can sort the array to look if there are two of the same number next to each other. Thus, we can detect if there is a match by examining each item in the array once. However, we cannot guarantee the sort will run in linear time.</li>
+        <li>Sliding window or Two pointer solution. Neither of these solutions are helpful since we must sort the array first and sorting already does the job.</li>
+        <li>Storing in hash table or hash set. This is a good solution because hash tables can store counts for each number in the array easily. We can detect if a number is already in the table in linear time and thus, we only need to review the list once.</li>
+    </ol>
+
+    <h2>Plan</h2>
+    <ol role="list" aria-label="Solution steps">
+        <li>Make a dictionary</li>
+        <li>For each number in num
+            <ol>
+                <li>Check if the number is already a key in the dictionary</li>
+                <li>If yes, return True</li>
+                <li>Else, add it to the dictionary</li>
+            </ol>
+        </li>
+        <li>Return False, no match was found</li>
+    </ol>
+
+    <h2>Complexity Analysis</h2>
+    <p><strong>Time Complexity:</strong></p>
+    <p> O(n) because we only iterate over the array once and hash table operations are in constant time.</p>
+    <p><strong>Space Complexity:</strong></p>   
+    <p> O(n) because the size of the dictionary scales with the length of the array.</p>
+    
+    <h2>Code Solution </h2>
+</div>
