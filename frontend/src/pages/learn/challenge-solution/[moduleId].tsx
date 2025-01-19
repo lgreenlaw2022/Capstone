@@ -3,7 +3,7 @@ import { useEffect, useState, useRef } from "react";
 import Editor, { OnMount } from "@monaco-editor/react";
 import * as monaco from "monaco-editor";
 
-import { getCodeChallenge, submitCompleteModule } from "../../../api/api";
+import { getModuleContent, submitCompleteModule } from "../../../api/api";
 import styles from "@/styles/Content.module.css";
 
 // TODO: REFACTORING -- this page is very similar to the CodeChallengePage,
@@ -18,7 +18,7 @@ const ChallengeSolutionPage: React.FC = () => {
     const fetchContent = async () => {
         try {
             if (moduleId) {
-                const data = await getCodeChallenge(Number(moduleId));
+                const data = await getModuleContent(Number(moduleId));
                 setContent(data.html);
                 setCode(data.code);
             }
