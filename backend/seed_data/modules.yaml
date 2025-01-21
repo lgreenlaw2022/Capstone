@@ -1,0 +1,30 @@
+modules:
+  - unit_title: "Hash Maps"
+    title: "Hash Maps Concept Guide"
+    order: 1
+    module_type: CONCEPT_GUIDE
+
+  - unit_title: "Hash Maps"
+    title: "Hash Maps Quiz"
+    order: 2
+    module_type: QUIZ
+
+  - unit_title: "Hash Maps"
+    title: "Hash Maps Code Challenge 1"
+    order: 3
+    module_type: CHALLENGE
+
+  - unit_title: "Hash Maps"
+    title: "Hash Maps Code Challenge 1 Solution"
+    order: 4
+    module_type: CHALLENGE_SOLUTION
+
+  - unit_title: "Hash Maps"
+    title: "Two Sum"
+    order: 1
+    module_type: BONUS_CHALLENGE
+
+# options: 
+  # unit order number
+  # unit id
+  # unit title

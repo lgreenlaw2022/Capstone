@@ -1,0 +1,20 @@
+hints:
+  - module_type: "CHALLENGE"
+    module_title: "Hash Maps Code Challenge 1"
+    hints:
+      - text: "This is hint 1"
+        order: 1
+      - text: "This is hint 2"
+        order: 2
+      - text: "This is hint 3"
+        order: 3
+
+  - module_type: "BONUS_CHALLENGE"
+    module_title: "Two Sum"
+    hints:
+      - text: "This is hint 1"
+        order: 1
+      - text: "This is hint 2"
+        order: 2
+      - text: "This is hint 3"
+        order: 3

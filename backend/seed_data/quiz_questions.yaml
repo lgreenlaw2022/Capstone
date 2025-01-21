@@ -1,0 +1,60 @@
+quiz_questions:
+  - module_title: "Hash Maps Quiz"
+    title: "What is a Hash Map?"
+    options:
+      - option_text: "A data structure that maps keys to values"
+        is_correct: true
+        option_type: CONCEPT
+
+      - option_text: "A type of array"
+        is_correct: false
+        option_type: CONCEPT
+
+      - option_text: "A sorting algorithm"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Hash Maps Quiz"
+    title: "What is the time complexity of searching in a Hash Map?"
+    options:
+      - option_text: "O(1)"
+        is_correct: true
+        option_type: CONCEPT
+
+      - option_text: "O(n)"
+        is_correct: false
+        option_type: CONCEPT
+
+      - option_text: "O(log n)"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Hash Maps Quiz"
+    title: "What is the time complexity of inserting in a Hash Map?"
+    options:
+      - option_text: "O(1)"
+        is_correct: true
+        option_type: CONCEPT
+
+      - option_text: "O(n)"
+        is_correct: false
+        option_type: CONCEPT
+
+      - option_text: "O(log n)"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Hash Maps Quiz"
+    title: "What kind of hash function minimizes collisions in a hash table?"
+    options:
+      - option_text: "A function that returns a constant value."
+        is_correct: false
+        option_type: CONCEPT
+
+      - option_text: "A function that evenly distributes keys across all array indices."
+        is_correct: true
+        option_type: CONCEPT
+
+      - option_text: "A function that increases linearly with the number of entries."
+        is_correct: false
+        option_type: CONCEPT

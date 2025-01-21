@@ -1,3 +1,4 @@
+import yaml
 from datetime import datetime, timezone
 from app import create_app
 from models import (
@@ -26,38 +27,131 @@ logging.basicConfig(level=logging.DEBUG)
 app = create_app()
 
 
-def add_units(course_id, units):
+def load_yaml(file_path):
+    with open(file_path, "r") as file:
+        return yaml.safe_load(file)
+
+
+def load_goals():
+    data = load_yaml("seed_data/goals.yaml")
+    for goal in data["goals"]:
+        new_goal = Goal(
+            title=goal["title"],
+            metric=MetricType[goal["metric"]],
+            requirement=goal["requirement"],
+            time_period=TimePeriodType[goal["time_period"]],
+        )
+        db.session.add(new_goal)
+    db.session.commit()  # NOTE: can optimize to bulk inserts if efficiency becomes a problem
+    logger.info("Goals loaded successfully.")
+
+
+def load_badges():
+    data = load_yaml("seed_data/badges.yaml")
+    for badge in data["badges"]:
+        new_badge = Badge(
+            title=badge["title"],
+            description=badge["description"],
+            type=BadgeType[badge["type"]],
+            criteria_expression=badge["criteria_expression"],
+            event_type=EventType[badge["event_type"]],
+        )
+        db.session.add(new_badge)
+    db.session.commit()
+    logger.info("Badges loaded successfully.")
+
+
+def load_units():
+    data = load_yaml("seed_data/units.yaml")["units"]
     units_to_add = []
-    for unit_data in units:
-        unit = Unit.query.filter_by(
-            title=unit_data["title"], course_id=course_id
-        ).first()
-        if unit is None:
-            unit = Unit(
-                course_id=course_id,
-                title=unit_data["title"],
-                order=unit_data["order"],
-            )
-            units_to_add.append(unit)
-    return units_to_add
+    for unit_data in data:
+        unit = Unit(
+            title=unit_data["title"],
+            order=unit_data["order"],
+            course_id=unit_data["course_id"],
+        )
+        units_to_add.append(unit)
+
+    db.session.bulk_save_objects(units_to_add)
+    db.session.commit()
+    logger.info("Units loaded successfully.")
 
 
-def add_modules(unit_id, modules):
+def load_modules():
+    # Load units and create a mapping of unit titles to unit IDs
+    units = Unit.query.all()
+    unit_title_to_id = {unit.title: unit.id for unit in units}
+
+    data = load_yaml("seed_data/modules.yaml")["modules"]
     modules_to_add = []
-    for module_data in modules:
-        module = Module.query.filter_by(
-            title=module_data["title"],
-            unit_id=unit_id,
-        ).first()
-        if module is None:
+    for module_data in data:
+        unit_id = unit_title_to_id.get(module_data["unit_title"])
+        if unit_id:
             module = Module(
                 unit_id=unit_id,
                 title=module_data["title"],
-                order=module_data.get("order"),
-                module_type=module_data["module_type"],
+                order=module_data["order"],
+                module_type=ModuleType[module_data["module_type"]],
             )
             modules_to_add.append(module)
-    return modules_to_add
+
+    db.session.bulk_save_objects(modules_to_add)
+    db.session.commit()
+    logger.info("Modules loaded successfully.")
+
+
+def load_quiz_questions():
+    # Load modules and create a mapping of module titles to module IDs
+    modules = Module.query.all()
+    module_title_to_id = {module.title: module.id for module in modules}
+
+    data = load_yaml("seed_data/quiz_questions.yaml")["quiz_questions"]
+    for question_data in data:
+        module_id = module_title_to_id.get(question_data["module_title"])
+        if module_id:
+            question = QuizQuestion(module_id=module_id, title=question_data["title"])
+            db.session.add(question)
+            db.session.flush()  # Ensure the question id is available for options data
+
+            for option in question_data["options"]:
+                quiz_question_option = QuizQuestionOption(
+                    question_id=question.id,
+                    option_text=option["option_text"],
+                    is_correct=option["is_correct"],
+                    option_type=option["option_type"],
+                )
+                db.session.add(quiz_question_option)
+    db.session.commit()
+    logger.info("Quiz questions loaded successfully.")
+
+
+def load_hints():
+    # Load modules with BONUS_CHALLENGE and CHALLENGE types and create a mapping of module titles to module IDs
+    modules = (
+        db.session.query(Module)
+        .filter(
+            Module.module_type.in_([ModuleType.BONUS_CHALLENGE, ModuleType.CHALLENGE])
+        )
+        .all()
+    )
+    module_title_to_id = {module.title: module.id for module in modules}
+
+    data = load_yaml("seed_data/hints.yaml")["hints"]
+    hints_to_add = []
+    for module_data in data:
+        module_id = module_title_to_id.get(module_data["module_title"])
+        if module_id:
+            for hint in module_data["hints"]:
+                hint_instance = Hint(
+                    module_id=module_id,
+                    text=hint["text"],
+                    order=hint["order"],
+                )
+                hints_to_add.append(hint_instance)
+
+    db.session.bulk_save_objects(hints_to_add)
+    db.session.commit()
+    logger.info("Hints loaded successfully.")
 
 
 # this function can be used if I want to manually seed the user's progress in the unit
@@ -94,81 +188,6 @@ def add_hashmap_modules_to_user(user_id, unit_id):
     return user_modules_to_add
 
 
-def add_quiz_questions(module_id, quiz_questions):
-    quiz_questions_to_add = []
-    # add each question in the list to the db
-    for question_data in quiz_questions:
-        # check the question is not already in the db
-        question = QuizQuestion.query.filter_by(
-            title=question_data["title"],
-            module_id=module_id,
-        ).first()
-
-        if question is None:
-            question = QuizQuestion(
-                module_id=module_id,
-                title=question_data["title"],
-            )
-            db.session.add(question)
-            db.session.flush()  # Ensure the question id is available for options data
-
-            # add the listed quiz answers to QuizQuestionOption table
-            for option_data in question_data["options"]:
-                option = QuizQuestionOption(
-                    question_id=question.id,
-                    option_text=option_data["option_text"],
-                    is_correct=option_data["is_correct"],
-                    option_type=option_data["option_type"],
-                )
-                db.session.add(option)
-            quiz_questions_to_add.append(question)
-    return quiz_questions_to_add
-
-
-def add_badges():
-    badges_data = [
-        {
-            "title": "Hash Maps",
-            "description": "Awarded for completing the hash tables unit.",
-            "type": BadgeType.CONTENT,
-            "criteria_expression": "user_unit.completed == True and user_unit.unit_id == 1",  # TODO: don't hardcode?
-            "event_type": EventType.UNIT_COMPLETION,
-        },
-        {
-            "title": "30 day streak",
-            "description": "Awarded for reaching a 30 day streak.",
-            "type": BadgeType.AWARD,
-            "criteria_expression": "user.streak >= 7",
-            "event_type": EventType.STREAK_ACHIEVEMENT,
-        },
-        {
-            "title": "Quiz Master",
-            "description": "Awarded for scoring 100% on a quiz.",
-            "type": BadgeType.AWARD,
-            "criteria_expression": "quiz_score == 100",
-            "event_type": EventType.QUIZ_PERFECT_SCORE,
-        },
-    ]
-
-    badges_to_add = []
-    for badge_data in badges_data:
-        existing_badge = Badge.query.filter_by(title=badge_data["title"]).first()
-        if existing_badge:
-            continue
-        badge = Badge(
-            title=badge_data["title"],
-            description=badge_data["description"],
-            type=badge_data["type"],
-            criteria_expression=badge_data["criteria_expression"],
-            event_type=badge_data["event_type"],
-        )
-        badges_to_add.append(badge)
-
-    db.session.bulk_save_objects(badges_to_add)
-    db.session.commit()
-    print("Badges added successfully.")
-
-
 def add_user_badges(user_id):
     # Fetch the badges
     hash_table_badge = Badge.query.filter_by(title="Hash Tables").first()
@@ -193,65 +212,6 @@ def add_user_badges(user_id):
         )
 
     return user_badges_to_add
-
-
-def add_goals():
-    goals_data = [
-        {
-            "title": "Complete 2 modules",
-            "metric": MetricType.COMPLETE_MODULES,
-            "requirement": 2,
-            "time_period": TimePeriodType.DAILY,
-        },
-        {
-            "title": "Earn 5 gems",
-            "metric": MetricType.EARN_GEMS,
-            "requirement": 5,
-            "time_period": TimePeriodType.DAILY,
-        },
-        {
-            "title": "Extend streak by 1 day",
-            "metric": MetricType.EXTEND_STREAK,
-            "requirement": 1,
-            "time_period": TimePeriodType.DAILY,
-        },
-        {
-            "title": "Practice for 15 days",
-            "metric": MetricType.EXTEND_STREAK,
-            "requirement": 15,
-            "time_period": TimePeriodType.MONTHLY,
-        },
-        {
-            "title": "Complete 10 modules",
-            "metric": MetricType.COMPLETE_MODULES,
-            "requirement": 10,
-            "time_period": TimePeriodType.MONTHLY,
-        },
-        {
-            "title": "Earn 50 gems",
-            "metric": MetricType.EARN_GEMS,
-            "requirement": 50,
-            "time_period": TimePeriodType.MONTHLY,
-        },
-    ]
-
-    goals_to_add = []
-    for goal_data in goals_data:
-        existing_goal = Goal.query.filter_by(title=goal_data["title"]).first()
-        if existing_goal:
-            continue
-        goal = Goal(
-            title=goal_data["title"],
-            metric=goal_data["metric"],
-            requirement=goal_data["requirement"],
-            time_period=goal_data["time_period"],
-        )
-        goals_to_add.append(goal)
-
-    db.session.bulk_save_objects(goals_to_add)
-    db.session.commit()
-
-    print("Goals added successfully.")
 
 
 def add_user_goals():
@@ -285,48 +245,6 @@ def add_user_goals():
     db.session.commit()
 
     print("User goals added successfully.")
-
-
-def add_hints():
-    # Fetch all CHALLENGE modules
-    challenge_modules = (
-        db.session.query(Module)
-        .filter(
-            Module.module_type.in_([ModuleType.CHALLENGE, ModuleType.BONUS_CHALLENGE])
-        )
-        .all()
-    )
-    hints_data_template = [
-        {
-            "text": "This is hint 1",
-            "order": 1,
-        },
-        {
-            "text": "This is hint 2",
-            "order": 2,
-        },
-        {
-            "text": "This is hint 3",
-            "order": 3,
-        },
-    ]
-
-    hints_to_add = []
-    for module in challenge_modules:
-        # Check if hints already exist for this module
-        existing_hints = db.session.query(Hint).filter_by(module_id=module.id).all()
-        if existing_hints:
-            continue
-
-        for hint_data in hints_data_template:
-            hint = Hint(
-                text=hint_data["text"],
-                order=hint_data["order"],
-                module_id=module.id,
-            )
-            hints_to_add.append(hint)
-
-    bulk_insert(hints_to_add)
 
 
 def bulk_insert(objects_to_add):
@@ -370,13 +288,20 @@ def seed_data():
         # Reset user progress
         # clear_users()
         # clear_user_units()
-        clear_user_modules()
+        # clear_user_modules()
         # clear_user_badges()
         # clear_daily_user_activity()
         # db.session.query(UserGoal).delete()
+
+        db.session.query(Goal).delete()
+        db.session.query(Badge).delete()
+        db.session.query(Unit).delete()
         db.session.query(Module).delete()
-        # db.session.query(Unit).delete()
+        db.session.query(QuizQuestion).delete()
+        db.session.query(QuizQuestionOption).delete()
+        db.session.query(Hint).delete()
         db.session.commit()
+
         # Check if the course already exists
         course = Course.query.filter_by(title="Technical Interview Prep").first()
         if not course:
@@ -384,159 +309,25 @@ def seed_data():
             db.session.add(course)
             db.session.commit()
 
-        # Add units to the course
-        units = [
-            {"title": "Hash Maps", "order": 1},
-        ]
+        # TODO: how am I handling small changes, right now it might override all user data?
+        # maybe make patch functions, like add this here or something?
+        logger.info("Seeding badges...")
+        load_badges()
 
-        # Bulk insert units
-        units_to_add = add_units(course.id, units)
-        bulk_insert(units_to_add)
+        logger.info("Seeding goals...")
+        load_goals()
 
-        # Add modules to the unit
-        hashmaps_modules = [
-            {
-                "title": "Hash Maps",
-                "order": 1,
-                "module_type": ModuleType.CONCEPT_GUIDE,
-            },
-            {
-                "title": "Hash Maps Quiz",
-                "order": 2,
-                "module_type": ModuleType.QUIZ,
-            },
-            {
-                "title": "Hash Maps Code Challenge 1",
-                "order": 3,
-                "module_type": ModuleType.CHALLENGE,
-            },
-            {
-                "title": "Two Sum",
-                "order": -1,
-                "module_type": ModuleType.BONUS_CHALLENGE,
-            },
-            {
-                "title": "Hash Maps Code Challenge 1 Solution",
-                "order": 4,
-                "module_type": ModuleType.CHALLENGE_SOLUTION,
-            },
-        ]
-        # Get the "Hash Maps" unit
-        hashmaps_unit = Unit.query.filter_by(
-            title="Hash Maps", course_id=course.id
-        ).first()
+        logger.info("Seeding units...")
+        load_units()
 
-        # Add modules and perform bulk insert
-        if hashmaps_unit:
-            modules_to_add = add_modules(hashmaps_unit.id, hashmaps_modules)
-            bulk_insert(modules_to_add)
+        logger.info("Seeding modules...")
+        load_modules()
 
-        # Fetch the "Hash Maps Quiz" module dynamically
-        quiz_module = Module.query.filter_by(
-            title="Hash Maps Quiz", unit_id=hashmaps_unit.id
-        ).first()
-        if quiz_module:
-            # Add quiz questions and options
-            quiz_questions_data = [
-                {
-                    "module_id": quiz_module.id,
-                    "title": "What is a Hash Map?",
-                    "options": [
-                        {
-                            "option_text": "A data structure that maps keys to values",
-                            "is_correct": True,
-                            "option_type": "CONCEPT",
-                        },
-                        {
-                            "option_text": "A type of array",
-                            "is_correct": False,
-                            "option_type": "CONCEPT",
-                        },
-                        {
-                            "option_text": "A sorting algorithm",
-                            "is_correct": False,
-                            "option_type": "CONCEPT",
-                        },
-                    ],
-                },
-                {
-                    "module_id": quiz_module.id,
-                    "title": "What is the time complexity of searching in a Hash Map?",
-                    "options": [
-                        {
-                            "option_text": "O(1)",
-                            "is_correct": True,
-                            "option_type": "CONCEPT",
-                        },
-                        {
-                            "option_text": "O(n)",
-                            "is_correct": False,
-                            "option_type": "CONCEPT",
-                        },
-                        {
-                            "option_text": "O(log n)",
-                            "is_correct": False,
-                            "option_type": "CONCEPT",
-                        },
-                    ],
-                },
-                {
-                    "module_id": quiz_module.id,
-                    "title": "What is the time complexity of inserting in a Hash Map?",
-                    "options": [
-                        {
-                            "option_text": "O(1)",
-                            "is_correct": True,
-                            "option_type": "CONCEPT",
-                        },
-                        {
-                            "option_text": "O(n)",
-                            "is_correct": False,
-                            "option_type": "CONCEPT",
-                        },
-                        {
-                            "option_text": "O(log n)",
-                            "is_correct": False,
-                            "option_type": "CONCEPT",
-                        },
-                    ],
-                },
-                {
-                    "module_id": quiz_module.id,
-                    "title": "What kind of hash function minimizes collisions in a hash table?",
-                    "options": [
-                        {
-                            "option_text": "A function that returns a constant value.",
-                            "is_correct": False,
-                            "option_type": "CONCEPT",
-                        },
-                        {
-                            "option_text": "A function that evenly distributes keys across all array indices.",
-                            "is_correct": True,
-                            "option_type": "CONCEPT",
-                        },
-                        {
-                            "option_text": "A function that increases linearly with the number of entries.",
-                            "is_correct": False,
-                            "option_type": "CONCEPT",
-                        },
-                    ],
-                },
-            ]
+        logger.info("Seeding quiz questions...")
+        load_quiz_questions()
 
-            quiz_questions_to_add = add_quiz_questions(
-                quiz_module.id, quiz_questions_data
-            )
-            bulk_insert(quiz_questions_to_add)
-
-        # Add badges
-        add_badges()
-        # add goals
-        add_goals()
-        add_hints()
-
-        # hardcode some user badges for testing
-        # bulk_insert(add_user_badges(1))
+        logger.info("Seeding hints...")
+        load_hints()
 
         logger.info("Database seeded successfully.")
 
