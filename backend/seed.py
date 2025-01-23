@@ -293,6 +293,7 @@ def seed_data():
         # clear_daily_user_activity()
         # db.session.query(UserGoal).delete()
 
+        logger.info("Clearing database...")
         db.session.query(Goal).delete()
         db.session.query(Badge).delete()
         db.session.query(Unit).delete()
@@ -301,6 +302,7 @@ def seed_data():
         db.session.query(QuizQuestionOption).delete()
         db.session.query(Hint).delete()
         db.session.commit()
+        logger.info("Database is reset")
 
         # Check if the course already exists
         course = Course.query.filter_by(title="Technical Interview Prep").first()

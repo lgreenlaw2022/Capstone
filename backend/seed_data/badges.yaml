@@ -1,10 +1,18 @@
 badges:
+# Unit Badges
   - title: "Hash Maps"
     description: "Awarded for completing the hash tables unit."
     type: CONTENT
-    criteria_expression: "user_unit.completed == True and user_unit.unit_id == 1" # TODO: don't hardcode?
+    criteria_expression: "user_unit.completed == True and user_unit.order == 1"
     event_type: UNIT_COMPLETION # NOTE: new challenge, need to convert enums
 
+  - title: "Linked Lists"
+    description: "Awarded for completing the linked lists unit."
+    type: CONTENT
+    criteria_expression: "user_unit.completed == True and user_unit.order == 2"
+    event_type: UNIT_COMPLETION # NOTE: new challenge, need to convert enums
+
+# Award Badges
   - title: "30 day streak"
     description: "Awarded for reaching a 30 day streak."
     type: AWARD
