@@ -31,12 +31,12 @@ modules:
     module_type: QUIZ
 
   - unit_title: "Hash Maps"
-    title: "Hash Maps Code Challenge 1"
+    title: "Contains Duplicate"
     order: 7
     module_type: CHALLENGE
 
   - unit_title: "Hash Maps"
-    title: "Hash Maps Code Challenge 1 Solution"
+    title: "Contains Duplicate Solution"
     order: 8
     module_type: CHALLENGE_SOLUTION
 
@@ -45,6 +45,8 @@ modules:
     title: "Two Sum"
     order: 1
     module_type: BONUS_CHALLENGE
+
+  # TODO: need the solutions
 
 # UNIT 2: LINKED LISTS
   - unit_title: "Linked Lists"
@@ -68,12 +70,12 @@ modules:
     module_type: QUIZ
 
   - unit_title: "Linked Lists"
-    title: "Linked Lists Code Challenge 1"
+    title: "Remove Nth Node From End of List"
     order: 5
     module_type: CHALLENGE
 
   - unit_title: "Linked Lists"
-    title: "Linked Lists Code Challenge 1 Solution"
+    title: "Remove Nth Node From End of List"
     order: 6
     module_type: CHALLENGE_SOLUTION
 
@@ -82,3 +84,5 @@ modules:
     title: "Reverse Linked List"
     order: 1
     module_type: BONUS_CHALLENGE
+  
+  # TODO: need to add the solution
