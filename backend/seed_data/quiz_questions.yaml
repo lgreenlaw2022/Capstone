@@ -326,7 +326,7 @@ quiz_questions:
         is_correct: false
         option_type: CONCEPT
 
-  - module_title: "Linked Lists Recognition Quiz"
+  - module_title: "Linked Lists Concept Quiz"
     title: 'How does the "temp head" strategy work in linked list algorithms?'
     options:
       - option_text: "It uses an extra pointer to keep track of the head of the linked list temporarily."
@@ -342,7 +342,7 @@ quiz_questions:
         is_correct: false
         option_type: CONCEPT
 
-  - module_title: "Linked Lists Recognition Quiz"
+  - module_title: "Linked Lists Concept Quiz"
     title: 'How does the "multiple passes" strategy work in linked list algorithms?'
     options:
       - option_text: "It involves iterating through the linked list multiple times."
@@ -358,7 +358,7 @@ quiz_questions:
         is_correct: false
         option_type: CONCEPT
 
-  - module_title: "Linked Lists Recognition Quiz"
+  - module_title: "Linked Lists Concept Quiz"
     title: 'How can the presence of a loop in a linked list be detected using the "two pointers" strategy?'
     options:
       - option_text: "By comparing the values of the nodes in the linked list."
@@ -367,26 +367,10 @@ quiz_questions:
       - option_text: "By checking if a fast pointer reaches the end of the list."
         is_correct: false
         option_type: CONCEPT
-      - option_text: "By checking if a slow pointer catches up to a fast pointer."
+      - option_text: "By checking if a fast pointer catches up to a slow pointer."
         is_correct: true
         option_type: CONCEPT
       - option_text: "By reversing the order of the nodes in the list."
-        is_correct: false
-        option_type: CONCEPT
-
-  - module_title: "Linked Lists Recognition Quiz"
-    title: 'In which case is the "multiple passes" strategy most appropriate?'
-    options:
-      - option_text: "Detecting loops or cycles in a linked list."
-        is_correct: false
-        option_type: CONCEPT
-      - option_text: "Sorting the elements of a linked list."
-        is_correct: true
-        option_type: CONCEPT
-      - option_text: "Deleting every other node in a linked list."
-        is_correct: false
-        option_type: CONCEPT
-      - option_text: "Reversing the order of the nodes in a linked list."
         is_correct: false
         option_type: CONCEPT
 
@@ -465,3 +449,20 @@ quiz_questions:
       - option_text: "When you need to reverse the linked list."
         is_correct: false
         option_type: CONCEPT
+
+  - module_title: "Linked Lists Recognition Quiz"
+    title: 'In which case is the "multiple passes" strategy most appropriate?'
+    options:
+      - option_text: "Detecting loops or cycles in a linked list."
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "Sorting the elements of a linked list."
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "Deleting every other node in a linked list."
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "Reversing the order of the nodes in a linked list."
+        is_correct: false
+        option_type: CONCEPT
+

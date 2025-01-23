@@ -1,0 +1,89 @@
+<div class="guideContainer">
+  <h1>Solution Walkthrough: Reverse Linked List</h1>
+
+  <h2>Understand the problem</h2>
+  <p><strong>Clarifying Questions</strong></p>
+  <dl>
+    <dt>Can the list be empty?</dt>
+    <dd>Yes.</dd>
+  </dl>
+  <dl>
+    <dt>Should the reversal be in place?</dt>
+    <dd>Yes. Return the new head of the list.</dd>
+  </dl>
+  <dl>
+    <dt>What are the time and space constraints for this problem?</dt>
+    <dd>
+      The solution should operate in O(N) time and O(1) space solution, where N
+      is the number of items in the array.
+    </dd>
+  </dl>
+
+  <p><strong>Test Cases</strong></p>
+  <!-- same as in challenge -->
+  <p>
+    Input: head = [1,2,3,4,5] <br />
+    Output: [5,4,3,2,1]
+  </p>
+  <p>
+    Input: head = [1,2]<br />
+    Output: [2,1]
+  </p>
+  <p>
+    Input: head = [1]<br />
+    Output: [1]]
+  </p>
+  <p>
+    Input: head = []<br />
+    Output: []
+  </p>
+
+  <h2>Match</h2>
+  <p><strong>Common solutions to linked list problems:</strong></p>
+  <ol>
+    <li>
+      Multiple Pass. This may help us determine the length of the list. However,
+      we do not need the length of the list.
+    </li>
+    <li>
+      Dummy Head. There are no edge cases that a dummy head would help handle.
+    </li>
+    <li>
+      Two Pointer. Two pointers could help us with this problem. We need to keep
+      track of the current node and the previous node in order to reverse the
+      references.
+    </li>
+  </ol>
+
+  <h2>Plan</h2>
+  <p>
+    We need pointers to track the previous, current, and current’s next node in
+    this problem because a singly linked list only has pointers to the next
+    node. Thus, we need to track the previous node so we can switch the pointer
+    and track the next node so we don't lose the reference to it. The last node
+    we review will then be the head of the list.
+  </p>
+  <ol role="list" aria-label="Solution steps">
+    <li>create two pointers, previous and current</li>
+    <li>
+      while the current node is not null
+      <ol>
+        <li>
+          initialize a new node to temporarily hold the current's next node
+        </li>
+        <li>update current.next to the previous node</li>
+        <li>set the previous node as the current node</li>
+        <li>set the current node as the next node</li>
+      </ol>
+    </li>
+    <li>return previous</li>
+  </ol>
+
+  <h2>Complexity Analysis</h2>
+  <p><strong>Time Complexity:</strong></p>
+  <p>O(n), we iterate over the linked list once.</p>
+  <p><strong>Space Complexity:</strong></p>
+  <p>O(1), we use three pointers.</p>
+
+  <h2>Code Solution</h2>
+</div>

@@ -12,17 +12,16 @@ class Solution:
 		    for i in range(n):
 		        r = r.next
 		    
-		    # special case, remove head
+		    # special case
 		    if r is None: # null check
 		        head = head.next
 		        return head
 		
 		    # move both forward until r is at the end of the list
-		    # when r.next = null, I'm next to the node that needs to be deleted
 		    while r.next:
 		        l = l.next
 		        r = r.next
 				
-				# delete
+			# delete
 		    l.next = l.next.next
 		    return head

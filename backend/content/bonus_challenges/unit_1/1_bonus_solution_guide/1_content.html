@@ -1,0 +1,105 @@
+<div class="guideContainer">
+  <h1>Solution Walkthrough: Longest Substring Without Repeating Characters</h1>
+
+  <h2>Understand the problem</h2>
+  <p><strong>Clarifying Questions</strong></p>
+  <dl>
+    <dt>Is it possible the string will be empty?</dt>
+  </dl>
+  <dl>
+    <dt>Are there any runtime or space constraints?</dt>
+  </dl>
+
+  <p><strong>Test Cases</strong></p>
+  <p><strong>Test Cases</strong></p>
+  <p>
+    Input: s = "abcabcbb" <br />
+    Output: 3 ("abc")
+  </p>
+  <p>
+    Input: s = "pwwkew"<br />
+    Output: 3 ("wke")
+  </p>
+  <p>
+    Input: s = "abcdefg"<br />
+    Output: 7 ("abcdefg")
+  </p>
+  <p>
+    Input: s = "bbbb"<br />
+    Output: 1 ("b")
+  </p>
+
+  <h2>Match</h2>
+  <p><strong>Common solutions to string problems:</strong></p>
+  <ol>
+    <li>
+      Sort. We do not want to sort the characters in the string because we need
+      to use substrings.
+    </li>
+    <li>
+      Sliding window or Two pointer solution. Using two pointers could allow us
+      to traverse the string and select substrings from it. However, we need to
+      know more than the values at the left and right pointer since any
+      character in the substring could be repeated. Reviewing the entire
+      substring contained between the pointers for each step is costly. This is
+      why two pointers and sliding windows are best used on string problems that
+      have a form of sorting.
+    </li>
+    <li>
+      Storing in hash table or hash set. This is a good solution because hash
+      sets can track which characters have already been seen. Hash sets are
+      effective because we do not care about the actual characters in the
+      string, only the length and repetition.
+    </li>
+  </ol>
+
+  <h2>Plan</h2>
+  <p>
+    We can use a hash set to track the characters in the current substring. A
+    left-hand pointer marks the beginning of the substring, and we attempt to
+    move across the string, looking for repeating characters. If there are none,
+    we will add each character to the set until we reach the end of the string.
+  </p>
+  <ol role="list" aria-label="Solution steps">
+    <li>declare a hash set</li>
+    <li>set up a left pointer at index 0</li>
+    <li>
+      iterate over each character in the string
+      <ol>
+        <li>while the character is already in the hash set</li>
+        <ol>
+          <li>remove the character at the left pointer from the set</li>
+          <li>increment the left pointer by 1</li>
+        </ol>
+        <li>add the character to the subset</li>
+        <li>
+          check if the length of the substring between the left and right
+          pointers is greater than the previous maximum
+        </li>
+      </ol>
+    </li>
+    <li>return the length of the hash set</li>
+  </ol>
+  <p>
+    <strong>Alternative solution</strong>
+    An alternative solution is to use a Hash Table that stores the indexes of
+    each seen character. Using the indexes, when a repeated character is found,
+    adjust the start of the substring to the next index. This solution can also
+    be classified as a sliding window strategy applied to strings and arrays.
+  </p>
+
+  <h2>Complexity Analysis</h2>
+  <p><strong>Time Complexity:</strong></p>
+  <p>
+    O(n) where n is the number of characters in the string. The for loop reviews
+    the entire string once. Because the left-hand pointer does not reset for
+    each for loop iteration, the while loop can only add an additional O(n) to
+    the run time rather than adding another factor of n.
+  </p>
+  <p><strong>Space Complexity:</strong></p>
+  <p>
+    O(n). The maximum size of the hash set is all the characters in the string.
+  </p>
+
+  <h2>Code Solution</h2>
+</div>

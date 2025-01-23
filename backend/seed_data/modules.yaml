@@ -76,3 +76,9 @@ modules:
     title: "Linked Lists Code Challenge 1 Solution"
     order: 6
     module_type: CHALLENGE_SOLUTION
+
+  # Bonus challenges
+  - unit_title: "Linked Lists"
+    title: "Reverse Linked List"
+    order: 1
+    module_type: BONUS_CHALLENGE
