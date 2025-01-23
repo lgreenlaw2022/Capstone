@@ -1,35 +1,134 @@
 <div class="guideContainer">
-    <h1>Concept Guide: Hash Maps</h1>
-    <p>
-        Hash tables are one of the most frequently used data structures in technical interviews. Always consider them
-        when first analyzing a question.
+  <h1>Concept Guide: Hash Maps</h1>
+  <p>
+    Hash tables are one of the most frequently used data structures in technical
+    interviews. Always consider them when first analyzing a question.
+  </p>
+  <p>
+    A hash table is a data structure that allows you to store data and access it
+    using a key. The key and the data can be any data structure.
+  </p>
+  <p class="boldPoint">A Hash table contains sets of key value pairs.</p>
+  <p>
+    At a high level, a hash table utilizes an array. Each key corresponds to an
+    index in the array where the data is stored. The hash function is
+    responsible for converting the key into the index.
+  </p>
+  <p class="highlight">
+    A Hash Table has 2 parts, an array and a hash function
+  </p>
+  <p>
+    The array stores the data, and the hash function tells us as what index to
+    store it and, later, at what index we can access it.
+  </p>
+
+  <h2>Hash Functions</h2>
+  <p>
+    A hash function creates the mapping between a key and a value. It takes the
+    value as an input, places it in the array, and returns the key to access it.
+    Let's make a key distinction here: the key for a value is not the same as
+    its index in the array. Different hash functions are different mapping
+    algorithms.
+  </p>
+  <p>
+    We pass the key, and the hash function maps from the key to what's called a
+    hash code and from the hash code to the index in the array.
+  </p>
+  <p>
+    If a value with the same key is placed at an index, we simply update the
+    existing value for that key to match the new one.
+  </p>
+  <p class="boldPoint">
+    Ultimately, the usability of a hash table to solve a store and look-up
+    problem hinges on how good of a hash function the hash table has.
+  </p>
+
+  <h2>Collisions</h2>
+  <p>
+    A collision is when 2 keys with different hash codes are mapped to the same
+    index. Collisions are not necessarily bad and are to be expected when
+    balancing the complexity of a hash function with avoiding collisions.
+  </p>
+  <p class="boldPoint">
+    The size of the data set is frequently larger than the size of the hash
+    table. This creates collisions.
+  </p>
+
+  <strong>Collision Resolution</strong>
+  <p>
+    To resolve a collision, we need a system for storing multiple keys in the
+    same hash bucket. A common solution is chaining.
+  </p>
+  <strong>Chaining in a linked list</strong>
+  <p>
+    With chaining, we simply store the additional values in the same index. This
+    means each hash bucket is represented by a linked list (introduced in unit
+    2). Now each index of the array has a pointer to the linked list with the
+    values in that index. Each node in the linked list contains the original key
+    in addition to the data so we can retrieve the correct value. One downside
+    to this solution is that a poor hash function may overload certain indexes
+    with values meaning we need to examine many of the elements in the linked
+    list before finding the desired value. This decreases the efficiency of the
+    hash table. However, with a good hash function, chaining will still average
+    out to access run times of O(1). You can summarize this assumption in the
+    interview.
+  </p>
+
+  <strong>A good hash table must always:</strong>
+  <ol>
+    <li>
+      have a hash function that is easy to compute, and therefore efficient
+    </li>
+    <li>
+      have an equal distribution of data amongst all the possible hash buckets
+    </li>
+    <li>minimize collisions</li>
+    <li>
+      have a hash function that returns the same key, every single time, when
+      given a value, and be able to use up all of the input data
+    </li>
+  </ol>
+
+  <h2>Python Implementation of Hash Maps</h2>
+  <p>
+    Python conveniently uses the dictionary data structure as a hash table. The
+    dictionary is a set of {key:value} pairs. Once you assign the key-value
+    pairs for the dictionary, python uses a convenient hash function under the
+    hood to convert the keys to hash codes and store the values in an array. We
+    trust that Python will pick an optimal hash function and assume that the
+    linear run time applies.
+  </p>
+  <p><strong>A few notes about Python dictionaries</strong>
+    <ol>
+        <li>keys are immutable, you cannot update their values later. You must restrict them to immutable data types (eg. a tuple and not a list)</li>
+        <li>values are mutable, you can update, add or remove items after the dictionary has been created</li>
+        <li>every key must be unique</li>
+    </ol>
     </p>
-    <p>
-        A hash table is a data structure that allows you to store data and access it using a key. The key and the data
-        can be any data structure.
-    </p>
-    <p class="boldPoint">A Hash table contains sets of key value pairs.</p>
-    <p>
-        At a high level, a hash table utilizes an array. Each key corresponds to an index in the array where the data is
-        stored. The hash function is responsible for converting the key into the index.
-    </p>
-    <p class="highlight">A Hash Table has 2 parts, an array and a hash function</p>
-    <p>
-        The array stores the data, and the hash function tells us as what index to store it and, later, at what index we
-        can access it.
-    </p>
-    <h2>Hash Functions</h2>
-    <p>A hash function creates the mapping between a key and a value. It takes the value as an input, places it in the
-        array, and returns the key to access it. Let's make a key distinction here: the key for a value is not the same
-        as its index in the array. Different hash functions are different mapping algorithms.
-    </p>
-    <p> We pass the key, and the hash function maps from the key to what's called a hash code and from the hash code to
-        the index in the array.
-    </p>
-    <p>
-        If a value with the same key is placed at an index, we simply update the existing value for that key to match
-        the new one.
-    </p>
-    <p class="boldPoint">Ultimately, the usability of a hash table to solve a store and look-up problem hinges
-        on how good of a hash function the hash table has.</p>
+
+  <h2>Run time</h2>
+  <p>
+    The run time of accessing data in a hash table depends on the hash function.
+    As we discussed with collisions, a poor hash function may result in all of
+    the keys in the linked list at 1 array index. When a hash table distributes
+    objects poorly, all of the operations take linear O(n) time. However,
+    generally, we assume a good hash function (like the Python dictionary uses).
+  </p>
+  <p><strong>Time Complexity</strong></p>
+  <p>Lookup, insert, and delete all take O(1) time.</p>
+  <p><strong>Space Complexity</strong></p>
+  <p>
+    O(n), the size of the hash table is proportional to the number of key-value
+    pairs (n).
+  </p>
+
+  <h2>Key Takeaways</h2>
+  <p>
+    <ul>
+        <li>Hash tables are an extremely useful data structure. Keep them top of mind for most interview questions.</li>
+        <li>Hash tables are a key value look-up.</li>
+        <li>Hash tables are implemented as dictionaries in python.</li>
+        <li>Given a good hash table, all operations occur in linear time. Thus, hash tables perform better than most other data structures. </li>
+    </ul>
+  </p>
 </div>

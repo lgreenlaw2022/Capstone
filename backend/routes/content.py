@@ -123,6 +123,14 @@ def get_module_content(module_id):
             logger.error(f"Concept guide file not found: {file_path}")
             return jsonify({"error": "Content not found"}), 404
         return send_file(file_path, mimetype="text/html")
+    elif module_type == ModuleType.RECOGNITION_GUIDE:
+        file_path = os.path.join(
+            base_content_dir, f"unit_{unit_id}", f"{order}_recognition_guide.html"
+        )
+        if not os.path.exists(file_path):
+            logger.error(f"Recognition guide file not found: {file_path}")
+            return jsonify({"error": "Content not found"}), 404
+        return send_file(file_path, mimetype="text/html")
     elif module_type in [
         ModuleType.CHALLENGE,
         ModuleType.CHALLENGE_SOLUTION,

@@ -1,30 +1,78 @@
 modules:
+# UNIT 1: HASH MAPS
   - unit_title: "Hash Maps"
     title: "Hash Maps Concept Guide"
     order: 1
     module_type: CONCEPT_GUIDE
 
   - unit_title: "Hash Maps"
-    title: "Hash Maps Quiz"
+    title: "Hash Maps Concept Quiz"
     order: 2
     module_type: QUIZ
 
   - unit_title: "Hash Maps"
-    title: "Hash Maps Code Challenge 1"
+    title: "Hash Sets Concept Guide"
     order: 3
+    module_type: CONCEPT_GUIDE
+
+  - unit_title: "Hash Maps"
+    title: "Hash Sets Concept Quiz"
+    order: 4
+    module_type: QUIZ
+
+  - unit_title: "Hash Maps"
+    title: "Hash Maps Recognition Guide"
+    order: 5
+    module_type: RECOGNITION_GUIDE
+
+  - unit_title: "Hash Maps"
+    title: "Hash Maps Recognition Quiz"
+    order: 6
+    module_type: QUIZ
+
+  - unit_title: "Hash Maps"
+    title: "Hash Maps Code Challenge 1"
+    order: 7
     module_type: CHALLENGE
 
   - unit_title: "Hash Maps"
     title: "Hash Maps Code Challenge 1 Solution"
-    order: 4
+    order: 8
     module_type: CHALLENGE_SOLUTION
 
+  # Bonus challenges
   - unit_title: "Hash Maps"
     title: "Two Sum"
     order: 1
     module_type: BONUS_CHALLENGE
 
-# options: 
-  # unit order number
-  # unit id
-  # unit title
+# UNIT 2: LINKED LISTS
+  - unit_title: "Linked Lists"
+    title: "Linked Lists Concept Guide"
+    order: 1
+    module_type: CONCEPT_GUIDE
+
+  - unit_title: "Linked Lists"
+    title: "Linked Lists Concept Quiz"
+    order: 2
+    module_type: QUIZ
+
+  - unit_title: "Linked Lists"
+    title: "Linked Lists Recognition Guide"
+    order: 3
+    module_type: RECOGNITION_GUIDE
+  
+  - unit_title: "Linked Lists"
+    title: "Linked Lists Recognition Quiz"
+    order: 4
+    module_type: QUIZ
+
+  - unit_title: "Linked Lists"
+    title: "Linked Lists Code Challenge 1"
+    order: 5
+    module_type: CHALLENGE
+
+  - unit_title: "Linked Lists"
+    title: "Linked Lists Code Challenge 1 Solution"
+    order: 6
+    module_type: CHALLENGE_SOLUTION

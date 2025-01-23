@@ -1,0 +1,64 @@
+<div class="guideContainer">
+    <h1>Solution Walkthrough: Remove Nth Node From End of List</h1>
+
+    <h2>Understand the problem</h2>
+    <p><strong>Clarifying Questions</strong></p>
+    <dl>
+        <dt>Are there any time or space requirements?</dt>
+        <dd>The solution should have O(1) space complexity and O(n) time complexity.
+        </dd>
+    </dl>
+    <dl>
+        <dt>Could there be any cycles in the list?</dt>
+        <dd>No</dd>
+    </dl>
+    <dl>
+        <dt>Is it guaranteed there are at least n nodes?</dt>
+        <dd>Yes</dd>
+    </dl>
+
+    <p><strong>Test Cases</strong></p>
+    <p>
+        Input: head = [1,2,3,4,5], n = 2 <br />
+        Output: [1,2,3,5]
+    </p>
+    <p>
+        Input: head = [1], n = 1 <br />
+        Output: []
+    </p>
+    <p>
+        Input: head = [1,2], n = 1 <br />
+        Output: [1]
+    </p>
+    <p>
+        Input: head = [1,2], n = 0 <br />
+        Output: [2]
+    </p>
+    
+    <h2>Match</h2>
+    <p><strong>Common solutions to linked list problems:</strong></p>
+    <ol>
+        <li>Two Pointers: Two pointers are useful in cases where we want to track two different locations in the list. This is effective for this problem because we can find the nth node from the end using two pointers.</li>
+        <li>Multiple Passes: We could use multiple passes to find the length of the list and then count from the beginning to remove the node. However, this is less efficient than the other options.</li>
+        <li>Temp Head: A temporary head could be used in the case the nth node from the end is the head of the list. However, we can simply assign the head to head.next before deleting the node making this unnecessary.</li>
+    </ol>
+
+    <h2>Plan</h2>
+    <p>The main strategy for this solution is to first define two pointers with a gap of n nodes. Advancing the right pointer to the end of the list allows us to identify the nth node from the end with the left pointer. We can then delete that node.</p>
+    <ol role="list" aria-label="Solution steps">
+        <li>Initialize 2 pointers.</li>
+        <li>Advance the right pointer so that the gap between the left and right pointers is n nodes</li>
+        <li>Handle special case where the head node is removed</li>
+        <li>While the right pointer is not at the end of the list, move both first and second pointer forward</li>
+        <li>Delete the node being pointed to by the left pointer.</li>
+        <li>Return the head of the linked list</li>
+    </ol>
+
+    <h2>Complexity Analysis</h2>
+    <p><strong>Time Complexity:</strong></p>
+    <p> O(n), the right pointer needs to traverse all nodes in the linked list. </p>
+    <p><strong>Space Complexity:</strong></p>   
+    <p> O(1), there are only 2 pointers. </p>
+    
+    <h2>Code Solution </h2>
+</div>

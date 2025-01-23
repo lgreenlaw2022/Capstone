@@ -2,3 +2,7 @@ units:
   - title: "Hash Maps"
     order: 1
     course_id: 1
+  
+  - title: "Linked Lists"
+    order: 2
+    course_id: 1

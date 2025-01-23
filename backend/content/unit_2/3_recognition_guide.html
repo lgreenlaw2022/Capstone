@@ -1,0 +1,72 @@
+<div class="guideContainer">
+    <h1>Recognition Guide: Linked Lists</h1>
+    <p>
+        Linked lists are unique in that usually you are told you are working with a linked list. The problem becomes determining which linked list strategy is suited to solving the problem. 
+    </p>
+    <p>
+        <p>
+            <strong>Two Pointers</strong>
+            <ul>
+                <li>use when tracking windows of nodes (sublists)</li>
+                <li>use when positions of certain nodes are important</li>
+                <li>use for linear data structurex: input data can be traversed in a linear fashion, such as an array, linked list, or string.</li>
+                <li>use when you want to process data elements at two different positions simultaneously.</li>
+            </ul>
+        </p>
+        <p>
+            <strong>Multiple Passes</strong>
+            <ul>
+                <li>use to traverse two linked lists at the same time</li>
+                <li>use to pre-process the list for other data structures</li>
+                <li>use to determine a characteristic of the input</li>
+            </ul>
+        </p>
+        <p>
+            <strong>Temp head</strong>
+            <ul>
+                <li>important to use if operations might affect the head of the list (eg. deleting, merging, reordering)</li>
+                <li>use when creating a new list</li>
+            </ul>
+        </p>
+    </p>
+
+    <p>
+        <i>Do not use if:</i></strong>
+        <ol>
+            <li>searching — searching is inefficient because you cannot access items by index</li>
+            <li>sorting — you cannot access items by index and in cases like a singly linked list, you can only compare pairs of values at a time</li>
+        </ol>
+    </p>
+        <h2>Questions to ask in an interview</h2>
+    <p>
+        <ol>
+            <li>
+                What type of linked list is it? singly linked, doubly linked?
+            </li>
+            <li>
+                Could there be cycles in the list?
+            </li>
+            <li>
+                Will the node values be given in sorted order?
+            </li>
+            <li>
+                Can I create a new linked list?
+                <ul>
+                    <li>Some problems require you modify the list in-place. This requires less storage.</li>
+                </ul>
+            </li>
+            <li>
+                What should the method return? A pointer to a head? A brand new list?
+            </li>
+            <li>
+                What kind of data does a node hold?
+                <ul>
+                    <li>This might affect how you check for equality between strings, integers, etc.</li>
+                </ul>
+            </li>
+            <li>
+                Does the linked list have a maximum (or minimum) number of nodes?
+            </li>
+        </ol>
+    </p>
+</div>
