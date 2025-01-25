@@ -1,0 +1,57 @@
+<div class="guideContainer">
+    <h1>Recognition Guide: Hash Maps</h1>
+    <p>
+        <strong>Signs you may want to use a hash map</strong>
+        <ol>
+            <li>
+                You need to store values
+            </li>
+            <li>
+                You need constant run time but storage is not restricted
+            </li>
+            <li>
+                You want to count occurrences 
+            </li>
+        </ol>
+        <strong>Common problems that use hash maps:</strong>
+        <ul>
+            <li>Finding duplicates</li>
+            <li>Finding a sum</li>
+            <li>Remove the least recently used (LRU) item</li>
+            <li>Mapping one input to another</li>
+            <li>Construct Binary Tree from Preorder and Inorder Traversal</li>
+        </ul>
+    </p>
+
+    <p>
+        <strong><i>Do not use if:</i></strong>
+        <ol>
+            <li>the original order of the data matters</li>
+            <li>memory is constrained</li>
+        </ol>
+    </p>
+    
+    <h2>Questions to ask in an interview</h2>
+    <p>
+        <ol>
+            <li>
+                Are there any memory constraints?
+                <ul>
+                    <li>Hash tables can be space-inefficient due to the need for resizing and handling collisions. It's vital to understand if space efficiency is a critical factor.</li>
+                </ul>
+            </li>
+            <li>
+                Do you require a specific time complexity?
+                <ul>
+                    <li>Asking for specific run time requirements, like needing constant time complexity (O(1)) for insertions, deletions, and lookups, can signal a hash table is appropriate.</li>
+                </ul>
+            </li>
+            <li>
+                Can you describe the nature of the data items you are dealing with?
+                <ul>
+                    <li>Understanding whether the data items are complex objects, simple key-value pairs, or require relationships between items can help infer the operations needed.</li>
+                </ul>
+            </li>
+        </ol>
+    </p>
+</div>

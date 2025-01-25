@@ -1,0 +1,34 @@
+hints:
+# Hash maps
+  - module_type: "CHALLENGE"
+    module_title: "Contains Duplicate"
+    hints:
+      - text: "It does not matter what the duplicate is, only that one exists."
+        order: 1
+      - text: "A hash set could be useful."
+        order: 2
+
+  - module_type: "BONUS_CHALLENGE"
+    module_title: "Two Sum"
+    hints:
+      - text: 'Focus on tracking the "complement" of each number (target - current number)'
+        order: 1
+      - text: "A hash map can be used to store the required complements."
+        order: 2
+
+# Linked Lists
+  - module_type: "CHALLENGE"
+    module_title: "Remove Nth Node From End of List"
+    hints:
+      - text: "Use two pointers with a strategic separation."
+        order: 1
+      - text: "Create a dummy head node to handle edge cases."
+        order: 2
+
+  - module_type: "BONUS_CHALLENGE"
+    module_title: "Reverse Linked List"
+    hints:
+      - text: "Focus on changing the direction of links without creating a new list."
+        order: 1
+      - text: Consider using three pointers (prev, current, and next) to systematically reverse the list's links.
+        order: 2

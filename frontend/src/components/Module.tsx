@@ -48,7 +48,7 @@ const getModulePath = (type: ModuleType, id: number): string => {
         case ModuleType.PYTHON_GUIDE:
             return `/learn/python-guide/${id}`;
         case ModuleType.RECOGNITION_GUIDE:
-            return `/learn/recognition-guide/${id}`;
+            return `/learn/concept-guide/${id}`; // TODO: recognition guide is the same as concept guide, this creates an issue of the appearance while loading
         case ModuleType.QUIZ:
             return `/learn/quiz/${id}`;
         case ModuleType.CHALLENGE:

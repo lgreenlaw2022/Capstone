@@ -1,0 +1,21 @@
+class Solution:
+  def lengthOfLongestSubstring(self, s: str) -> int:
+	  # declare a hash set holding the current chars in the substr
+	  # note: we don't care what's in the substring, only its length
+		  # this is why we never declare or retrieve the current substring string
+    chars = set()
+    l = 0
+    max_len = 0
+    
+    # continue until reaching the end of the str    
+    for r in range(len(s)):	    
+      while s[r] in chars:
+	      # try moving l to the right until the repeated char is removed
+        chars.remove(s[l])
+        l += 1
+      # and r to chars because it's in the current substring
+      chars.add(s[r])
+      # check if this new valid substring is larger than prev
+      max_len = max(max_len, r - l + 1)
+      
+    return max_len

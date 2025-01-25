@@ -3,7 +3,7 @@ import { useEffect, useState, useRef } from "react";
 import Editor, { OnMount } from "@monaco-editor/react";
 import * as monaco from "monaco-editor";
 
-import { getCodeChallenge, submitCompleteModule } from "../../../api/api";
+import { getModuleContent, submitCompleteModule } from "../../../api/api";
 import styles from "@/styles/Content.module.css";
 import CodeEditorInstructions from "@/components/CodeEditorInstructions";
 import Hints from "@/components/Hints";
@@ -23,7 +23,7 @@ const CodeChallengePage: React.FC = () => {
     const fetchContent = async () => {
         try {
             if (moduleId) {
-                const data = await getCodeChallenge(Number(moduleId));
+                const data = await getModuleContent(Number(moduleId));
                 setContent(data.html);
                 setCode(data.code);
             }

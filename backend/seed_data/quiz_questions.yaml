@@ -1,0 +1,468 @@
+quiz_questions:
+# Hash Maps Concept Quiz
+  - module_title: "Hash Maps Concept Quiz"
+    title: "What is a Hash Map?"
+    options:
+      - option_text: "A data structure that maps keys to values"
+        is_correct: true
+        option_type: CONCEPT
+
+      - option_text: "A graph data structure"
+        is_correct: false
+        option_type: CONCEPT
+
+      - option_text: "A sorting algorithm"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Hash Maps Concept Quiz"
+    title: "What are the basic components of a hash table?"
+    options:
+      - option_text: "A linked list and a hash function."
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "An array of buckets and a hash function."
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "A binary tree and a hash function."
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Hash Maps Concept Quiz"
+    title: "What is a hash function?"
+    options:
+      - option_text: "A function that takes a key and converts it into a unique memory address."
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "A function that maps input data to an array index."
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "A function that encrypts data before storing it in a data structure."
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Hash Maps Concept Quiz"
+    title: "What is the average time complexity of searching in a Hash Map?"
+    options:
+      - option_text: "O(1)"
+        is_correct: true
+        option_type: CONCEPT
+
+      - option_text: "O(n)"
+        is_correct: false
+        option_type: CONCEPT
+
+      - option_text: "O(log n)"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Hash Maps Concept Quiz"
+    title: "What is the time complexity of inserting in a Hash Map?"
+    options:
+      - option_text: "O(1)"
+        is_correct: true
+        option_type: CONCEPT
+
+      - option_text: "O(n)"
+        is_correct: false
+        option_type: CONCEPT
+
+      - option_text: "O(log n)"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Hash Maps Concept Quiz"
+    title: "What kind of hash function minimizes collisions in a hash table?"
+    options:
+      - option_text: "A function that returns a constant value."
+        is_correct: false
+        option_type: CONCEPT
+
+      - option_text: "A function that evenly distributes keys across all array indices."
+        is_correct: true
+        option_type: CONCEPT
+
+      - option_text: "A function that increases linearly with the number of entries."
+        is_correct: false
+        option_type: CONCEPT
+
+# Hash Sets Concept Quiz
+  - module_title: "Hash Sets Concept Quiz"
+    title: "What is the primary purpose of a hash set?"
+    options:
+      - option_text: "To store arrays of values."
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "To maintain a collection of unique elements."
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "To ensure elements are sorted."
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Hash Sets Concept Quiz"
+    title: "How does a hash set ensure that all elements are unique?"
+    options:
+      - option_text: "By sorting the elements and removing duplicates."
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "By using a hash function to map each element to a unique index and checking for existing elements before adding a new one."
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "By storing elements in a linked list and comparing each new element with all existing elements."
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Hash Sets Concept Quiz"
+    title: "Which of the following operations are typically O(1) time complexity in a hash set?"
+    options:
+      - option_text: "Checking if an element exists"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "Sorting all elements"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "Finding the minimum or maximum element"
+        is_correct: false
+        option_type: CONCEPT
+
+# Hash Maps Recognition Quiz
+  - module_title: "Hash Maps Recognition Quiz"
+    title: "Which scenario would benefit most from the use of a hash table?"
+    options:
+      - option_text: "Maintaining a sorted list of student grades."
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "Looking up a phone number given a person's name."
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "Calculating the sum of a series of numbers."
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Hash Maps Recognition Quiz"
+    title: "Which scenario is most suitable for using a hash table?"
+    options:
+      - option_text: "Maintaining a real-time leaderboard for a gaming application where scores are continuously updated and accessed."
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "Storing data that requires complex multi-field sorting operations frequently."
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "Storing data where relationships between records (like in a graph) are more important than individual record access speed."
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Hash Maps Recognition Quiz"
+    title: "Which factor indicates a hash map is not an appropriate data structure?"
+    options:
+      - option_text: "The need for quick lookup of elements using a key."
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "The data contains many duplicate values."
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "The data needs to be iterated over in a specific order for reports."
+        is_correct: true
+        option_type: CONCEPT
+
+  - module_title: "Hash Maps Recognition Quiz"
+    title: "In which scenario would you prefer to use a hash set over an array or list?"
+    options:
+      - option_text: "When you need to maintain the order of elements."
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "When you need to perform frequent searches and ensure that all elements are unique."
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "When you need to perform range queries on a sorted list of elements."
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Hash Maps Recognition Quiz"
+    title: "Which scenario suggests the use of a hash set?"
+    options:
+      - option_text: "Maintaining a real-time leaderboard where scores need to be sorted."
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "Tracking a collection of visited URLs to ensure no duplicates are processed."
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "Performing range queries on a list of numbers."
+        is_correct: false
+        option_type: CONCEPT
+
+# Linked Lists Concept Quiz
+  - module_title: "Linked Lists Concept Quiz"
+    title: "What is a linked list composed of?"
+    options:
+      - option_text: "Arrays and stacks"
+        is_correct: false
+        option_type: CONCEPT
+
+      - option_text: "Nodes and pointers"
+        is_correct: true
+        option_type: CONCEPT
+
+      - option_text: "Trees and graphs"
+        is_correct: false
+        option_type: CONCEPT
+
+      - option_text: "Queues and heaps"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Linked Lists Concept Quiz"
+    title: "What distinguishes a singly linked list from a doubly linked list?"
+    options:
+      - option_text: "Singly linked lists have nodes with one pointer, while doubly linked lists have nodes with two pointers"
+        is_correct: true
+        option_type: CONCEPT
+
+      - option_text: "Doubly linked lists are circular, while singly linked lists are not"
+        is_correct: false
+        option_type: CONCEPT
+
+      - option_text: "Doubly linked lists can have elements of different types, while singly linked lists cannot"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Linked Lists Concept Quiz"
+    title: "In a circular linked list, what is true about the last node?"
+    options:
+      - option_text: "The last node points to the head node"
+        is_correct: true
+        option_type: CONCEPT
+
+      - option_text: "The last node points to a null value"
+        is_correct: false
+        option_type: CONCEPT
+
+      - option_text: "The last node points to itself"
+        is_correct: false
+        option_type: CONCEPT
+
+      - option_text: "The last node has no pointers"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Linked Lists Concept Quiz"
+    title: "Why are linked lists generally less efficient than arrays for accessing specific elements?"
+    options:
+      - option_text: "Linked lists use more memory"
+        is_correct: false
+        option_type: CONCEPT
+
+      - option_text: "Nodes in a linked list must be accessed sequentially"
+        is_correct: true
+        option_type: CONCEPT
+
+      - option_text: "Arrays can only be used with integers"
+        is_correct: false
+        option_type: CONCEPT
+
+      - option_text: "Linked lists require more complex sorting algorithms"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Linked Lists Concept Quiz"
+    title: "Which of the following operations on a linked list typically has O(1) time complexity?"
+    options:
+      - option_text: "Accessing the middle element"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "Deleting the head node"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "Searching for a specific value"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "Sorting the list"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Linked Lists Concept Quiz"
+    title: "What is a 'pointer' in the context of linked lists?"
+    options:
+      - option_text: "A variable that stores the data of a node"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "A function that points to the next element"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "A reference to the location of another node"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "A specific value in a node"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Linked Lists Concept Quiz"
+    title: "Which type of linked list can efficiently traverse both forwards and backwards?"
+    options:
+      - option_text: "Singly linked list"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "Doubly linked list"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "Circular linked list"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Linked Lists Concept Quiz"
+    title: "What is the time complexity of inserting a node at the end of a singly linked list?"
+    options:
+      - option_text: "O(1)"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "O(n)"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "O(log n)"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "O(n^2)"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Linked Lists Concept Quiz"
+    title: 'How does the "temp head" strategy work in linked list algorithms?'
+    options:
+      - option_text: "It uses an extra pointer to keep track of the head of the linked list temporarily."
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "It reverses the order of the nodes in the linked list."
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "It deletes the head node of the linked list."
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "It creates a new linked list with a different head node."
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Linked Lists Concept Quiz"
+    title: 'How does the "multiple passes" strategy work in linked list algorithms?'
+    options:
+      - option_text: "It involves iterating through the linked list multiple times."
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "It uses multiple linked lists to store different parts of the data."
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "It involves deleting nodes from the linked list in multiple steps."
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "It swaps the order of the nodes in the linked list multiple times."
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Linked Lists Concept Quiz"
+    title: 'How can the presence of a loop in a linked list be detected using the "two pointers" strategy?'
+    options:
+      - option_text: "By comparing the values of the nodes in the linked list."
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "By checking if a fast pointer reaches the end of the list."
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "By checking if a fast pointer catches up to a slow pointer."
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "By reversing the order of the nodes in the list."
+        is_correct: false
+        option_type: CONCEPT
+
+# Linked Lists Recognition Quiz
+  - module_title: "Linked Lists Recognition Quiz"
+    title: 'When would the "two pointers" strategy be an appropriate technique to use in a linked list problem?'
+    options:
+      - option_text: "When you need to insert a node at the beginning of a linked list."
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "When you need to find the middle of a linked list in a single pass."
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "When you need to delete a node from the linked list."
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Linked Lists Recognition Quiz"
+    title: 'When would the "temporary head" strategy be an appropriate technique to use in a linked list problem?'
+    options:
+      - option_text: "When you need to delete the head node of a linked list."
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "When you need to insert a node at the end of the linked list."
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "When you need to detect a loop in a linked list."
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Linked Lists Recognition Quiz"
+    title: 'When would the "multiple passes" strategy be an appropriate technique to use in a linked list problem?'
+    options:
+      - option_text: "When you need to find the middle of the linked list."
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "When you need to traverse two linked lists at the same time."
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "When you need to insert a node at the beginning of the linked list."
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Linked Lists Recognition Quiz"
+    title: "When should you not use a linked list?"
+    options:
+      - option_text: "When you need to search for an element efficiently."
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "When you need to merge two linked lists."
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Linked Lists Recognition Quiz"
+    title: 'When would the "temporary head" strategy be most appropriate?'
+    options:
+      - option_text: "When you need to sort the linked list."
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "When modifying or creating a new list."
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "When you need to find a node at a specific index."
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Linked Lists Recognition Quiz"
+    title: 'When would the "two pointers" strategy be an appropriate technique to use in a linked list problem?'
+    options:
+      - option_text: "When you need to insert a node at the end of the linked list."
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "When tracking windows of nodes (sublists) in a linked list."
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "When you need to reverse the linked list."
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Linked Lists Recognition Quiz"
+    title: 'In which case is the "multiple passes" strategy most appropriate?'
+    options:
+      - option_text: "Detecting loops or cycles in a linked list."
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "Sorting the elements of a linked list."
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "Deleting every other node in a linked list."
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "Reversing the order of the nodes in a linked list."
+        is_correct: false
+        option_type: CONCEPT
+

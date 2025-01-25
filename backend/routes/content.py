@@ -104,41 +104,82 @@ def calculate_completion_percentage(total_modules, completed_modules):
 @content_bp.route("/modules/<int:module_id>", methods=["GET"])
 @jwt_required()
 def get_module_content(module_id):
-    try:
-        # Get the file path using the module_id
-        file_path = get_content_file_path(module_id, "concept-guides")
-    except ValueError as e:
-        return abort(404, description=str(e))
-
-    # Check if the file exists
-    if not os.path.exists(file_path):
-        return jsonify({"error": "Content not found"}), 404
-
-    # Serve the HTML file
-    return send_file(file_path, mimetype="text/html")
-
-
-def transform_title(title: str) -> str:
-    # Replace spaces with hyphens and convert to lowercase
-    return title.replace(" ", "-").lower()
-
-
-def get_content_file_path(module_id: int, content_type: str) -> str:
-    # Query the database for the module title using the module_id
     module = Module.query.get(module_id)
     if module is None:
-        raise ValueError("Module not found")
+        return jsonify({"error": "Module not found"}), 404
 
-    # Transform the title
-    transformed_title = transform_title(module.title)
+    unit_id = module.unit_id
+    module_type = module.module_type
+    order = module.order
 
-    # Define the path to the HTML files
-    base_path = os.path.join(os.getcwd(), "content", content_type)
-    # Construct the file path using the transformed title
-    file_path = os.path.join(base_path, f"{transformed_title}.html")
-    logger.debug(f"File path: {file_path}")
+    base_content_dir = "content"
 
-    return file_path
+    # Determine the file paths based on module type
+    if module_type == ModuleType.CONCEPT_GUIDE:
+        file_path = os.path.join(
+            base_content_dir, f"unit_{unit_id}", f"{order}_concept_guide.html"
+        )
+        if not os.path.exists(file_path):
+            logger.error(f"Concept guide file not found: {file_path}")
+            return jsonify({"error": "Content not found"}), 404
+        return send_file(file_path, mimetype="text/html")
+    if module_type == ModuleType.RECOGNITION_GUIDE:
+        file_path = os.path.join(
+            base_content_dir, f"unit_{unit_id}", f"{order}_recognition_guide.html"
+        )
+        if not os.path.exists(file_path):
+            logger.error(f"Recognition guide file not found: {file_path}")
+            return jsonify({"error": "Content not found"}), 404
+        return send_file(file_path, mimetype="text/html")
+    if module_type in [
+        ModuleType.CHALLENGE,
+        ModuleType.CHALLENGE_SOLUTION,
+        ModuleType.BONUS_CHALLENGE,
+    ]:
+        if module_type == ModuleType.CHALLENGE:
+            sub_dir = f"{order}_challenge"
+        elif module_type == ModuleType.CHALLENGE_SOLUTION:
+            sub_dir = f"{order}_solution_guide"
+        elif module_type == ModuleType.BONUS_CHALLENGE:
+            sub_dir = f"{order}_bonus_challenge"
+            base_content_dir = os.path.join(base_content_dir, "bonus_challenges")
+
+        content_file_path = os.path.join(
+            base_content_dir, f"unit_{unit_id}", sub_dir, f"{order}_content.html"
+        )
+        code_file_path = os.path.join(
+            base_content_dir, f"unit_{unit_id}", sub_dir, f"{order}_code.txt"
+        )
+        return get_code_and_content(code_file_path, content_file_path)
+    else:
+        return jsonify({"error": "Unsupported module type"}), 400
+
+
+def get_code_and_content(code_file_path, content_file_path):
+    try:
+        # Check if the text file exists
+        if not os.path.exists(code_file_path):
+            logger.error("Code file not found for module")
+            return jsonify({"error": "Code Content not found"}), 404
+
+        # Check if the HTML file exists
+        if not os.path.exists(content_file_path):
+            logger.error(f"HTML file not found for module")
+            return jsonify({"error": "Content not found"}), 404
+
+        # Read content from both files
+        with open(code_file_path, "r", encoding="utf-8") as code_file, open(
+            content_file_path, "r", encoding="utf-8"
+        ) as html_file:
+            code_content = code_file.read()
+            html_content = html_file.read()
+
+        logger.debug(f"Code and content retrieved successfully for module")
+        return jsonify({"html": html_content, "code": code_content}), 200
+
+    except Exception as e:
+        logger.error(f"Error retrieving code and content files: {str(e)}")
+        return abort(500, description=str(e))
 
 
 @content_bp.route("/modules/<int:module_id>/quiz-questions", methods=["GET"])
@@ -455,59 +496,6 @@ def get_unit_title(unit_id):
     except Exception as e:
         logger.error(f"Error fetching unit title for unit {unit_id}: {str(e)}")
         return jsonify({"error": str(e)}), 500
-
-
-@content_bp.route("/code-challenges/<int:module_id>", methods=["GET"])
-def get_code_challenge(module_id):
-    try:
-        # Get file paths for the code challenge and HTML
-        code_challenge_file_path = get_code_challenge_file_path(module_id)
-        html_file_path = get_html_file_path(module_id)
-
-        # Check if the text file exists
-        if not os.path.exists(code_challenge_file_path):
-            logger.error(f"Code challenge file not found for module {module_id}")
-            return jsonify({"error": "Content not found"}), 404
-
-        # Check if the HTML file exists
-        if not os.path.exists(html_file_path):
-            logger.error(f"HTML file not found for module {module_id}")
-            return jsonify({"error": "Content not found"}), 404
-
-        # Read content from both files
-        with open(code_challenge_file_path, "r", encoding="utf-8") as code_file, open(
-            html_file_path, "r", encoding="utf-8"
-        ) as html_file:
-            code_content = code_file.read()
-            html_content = html_file.read()
-
-        # Return the HTML content and code string as part of the response
-        logger.debug(f"Code challenge retrieved successfully for module {module_id}")
-        return jsonify({"html": html_content, "code": code_content}), 200
-
-    except Exception as e:
-        logger.error(
-            f"Error retrieving code challenge for module {module_id}: {str(e)}"
-        )
-        return abort(500, description=str(e))
-
-
-def get_code_challenge_file_path(module_id: int) -> str:
-    # TODO: consider using the module title again for file names
-    # Define the path to the text files
-    base_path = os.path.join(os.getcwd(), "content", "code-challenges", "code")
-    file_path = os.path.join(base_path, f"{module_id}.txt")
-
-    return file_path
-
-
-def get_html_file_path(module_id: int) -> str:
-    # Define the path to the HTML files
-    base_path = os.path.join(os.getcwd(), "content", "code-challenges", "html")
-    # Construct the file path using the module_id
-    file_path = os.path.join(base_path, f"{module_id}.html")
-
-    return file_path
 
 
 @content_bp.route("/units/completed", methods=["GET"])

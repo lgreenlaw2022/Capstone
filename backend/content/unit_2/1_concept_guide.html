@@ -1,0 +1,126 @@
+<div class="guideContainer">
+  <h1>Concept Guide: Linked Lists</h1>
+  <p>
+    Linked lists are a data structure using nodes and pointers. The nodes of a
+    linked list form a chain, with each item a link in the chain. Each node
+    stores the information contained in it and the appropriate pointers to the
+    next and/or previous nodes in the list. The last node in the list points to
+    null. Because of this, you can only move through one node at a time. There
+    is no way to access a node using references or indexes.
+  </p>
+    <strong>Key Terms</strong>
+    <ul>
+      <li><strong>Node: </strong>a position in a list that contains the value of whatever is stored at the position as well as at least one reference to another node.</li>
+      <li><strong>Head: </strong>node at the beginning of the list.</li>
+      <li><strong>Tail: </strong>node at the end of the list.</li>
+      <li><strong>Sentinel: </strong>a temporary node, typically placed at the head or end of the list to help make operations simpler (e.g., delete) or to indicate the termination of the list.</li>
+      <li><strong>Pointer: </strong>references to memory locations where the information in a variable or object is stored. You can easily retrieve an object using its address in memory. </li>
+    </ul>
+  </p>
+  <p>
+    <strong>Call stack example</strong>
+    <p>A real-life example of a linked list is a call stack. A call stack is a data structure used by a program to keep track of method or function calls. It indicates the current state of the program, specifically which methods or functions are active and in what order they were called. Using the call stack, you can trace back through each method call, making it easier to debug and understand the flow of the program.</p>
+    <p>In a call stack, the most recent method call is always at the top of the stack. As each method is called, it is pushed onto the stack, and as methods complete and return, they are popped off the stack. This structure is naturally represented as a linked list, where each node (or item) points to the memory address of the method and the next node in the sequence.</p>
+    <p>Linked list representation:</p>
+    <ul>
+      <li>Each node represents a method call.</li>
+      <li>Each node contains a pointer to the next method in the call stack.</li>
+      <li>The head of the list is the most recent method call (the top of the stack).</li>
+    </ul>
+  </p>
+
+  <h2>Common Variants</h2>
+  <p>There are multiple ways nodes in a linked list can be “chained” together. Each variant has different behavior by the pointers. </p>
+  <strong>Singly Linked List</strong>
+  <p>In a singly linked list, the node only has a pointer referencing the next node. This is assumed as the generic linked list. If the variant is not designated, you can typically assume it is a singly linked list. However, it is always best to ask your interviewer. </p>
+  <strong>Doubly Linked List</strong>
+  <p>Nodes in a doubly linked list contain pointers to the next node and the previous node. This means you can go in any direction through the list. </p>
+  <strong>Circular Linked List</strong>
+  <p>
+    In a circular linked list, the last node points to the first node, creating a
+    circular structure. This can be useful for certain algorithms, such as
+    traversing a list that has no end. It is important to be careful with circular linked lists as you can enter an infinite loop. Note, this is different from a list with loops or cycles embedded which still have a terminal node pointing to null.
+  </p>
+  <p>
+    <img src="/assets/figures/linked-list-types.png" alt="Linked List Example" style="width: 650px; height: auto;"/>
+  </p>
+
+  <h2>Python Implementation</h2>
+  <p>
+    <strong>Node Class</strong>
+    <p>
+      The node class is the building block of a linked list. It contains the data
+      and a reference to the next node in the list. The node class is typically
+      defined as follows:
+    </p>
+    <pre><code class="codeBlock"># Singly Linked List Node
+class SinglyNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+# Doubly Linked List Node
+class DoublyNode:
+    def __init__(self, val=0, next=None, prev=None):
+        self.val = val
+        self.next = next
+        self.prev = prev
+
+# Circular Linked List example
+def create_circular_list():
+    head = SinglyNode(1)
+    head.next = SinglyNode(2)
+    head.next.next = SinglyNode(3)
+    head.next.next.next = head  # Points back to head
+    return head
+</code></pre>
+  
+  <h2>Time and Space Complexity</h2>
+  <strong>
+    Time Complexity:
+  </strong>
+  <p>
+    Best case runtime occurs when the target node is at the beginning of the list. The worst-case runtime occurs when the target node is at the end of the list. Typically you are given the head of the linked list. 
+    Because of these worst case runtimes, linked lists are most effective when operations are confined to one area of the list or the number of nodes is relatively small. 
+  </p>
+  <strong>
+    Space Complexity:
+  </strong>
+  <p>
+    The space complexity of a linked list is O(n) where n is the number of nodes in the list. This is because each node contains a reference to the next node.
+  </p>
+
+  <h2>Common Strategies</h2>
+  <p>
+    <strong> Dummy head aka Temp Head </strong>
+    <p>
+      A dummy head is a node that is placed at the beginning of the list. The dummy head points to the original head of the list.  This is especially useful when you need to delete the head of the list. By using a dummy head, you can avoid edge cases where you need to change the head of the list.
+      After completing the task, remove the dummy head and set the head of the list to its next node. 
+    </p>
+  </p>
+  <p>
+    <strong> Two Pointer Technique</strong>
+    <p>
+      The two pointer strategy is incredibly versatile and can be adapted for many problems. This technique uses two (or more) pointers that each point to node in the linked list. The pointers can move at different speeds or in different directions. This technique is especially useful for finding the middle of a linked list, detecting cycles, and reversing a linked list.
+      A common example of using two pointers is to detect a cycle in a linked list. Rather than iterating through the whole list twice and checking if the value matches the values stored in a hash table, two pointers avoids storing any values. If the fast pointer catches up to the slow pointer, there is a cycle in the linked list.
+    </p>
+    <p class="boldPoint">Note. The two-pointer strategy can be applied to many different data structures. It is often used in array and string problems. While we introduce it with linked lists, understanding the two-pointer strategy is a foundation for many problem-solving approaches.</p>
+  </p>
+  <p>
+    <strong>Multiple Passes</strong>
+    <p>
+      Sometimes you need to traverse the list multiple times to solve a problem. This is especially true when you need to find the length of the list or the middle of the list. While this is not the most efficient strategy, it is a common approach to solving linked list problems. Each pass over a linked list runs in O(n) time, helping manage the time complexity.
+      This can also be helpful when you need to determine a specific characteristic of an input or compare two linked lists.
+    </p>
+  </p>
+  
+  <h2>Key Takeaways</h2>
+  <ul>
+    <li>Linked lists are a data structure that uses nodes and pointers to store information.</li>
+    <li>Nodes contain the information and a reference to the next node in the list.</li>
+    <li>There are three common variants of linked lists: singly linked lists, doubly linked lists, and circular linked lists. They are typically inefficient for searching.</li>
+    <li>Linked lists are most effective when operations are confined to one area of the list or the number of nodes is relatively small.</li>
+    <li>Common strategies for linked list problems include using a temp head, the two-pointer technique, and making multiple passes over the list.</li>
+  </ul>
+
+</div>

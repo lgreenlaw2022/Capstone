@@ -1,0 +1,30 @@
+goals:
+  - title: "Complete 2 modules"
+    metric: COMPLETE_MODULES
+    requirement: 2
+    time_period: DAILY
+
+  - title: "Earn 5 gems"
+    metric: EARN_GEMS
+    requirement: 5
+    time_period: DAILY
+
+  - title: "Extend streak by 1 day"
+    metric: EXTEND_STREAK
+    requirement: 1
+    time_period: DAILY
+
+  - title: "Practice for 15 days"
+    metric: EXTEND_STREAK
+    requirement: 15
+    time_period: MONTHLY
+
+  - title: "Complete 10 modules"
+    metric: COMPLETE_MODULES
+    requirement: 10
+    time_period: MONTHLY
+
+  - title: "Earn 50 gems"
+    metric: EARN_GEMS
+    requirement: 50
+    time_period: MONTHLY
