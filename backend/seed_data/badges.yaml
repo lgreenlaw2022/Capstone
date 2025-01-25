@@ -16,7 +16,7 @@ badges:
   - title: "30 day streak"
     description: "Awarded for reaching a 30 day streak."
     type: AWARD
-    criteria_expression: "user.streak >= 7"
+    criteria_expression: "user.streak >= 30"
     event_type: STREAK_ACHIEVEMENT
 
   - title: "Quiz Master"

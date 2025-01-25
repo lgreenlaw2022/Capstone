@@ -42,7 +42,7 @@ quiz_questions:
         option_type: CONCEPT
 
   - module_title: "Hash Maps Concept Quiz"
-    title: "What is the time complexity of searching in a Hash Map?"
+    title: "What is the average time complexity of searching in a Hash Map?"
     options:
       - option_text: "O(1)"
         is_correct: true

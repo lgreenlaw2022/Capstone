@@ -123,7 +123,7 @@ def get_module_content(module_id):
             logger.error(f"Concept guide file not found: {file_path}")
             return jsonify({"error": "Content not found"}), 404
         return send_file(file_path, mimetype="text/html")
-    elif module_type == ModuleType.RECOGNITION_GUIDE:
+    if module_type == ModuleType.RECOGNITION_GUIDE:
         file_path = os.path.join(
             base_content_dir, f"unit_{unit_id}", f"{order}_recognition_guide.html"
         )
@@ -131,7 +131,7 @@ def get_module_content(module_id):
             logger.error(f"Recognition guide file not found: {file_path}")
             return jsonify({"error": "Content not found"}), 404
         return send_file(file_path, mimetype="text/html")
-    elif module_type in [
+    if module_type in [
         ModuleType.CHALLENGE,
         ModuleType.CHALLENGE_SOLUTION,
         ModuleType.BONUS_CHALLENGE,
@@ -159,7 +159,7 @@ def get_code_and_content(code_file_path, content_file_path):
     try:
         # Check if the text file exists
         if not os.path.exists(code_file_path):
-            logger.error(f"Code file not found for module")
+            logger.error("Code file not found for module")
             return jsonify({"error": "Code Content not found"}), 404
 
         # Check if the HTML file exists

@@ -78,6 +78,12 @@ dd {
     margin-left: 20px;
 }
 
+code {
+    background-color: #edebe6;
+    padding: 3px;
+    border-radius: 4px;
+}
+
 .main-content {
     display: flex;
     flex-direction: column;

@@ -28,7 +28,7 @@ app = create_app()
 
 
 def load_yaml(file_path):
-    with open(file_path, "r") as file:
+    with open(file_path) as file:
         return yaml.safe_load(file)
 
 
@@ -94,7 +94,8 @@ def load_modules():
                 module_type=ModuleType[module_data["module_type"]],
             )
             modules_to_add.append(module)
-
+        else:
+            logger.error(f"Unit with title {module_data['unit_title']} not found.")
     db.session.bulk_save_objects(modules_to_add)
     db.session.commit()
     logger.info("Modules loaded successfully.")
@@ -121,6 +122,10 @@ def load_quiz_questions():
                     option_type=option["option_type"],
                 )
                 db.session.add(quiz_question_option)
+        else:
+            logger.error(
+                f"Module with title {question_data['module_title']} not found."
+            )
     db.session.commit()
     logger.info("Quiz questions loaded successfully.")
 
@@ -148,6 +153,8 @@ def load_hints():
                     order=hint["order"],
                 )
                 hints_to_add.append(hint_instance)
+        else:
+            logger.error(f"Module with title {module_data['module_title']} not found.")
 
     db.session.bulk_save_objects(hints_to_add)
     db.session.commit()
