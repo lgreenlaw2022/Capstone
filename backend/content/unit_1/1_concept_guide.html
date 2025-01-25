@@ -35,6 +35,9 @@
     hash code and from the hash code to the index in the array.
   </p>
   <p>
+    <img src="/assets/figures/hash-function.jpg" alt="Hash function image" style="width: 650px; height: auto;"/>
+  </p>
+  <p>
     If a value with the same key is placed at an index, we simply update the
     existing value for that key to match the new one.
   </p>
@@ -92,12 +95,37 @@
   <h2>Python Implementation of Hash Maps</h2>
   <p>
     Python conveniently uses the dictionary data structure as a hash table. The
-    dictionary is a set of {key:value} pairs. Once you assign the key-value
+    dictionary is a set of <code>{key:value}</code> pairs. Once you assign the key-value
     pairs for the dictionary, python uses a convenient hash function under the
     hood to convert the keys to hash codes and store the values in an array. We
     trust that Python will pick an optimal hash function and assume that the
-    linear run time applies.
+    linear run time applies. Below are some helpful code snippets.
   </p>
+  <pre><code class="codeBlock"># Creating a dictionary
+hash_table = {}
+# Adding elements
+hash_table['key'] = 'value'
+# Checking membership
+print('key' in hash_table)
+# retrieve value
+print(hash_table['key'])
+# update value
+hash_table['key'] = 'new value'
+# Removing elements
+del hash_table['key']
+</code></pre>
+  <p>
+    To access an iterable list of the keys and values in a dictionary, use the following methods:
+  </p>
+
+  <pre><code class="codeBlock"># Accessing keys
+print(hash_table.keys())
+# Accessing values
+print(hash_table.values())
+# Accessing key-value pairs
+print(hash_table.items())
+</code></pre>
+
   <p><strong>A few notes about Python dictionaries</strong>
     <ol>
         <li>keys are immutable, you cannot update their values later. You must restrict them to immutable data types (eg. a tuple and not a list)</li>

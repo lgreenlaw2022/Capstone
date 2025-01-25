@@ -79,8 +79,15 @@ dd {
 }
 
 code {
-    background-color: #edebe6;
+    background-color: #e6e6e6;
     padding: 3px;
+    border-radius: 4px;
+}
+
+.codeBlock {
+    display: block;
+    padding: 10px;
+    background-color: #e6e6e6;
     border-radius: 4px;
 }
 

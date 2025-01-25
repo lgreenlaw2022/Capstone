@@ -16,6 +16,18 @@
     value in the set can be completed in constant time. Like dictionaries,
     python sets can contain a mix of data types.
   </p>
+<pre><code class="codeBlock"># Creating a set
+numbers = {1, 2, 3, 4, 5}
+  
+# Adding elements
+numbers.add(6)  # O(1)
+  
+# Removing elements
+numbers.remove(1)  # O(1)
+ 
+# Checking membership
+print(2 in numbers)  # O(1)
+</code></pre>
   <p>
     A common way to use a set in a technical interview is for problems that
     require checking for duplicates. In this case, you can compare the length of

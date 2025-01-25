@@ -41,6 +41,39 @@
     circular structure. This can be useful for certain algorithms, such as
     traversing a list that has no end. It is important to be careful with circular linked lists as you can enter an infinite loop. Note, this is different from a list with loops or cycles embedded which still have a terminal node pointing to null.
   </p>
+  <p>
+    <img src="/assets/figures/linked-list-types.png" alt="Linked List Example" style="width: 650px; height: auto;"/>
+  </p>
+
+  <h2>Python Implementation</h2>
+  <p>
+    <strong>Node Class</strong>
+    <p>
+      The node class is the building block of a linked list. It contains the data
+      and a reference to the next node in the list. The node class is typically
+      defined as follows:
+    </p>
+    <pre><code class="codeBlock"># Singly Linked List Node
+class SinglyNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+# Doubly Linked List Node
+class DoublyNode:
+    def __init__(self, val=0, next=None, prev=None):
+        self.val = val
+        self.next = next
+        self.prev = prev
+
+# Circular Linked List example
+def create_circular_list():
+    head = SinglyNode(1)
+    head.next = SinglyNode(2)
+    head.next.next = SinglyNode(3)
+    head.next.next.next = head  # Points back to head
+    return head
+</code></pre>
   
   <h2>Time and Space Complexity</h2>
   <strong>
