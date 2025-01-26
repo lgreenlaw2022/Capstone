@@ -7,6 +7,7 @@ import { getModuleContent, submitCompleteModule } from "../../../api/api";
 import styles from "@/styles/Content.module.css";
 import CodeEditorInstructions from "@/components/CodeEditorInstructions";
 import Hints from "@/components/Hints";
+import CodeCheck from "@/components/CodeCheck";
 
 const CodeChallengePage: React.FC = () => {
     const router = useRouter();
@@ -72,8 +73,10 @@ const CodeChallengePage: React.FC = () => {
                     }}
                 />
             </div>
-            <Hints moduleId={Number(moduleId)}/> 
+            
             <CodeEditorInstructions />
+            <Hints moduleId={Number(moduleId)}/> 
+            <CodeCheck />
 
             <button
                 onClick={handleComplete}
