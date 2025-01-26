@@ -3,7 +3,10 @@ import { useEffect, useState } from "react";
 import styles from "@/styles/CodeCheck.module.css";
 import TestCase from "./TestCase";
 
-export default function CodeCheck() {
+interface CodeCheckProps {
+    onTestCasesCompleted: (completed: boolean) => void;
+}
+export default function CodeCheck({ onTestCasesCompleted }: CodeCheckProps) {
     const testData = [
         {
             input: "[1, 2]",
@@ -32,6 +35,11 @@ export default function CodeCheck() {
         // retrieve test cases from the backend
         [];
     });
+
+    useEffect(() => {
+        const allCompleted = testCases.every(testCase => testCase.verified);
+        onTestCasesCompleted(allCompleted);
+    }, [testCases, onTestCasesCompleted]);
 
     const handleCheck = (
         userOutput: string,

@@ -6,8 +6,6 @@ import * as monaco from "monaco-editor";
 import { getModuleContent, submitCompleteModule } from "../../../api/api";
 import styles from "@/styles/Content.module.css";
 
-// TODO: REFACTORING -- this page is very similar to the CodeChallengePage,
-// consider what should be extracted to a component
 const ChallengeSolutionPage: React.FC = () => {
     const router = useRouter();
     const { moduleId } = router.query;

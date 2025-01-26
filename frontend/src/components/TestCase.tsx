@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import styles from "@/styles/CodeCheck.module.css";
 
@@ -9,7 +9,12 @@ interface TestCaseProps {
     onCheck: (userOutput: string, correctOutput: string) => void;
 }
 
-export default function TestCase({input, output, verified, onCheck}: TestCaseProps) {
+export default function TestCase({
+    input,
+    output,
+    verified,
+    onCheck,
+}: TestCaseProps) {
     const [userOutput, setUserOutput] = useState("");
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -21,7 +26,7 @@ export default function TestCase({input, output, verified, onCheck}: TestCasePro
     };
 
     return (
-        <div>
+        <div className={styles.testCase}>
             <p>
                 Input: <code>{input}</code>
             </p>
@@ -34,7 +39,9 @@ export default function TestCase({input, output, verified, onCheck}: TestCasePro
                     placeholder="Enter your output"
                     disabled={verified}
                 />
-                <button onClick={handleCheck} disabled={verified}>Check</button>
+                <button onClick={handleCheck} disabled={verified}>
+                    Check
+                </button>
             </div>
         </div>
     );

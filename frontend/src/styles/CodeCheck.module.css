@@ -5,6 +5,12 @@
     gap: 4px;
 }
 
+.testCase {
+    display: flex;
+    gap: 4px;
+    flex-direction: column;
+}
+
 .userInput {
     display: flex;
     gap: 8px;
