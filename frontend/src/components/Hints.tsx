@@ -21,7 +21,6 @@ export default function Hints({ moduleId }: { moduleId: number }) {
     const fetchHints = async () => {
         try {
             const data = await getUserChallengeHints(moduleId);
-            console.log("Hints:", data);
             // order the hints by order
             setLockedHints(data.filter((hint: Hint) => !hint.unlocked));
             setUnlockedHints(data.filter((hint: Hint) => hint.unlocked));

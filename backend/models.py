@@ -60,6 +60,9 @@ class User(db.Model):
     user_hints = db.relationship(
         "UserHint", back_populates="user", cascade="all, delete-orphan"
     )
+    user_test_cases = db.relationship(
+        "UserTestCase", back_populates="user", cascade="all, delete-orphan"
+    )
 
     # Set and check for password using Werkzeug functions.
     def set_password(self, password):
@@ -189,6 +192,9 @@ class Module(db.Model):
     hints = db.relationship(
         "Hint", back_populates="module", cascade="all, delete-orphan"
     )  # Cascade delete
+    test_cases = db.relationship(
+        "TestCase", back_populates="module", cascade="all, delete-orphan"
+    )
 
 
 class UserModule(db.Model):
@@ -296,6 +302,49 @@ class UserHint(db.Model):
 
     hint = db.relationship("Hint", back_populates="user_hints")
     user = db.relationship("User", back_populates="user_hints")
+
+
+class TestCase(db.Model):
+    __tablename__ = "test_cases"
+
+    id = db.Column(db.Integer, primary_key=True)
+    input = db.Column(db.Text, nullable=False)
+    output = db.Column(db.Text, nullable=False)
+    module_id = db.Column(db.Integer, db.ForeignKey("modules.id"), nullable=False)
+
+    module = db.relationship("Module", back_populates="test_cases")
+    user_test_cases = db.relationship(
+        "UserTestCase", back_populates="test_case", cascade="all, delete-orphan"
+    )
+
+    # Check constraint ensuring that the associated module is of type 'CHALLENGE'
+    def __init__(self, input, output, module_id):
+        self.input = input
+        self.output = output
+        self.module_id = module_id
+        self.validate_module_type()
+
+    def validate_module_type(self):
+        module = Module.query.get(self.module_id)
+        if module and module.module_type not in [
+            ModuleType.CHALLENGE,
+            ModuleType.BONUS_CHALLENGE,
+        ]:
+            raise ValueError(
+                "Associated module must be of type 'CHALLENGE' or 'BONUS_CHALLENGE'"
+            )
+
+
+class UserTestCase(db.Model):
+    __tablename__ = "user_test_cases"
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), primary_key=True)
+    test_case_id = db.Column(
+        db.Integer, db.ForeignKey("test_cases.id"), primary_key=True
+    )
+    verified = db.Column(db.Boolean, default=False)
+
+    test_case = db.relationship("TestCase", back_populates="user_test_cases")
+    user = db.relationship("User", back_populates="user_test_cases")
 
 
 class DailyUserActivity(db.Model):

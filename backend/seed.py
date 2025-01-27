@@ -4,6 +4,7 @@ from app import create_app
 from models import (
     Goal,
     Hint,
+    TestCase,
     User,
     UserGoal,
     db,
@@ -161,6 +162,37 @@ def load_hints():
     logger.info("Hints loaded successfully.")
 
 
+def load_test_cases():
+    # Load modules with BONUS_CHALLENGE and CHALLENGE types and create a mapping of module titles to module IDs
+    modules = (
+        db.session.query(Module)
+        .filter(
+            Module.module_type.in_([ModuleType.BONUS_CHALLENGE, ModuleType.CHALLENGE])
+        )
+        .all()
+    )
+    module_title_to_id = {module.title: module.id for module in modules}
+
+    data = load_yaml("seed_data/test_cases.yaml")["test_cases"]
+    test_cases_to_add = []
+    for module_data in data:
+        module_id = module_title_to_id.get(module_data["module_title"])
+        if module_id:
+            for test_case in module_data["test_cases"]:
+                test_case_instance = TestCase(
+                    module_id=module_id,
+                    input=test_case["input"],
+                    output=test_case["output"],
+                )
+                test_cases_to_add.append(test_case_instance)
+        else:
+            logger.error(f"Module with title {module_data['module_title']} not found.")
+
+    db.session.bulk_save_objects(test_cases_to_add)
+    db.session.commit()
+    logger.info("Test Cases loaded successfully.")
+
+
 # this function can be used if I want to manually seed the user's progress in the unit
 def add_hashmap_modules_to_user(user_id, unit_id):
     if user_id:
@@ -308,6 +340,7 @@ def seed_data():
         db.session.query(QuizQuestion).delete()
         db.session.query(QuizQuestionOption).delete()
         db.session.query(Hint).delete()
+        db.session.query(TestCase).delete()
         db.session.commit()
         logger.info("Database is reset")
 
@@ -337,6 +370,9 @@ def seed_data():
 
         logger.info("Seeding hints...")
         load_hints()
+
+        logger.info("Seeding test cases...")
+        load_test_cases()
 
         logger.info("Database seeded successfully.")
 

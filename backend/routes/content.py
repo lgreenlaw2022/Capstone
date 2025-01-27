@@ -15,6 +15,7 @@ from models import (
     User,
     UserHint,
     UserQuizQuestion,
+    UserTestCase,
     UserUnit,
     db,
     Unit,
@@ -594,6 +595,52 @@ def get_user_challenge_hints(module_id):
         return jsonify(user_hints_data), 200
     except Exception as e:
         logger.error(f"Error fetching hints for challenge {module_id}: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+
+
+@content_bp.route("/test-cases/<int:module_id>", methods=["GET"])
+@jwt_required()
+def get_user_challenge_test_cases(module_id):
+    try:
+        user_id = get_jwt_identity()
+        user_test_case_data = []
+
+        # get all test cases for the challenge
+        module = db.session.query(Module).filter(Module.id == module_id).first()
+        if module is None:
+            return jsonify({"error": "Module not found"}), 404
+        if module.module_type not in [
+            ModuleType.CHALLENGE,
+            ModuleType.BONUS_CHALLENGE,
+        ]:
+            return jsonify({"error": "Module is not a challenge"}), 400
+
+        test_cases = module.test_cases
+        for test_case in test_cases:
+            user_test_case = UserTestCase.query.filter_by(
+                user_id=user_id, test_case_id=test_case.id
+            ).first()
+            if not user_test_case:
+                user_test_case = UserTestCase(
+                    user_id=user_id, test_case_id=test_case.id, verified=False
+                )
+                db.session.add(user_test_case)
+                db.session.commit()
+            verified = user_test_case.verified
+            user_test_case_data.append(
+                {
+                    "testCaseId": test_case.id,
+                    "input": test_case.input,
+                    "output": test_case.output,
+                    "verified": verified,
+                }
+            )
+        logger.debug(
+            f"Test cases fetched successfully for challenge {module_id}: {user_test_case_data}"
+        )
+        return jsonify(user_test_case_data), 200
+    except Exception as e:
+        logger.error(f"Error fetching test cases for challenge {module_id}: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
 

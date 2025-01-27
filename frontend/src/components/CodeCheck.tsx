@@ -2,42 +2,43 @@ import { useEffect, useState } from "react";
 
 import styles from "@/styles/CodeCheck.module.css";
 import TestCase from "./TestCase";
+import { getUserChallengeTestCases } from "@/api/api";
 
 interface CodeCheckProps {
+    moduleId: number;
     onTestCasesCompleted: (completed: boolean) => void;
 }
-export default function CodeCheck({ onTestCasesCompleted }: CodeCheckProps) {
-    const testData = [
-        {
-            input: "[1, 2]",
-            output: "[2, 1]",
-            verified: true,
-        },
-        {
-            input: "[1, 2, 3]",
-            output: "[3, 2, 1]",
-            verified: false,
-        },
-        {
-            input: "[1, 2, 3, 4]",
-            output: "[4, 3, 2, 1]",
-            verified: false,
-        },
-    ];
 
-    const [userOutput, setUserOutput] = useState("");
-    const [feedback, setFeedback] = useState<string[]>(
-        new Array(testData.length).fill("")
-    );
-    const [testCases, setTestCases] = useState(testData);
+// TODO: use this for all?
+interface TestCase {
+    input: string;
+    output: string;
+    verified: boolean;
+}
 
-    useEffect(() => {
-        // retrieve test cases from the backend
-        [];
-    });
+export default function CodeCheck({
+    moduleId,
+    onTestCasesCompleted,
+}: CodeCheckProps) {
+    const [feedback, setFeedback] = useState<string[]>([]);
+    const [testCases, setTestCases] = useState<TestCase[]>([]);
+
+    const fetchTestCases = async () => {
+        try {
+            const data = await getUserChallengeTestCases(moduleId);
+            setTestCases(data);
+            setFeedback(new Array(data.length).fill(""));
+        } catch (error) {
+            console.error("Error fetching test cases:", error);
+        }
+    };
 
     useEffect(() => {
-        const allCompleted = testCases.every(testCase => testCase.verified);
+        fetchTestCases();
+    }, []);
+
+    useEffect(() => {
+        const allCompleted = testCases.every((testCase) => testCase.verified);
         onTestCasesCompleted(allCompleted);
     }, [testCases, onTestCasesCompleted]);
 
