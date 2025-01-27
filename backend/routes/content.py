@@ -12,6 +12,7 @@ import logging
 from models import (
     DailyUserActivity,
     Hint,
+    TestCase,
     User,
     UserHint,
     UserQuizQuestion,
@@ -598,6 +599,35 @@ def get_user_challenge_hints(module_id):
         return jsonify({"error": str(e)}), 500
 
 
+@content_bp.route("/hints/<int:hint_id>/buy", methods=["POST"])
+@jwt_required()
+def buy_hint(hint_id):
+    try:
+        user_id = get_jwt_identity()
+        # Validate hint exists
+        hint = Hint.query.get(hint_id)
+        if hint is None:
+            return jsonify({"error": "Hint not found"}), 404
+
+        user_hint = UserHint.query.filter_by(user_id=user_id, hint_id=hint_id).first()
+        if user_hint is None:
+            user_hint = UserHint(user_id=user_id, hint_id=hint_id)
+        # deduct gems for hint purchase
+        user = User.query.get(user_id)
+        if user.gems < GEMS_FOR_HINT:
+            logger.error(f"Insufficient gems to buy hint for user {user_id}")
+            return jsonify({"error": "Insufficient gems to buy hint"}), 400
+
+        user.gems -= GEMS_FOR_HINT
+        user_hint.unlocked = True
+        db.session.add(user_hint)
+        db.session.commit()
+        return jsonify({"message": "Hint unlocked successfully"}), 200
+    except Exception as e:
+        logger.error(f"Error unlocking hint {hint_id}: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+
+
 @content_bp.route("/test-cases/<int:module_id>", methods=["GET"])
 @jwt_required()
 def get_user_challenge_test_cases(module_id):
@@ -644,30 +674,25 @@ def get_user_challenge_test_cases(module_id):
         return jsonify({"error": str(e)}), 500
 
 
-@content_bp.route("/hints/<int:hint_id>/buy", methods=["POST"])
+@content_bp.route("/test-cases/<int:test_case_id>/verify", methods=["POST"])
 @jwt_required()
-def buy_hint(hint_id):
+def mark_user_test_case_verified(test_case_id):
     try:
         user_id = get_jwt_identity()
-        # Validate hint exists
-        hint = Hint.query.get(hint_id)
-        if hint is None:
-            return jsonify({"error": "Hint not found"}), 404
+        # Validate test case exists
+        test_case = TestCase.query.get(test_case_id)
+        if test_case is None:
+            return jsonify({"error": "Test case not found"}), 404
 
-        user_hint = UserHint.query.filter_by(user_id=user_id, hint_id=hint_id).first()
-        if user_hint is None:
-            user_hint = UserHint(user_id=user_id, hint_id=hint_id)
-        # deduct gems for hint purchase
-        user = User.query.get(user_id)
-        if user.gems < GEMS_FOR_HINT:
-            logger.error(f"Insufficient gems to buy hint for user {user_id}")
-            return jsonify({"error": "Insufficient gems to buy hint"}), 400
+        user_test_case = UserTestCase.query.filter_by(
+            user_id=user_id, test_case_id=test_case_id
+        ).first()
+        if user_test_case is None:
+            return jsonify({"error": "User test case not found"}), 404
 
-        user.gems -= GEMS_FOR_HINT
-        user_hint.unlocked = True
-        db.session.add(user_hint)
+        user_test_case.verified = True
         db.session.commit()
-        return jsonify({"message": "Hint unlocked successfully"}), 200
+        return jsonify({"message": "Test case verified successfully"}), 200
     except Exception as e:
-        logger.error(f"Error unlocking hint {hint_id}: {str(e)}")
+        logger.error(f"Error verifying test case {test_case_id}: {str(e)}")
         return jsonify({"error": str(e)}), 500

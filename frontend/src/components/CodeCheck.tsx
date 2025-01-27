@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import styles from "@/styles/CodeCheck.module.css";
 import TestCase from "./TestCase";
-import { getUserChallengeTestCases } from "@/api/api";
+import { getUserChallengeTestCases, submitTestCase } from "@/api/api";
 
 interface CodeCheckProps {
     moduleId: number;
@@ -11,6 +11,7 @@ interface CodeCheckProps {
 
 // TODO: use this for all?
 interface TestCase {
+    testCaseId: number;
     input: string;
     output: string;
     verified: boolean;
@@ -42,9 +43,10 @@ export default function CodeCheck({
         onTestCasesCompleted(allCompleted);
     }, [testCases, onTestCasesCompleted]);
 
-    const handleCheck = (
+    const handleCheck = async (
         userOutput: string,
         correctOutput: string,
+        testCaseId: number,
         index: number
     ) => {
         const newFeedback = [...feedback];
@@ -56,7 +58,8 @@ export default function CodeCheck({
             .toLowerCase();
 
         if (standardizedUserOutput === standardizedCorrectOutput) {
-            // trigger backend update to mark test case as verified
+            await submitTestCase(testCaseId);
+
             newFeedback[index] = "Correct!";
             const newTestCases = [...testCases];
             newTestCases[index].verified = true; // TODO: this is overriding the backend, I am not refetching the data in this case
@@ -80,7 +83,12 @@ export default function CodeCheck({
                     <TestCase
                         {...testCase}
                         onCheck={(userOutput, correctOutput) =>
-                            handleCheck(userOutput, correctOutput, index)
+                            handleCheck(
+                                userOutput,
+                                correctOutput,
+                                testCase.testCaseId,
+                                index
+                            )
                         }
                     />
                     {feedback[index] && (

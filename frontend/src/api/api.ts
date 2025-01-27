@@ -516,3 +516,18 @@ export const getUserChallengeTestCases = async (moduleId: number) => {
         throw error;
     }
 };
+
+
+export const submitTestCase = async (testCaseId: number) => {
+    try {
+        const response = await axiosInstance.post(`/content/test-cases/${testCaseId}/verify`);
+        return response.data;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error verifying user challenge test case:', error.message);
+        } else {
+            console.error('Unknown error verifying user challenge test case:', error);
+        }
+        throw error
+    }
+}
