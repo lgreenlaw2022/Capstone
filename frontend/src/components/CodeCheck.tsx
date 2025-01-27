@@ -17,6 +17,12 @@ interface TestCase {
     verified: boolean;
 }
 
+enum TestCaseFeedbackMessages {
+    Correct = "Correct!",
+    AlreadyComplete = "Correct! You have already submitted the correct answer.",
+    Incorrect = "Incorrect, try again. Verify your entry follows the correct format.",
+}
+
 export default function CodeCheck({
     moduleId,
     onTestCasesCompleted,
@@ -28,7 +34,12 @@ export default function CodeCheck({
         try {
             const data = await getUserChallengeTestCases(moduleId);
             setTestCases(data);
-            setFeedback(new Array(data.length).fill(""));
+            const initialFeedback = data.map((testCase: TestCase) =>
+                testCase.verified
+                    ? TestCaseFeedbackMessages.AlreadyComplete
+                    : ""
+            );
+            setFeedback(initialFeedback);
         } catch (error) {
             console.error("Error fetching test cases:", error);
         }
@@ -60,13 +71,12 @@ export default function CodeCheck({
         if (standardizedUserOutput === standardizedCorrectOutput) {
             await submitTestCase(testCaseId);
 
-            newFeedback[index] = "Correct!";
+            newFeedback[index] = TestCaseFeedbackMessages.Correct;
             const newTestCases = [...testCases];
             newTestCases[index].verified = true; // TODO: this is overriding the backend, I am not refetching the data in this case
             setTestCases(newTestCases);
         } else {
-            newFeedback[index] =
-                "Incorrect, try again. Verify your entry follows the correct format.";
+            newFeedback[index] = TestCaseFeedbackMessages.Incorrect;
         }
         setFeedback(newFeedback);
     };
@@ -94,9 +104,10 @@ export default function CodeCheck({
                     {feedback[index] && (
                         <p
                             className={
-                                feedback[index] === "Correct!"
-                                    ? styles.correctFeedback
-                                    : styles.incorrectFeedback
+                                feedback[index] ===
+                                TestCaseFeedbackMessages.Incorrect
+                                    ? styles.incorrectFeedback
+                                    : styles.correctFeedback
                             }
                         >
                             {feedback[index]}

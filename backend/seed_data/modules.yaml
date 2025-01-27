@@ -42,7 +42,7 @@ modules:
 
   # Bonus challenges
   - unit_title: "Hash Maps"
-    title: "Two Sum"
+    title: "Longest Substring Without Repeating Characters"
     order: 1
     module_type: BONUS_CHALLENGE
 

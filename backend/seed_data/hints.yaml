@@ -7,13 +7,13 @@ hints:
         order: 1
       - text: "A hash set could be useful."
         order: 2
-
+        
   - module_type: "BONUS_CHALLENGE"
-    module_title: "Two Sum"
+    module_title: "Longest Substring Without Repeating Characters"
     hints:
-      - text: 'Focus on tracking the "complement" of each number (target - current number)'
+      - text: "Use two pointers to create a sliding window."
         order: 1
-      - text: "A hash map can be used to store the required complements."
+      - text: "Use a hash set to store the characters in the current window."
         order: 2
 
 # Linked Lists
