@@ -711,3 +711,30 @@ def mark_user_test_case_verified(test_case_id):
     except Exception as e:
         logger.error(f"Error verifying test case {test_case_id}: {str(e)}")
         return jsonify({"error": str(e)}), 500
+
+@content_bp.route("/modules/<int:module_id>/runtime/submit", methods=["POST"])
+@jwt_required()
+def store_user_runtime_answer(module_id):
+    try:
+        user_id = get_jwt_identity()
+        data = request.get_json()
+        submitted_runtime = data.get("runtime")
+        if submitted_runtime is None:
+            return jsonify({"error": "Runtime is required"}), 400
+
+        module = Module.query.filter_by(id=module_id).first()
+        if module is None:
+            return jsonify({"error": "Module not found"}), 404
+
+        user_module = UserModule.query.filter_by(
+            user_id=user_id, module_id=module_id
+        ).first()
+        if user_module is None:
+            return jsonify({"error": "User module not found"}), 404
+
+        user_module.submitted_runtime = submitted_runtime
+        db.session.commit()
+        return jsonify({"message": "Runtime answer submitted successfully"}), 200
+    except Exception as e:
+        logger.error(f"Error submitting runtime answer for module {module_id}: {str(e)}")
+        return jsonify({"error": str(e)}), 500

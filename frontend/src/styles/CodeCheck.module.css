@@ -25,6 +25,7 @@
     padding: 0 8px;
 }
 
+
 /* TODO: this is a bit of a hack */
 .userInput button {
     margin: 0px;
@@ -35,6 +36,15 @@
 .userInput button:disabled {
     cursor: default;
     background-color: #d9d9d9;
+}
+
+/* this only applies to the dropdown for runtime, confusing? */
+.userInput select {
+    border-radius: 8px;
+    border: 2px solid #d9d9d9;
+    font-size: 16px;
+    height: 32px;
+    padding: 0 8px;
 }
 
 .correctFeedback {

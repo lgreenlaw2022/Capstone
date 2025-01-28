@@ -531,3 +531,19 @@ export const submitTestCase = async (testCaseId: number) => {
         throw error
     }
 }
+
+export const submitRuntimeResponse = async (moduleId: number, runtime: string) => {
+    try {
+        const response = await axiosInstance.post(`/content/modules/${moduleId}/runtime/submit`, {
+            runtime: runtime
+        });
+        return response.data;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error submitting runtime response:', error.message);
+        } else {
+            console.error('Unknown error submitting runtime response:', error);
+        }
+        throw error;
+    }
+}

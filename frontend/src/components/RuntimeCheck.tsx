@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-// import styles from "@/styles/CodeCheck.module.css";
+import styles from "@/styles/CodeCheck.module.css";
 
 interface RuntimeProps {
     targetRuntime: string;
@@ -27,7 +27,7 @@ export default function RuntimeCheck({
                 <strong>Runtime Complexity</strong>
             </p>
             <p>Evaluate the time complexity of your solution:</p>
-            <div>
+            <div className={styles.userInput}>
                 {/* TODO: I want to remember their submited value, but I don't want to stop them from resubmitting */}
                 {/* TODO: customize the styling */}
                 <select value={userSelection} onChange={handleChange}>

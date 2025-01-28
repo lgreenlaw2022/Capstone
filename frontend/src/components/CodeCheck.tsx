@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import styles from "@/styles/CodeCheck.module.css";
 import TestCase from "./TestCase";
-import { getUserChallengeTestCases, submitTestCase } from "@/api/api";
+import { getUserChallengeTestCases, submitTestCase, submitRuntimeResponse } from "@/api/api";
 import RuntimeCheck from "./RuntimeCheck";
 
 interface CodeCheckProps {
@@ -33,9 +33,12 @@ export default function CodeCheck({
 
     const [runtimeFeedback, setRuntimeFeedback] = useState<string>("");
     let targetRuntime: string | "" = "";
+    // TODO: what about tracking the user's prior runtime submission?
 
-    const handleRuntimeCheck = () => {
-        console.log("checking");
+    const handleRuntimeCheck = async (userRuntime: string, targetRuntime: string) => {
+        await submitRuntimeResponse(moduleId, userRuntime);
+        // TODO: problem begins here
+        // also: am I doing the function pass and callback with the params correctly?
         setRuntimeFeedback("submitted");
     };
 
