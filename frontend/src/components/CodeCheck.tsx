@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import styles from "@/styles/CodeCheck.module.css";
 import TestCase from "./TestCase";
 import { getUserChallengeTestCases, submitTestCase } from "@/api/api";
+import RuntimeCheck from "./RuntimeCheck";
 
 interface CodeCheckProps {
     moduleId: number;
@@ -27,19 +28,30 @@ export default function CodeCheck({
     moduleId,
     onTestCasesCompleted,
 }: CodeCheckProps) {
-    const [feedback, setFeedback] = useState<string[]>([]);
+    const [testCaseFeedback, setTestCaseFeedback] = useState<string[]>([]);
     const [testCases, setTestCases] = useState<TestCase[]>([]);
+
+    const [runtimeFeedback, setRuntimeFeedback] = useState<string>("");
+    let targetRuntime: string | "" = "";
+
+    const handleRuntimeCheck = () => {
+        console.log("checking");
+        setRuntimeFeedback("submitted");
+    };
 
     const fetchTestCases = async () => {
         try {
             const data = await getUserChallengeTestCases(moduleId);
-            setTestCases(data);
-            const initialFeedback = data.map((testCase: TestCase) =>
-                testCase.verified
-                    ? TestCaseFeedbackMessages.AlreadyComplete
-                    : ""
+            setTestCases(data.testCases);
+            targetRuntime = data.targetRuntime;
+
+            const initialTestCaseFeedback = data.testCases.map(
+                (testCase: TestCase) =>
+                    testCase.verified
+                        ? TestCaseFeedbackMessages.AlreadyComplete
+                        : ""
             );
-            setFeedback(initialFeedback);
+            setTestCaseFeedback(initialTestCaseFeedback);
         } catch (error) {
             console.error("Error fetching test cases:", error);
         }
@@ -60,7 +72,7 @@ export default function CodeCheck({
         testCaseId: number,
         index: number
     ) => {
-        const newFeedback = [...feedback];
+        const newFeedback = [...testCaseFeedback];
         const standardizedUserOutput = userOutput
             .replace(/\s+/g, "")
             .toLowerCase();
@@ -78,7 +90,7 @@ export default function CodeCheck({
         } else {
             newFeedback[index] = TestCaseFeedbackMessages.Incorrect;
         }
-        setFeedback(newFeedback);
+        setTestCaseFeedback(newFeedback);
     };
 
     return (
@@ -88,6 +100,7 @@ export default function CodeCheck({
                 Before viewing the solution guide, make sure your code passes
                 the following test cases:
             </p>
+
             {testCases.map((testCase, index) => (
                 <div key={index}>
                     <TestCase
@@ -101,20 +114,26 @@ export default function CodeCheck({
                             )
                         }
                     />
-                    {feedback[index] && (
+                    {testCaseFeedback[index] && (
                         <p
                             className={
-                                feedback[index] ===
+                                testCaseFeedback[index] ===
                                 TestCaseFeedbackMessages.Incorrect
                                     ? styles.incorrectFeedback
                                     : styles.correctFeedback
                             }
                         >
-                            {feedback[index]}
+                            {testCaseFeedback[index]}
                         </p>
                     )}
                 </div>
             ))}
+
+            <RuntimeCheck
+                targetRuntime={targetRuntime}
+                onCheck={handleRuntimeCheck}
+            />
+            {runtimeFeedback && <p>submitted</p>}
         </div>
     );
 }

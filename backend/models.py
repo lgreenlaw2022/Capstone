@@ -3,6 +3,7 @@ from sqlalchemy import CheckConstraint
 from datetime import datetime, timezone
 from enums import BadgeType, MetricType, TimePeriodType, ModuleType, QuizType, EventType
 from werkzeug.security import generate_password_hash, check_password_hash
+from sqlalchemy.orm import validates
 
 db = SQLAlchemy()
 
@@ -179,6 +180,7 @@ class Module(db.Model):
     title = db.Column(db.String(255), nullable=False)
     module_type = db.Column(db.Enum(ModuleType), nullable=False, index=True)
     order = db.Column(db.Integer)  # order in unit
+    target_runtime = db.Column(db.String, nullable=True)  # Only for challenges
 
     # TODO: figure out what delete to use here
     unit = db.relationship("Unit", back_populates="modules")
@@ -196,6 +198,15 @@ class Module(db.Model):
         "TestCase", back_populates="module", cascade="all, delete-orphan"
     )
 
+    @validates("target_runtime")
+    def validate_target_runtime(self, key, value):
+        if value is not None and self.module_type not in [
+            ModuleType.CHALLENGE,
+            ModuleType.BONUS_CHALLENGE,
+        ]:
+            raise ValueError("Only challenge modules can have a target runtime")
+        return value
+
 
 class UserModule(db.Model):
     __tablename__ = "user_modules"
@@ -206,9 +217,21 @@ class UserModule(db.Model):
         db.Boolean, default=False
     )  # flag for if the user can start the module
     completed_date = db.Column(db.DateTime, nullable=True)  # used to help with review
+    submitted_runtime = db.Column(db.String, nullable=True)  # only for challenges
 
     user = db.relationship("User", back_populates="modules")
     module = db.relationship("Module", back_populates="users")
+
+    @validates("submitted_runtime")
+    def validate_submitted_runtime(self, key, value):
+        if value is not None:
+            module = Module.query.get(self.module_id)
+            if module.module_type not in [
+                ModuleType.CHALLENGE,
+                ModuleType.BONUS_CHALLENGE,
+            ]:
+                raise ValueError("Runtime can only be submitted for challenge modules")
+        return value
 
 
 class QuizQuestion(db.Model):

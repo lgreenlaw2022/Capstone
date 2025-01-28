@@ -645,6 +645,14 @@ def get_user_challenge_test_cases(module_id):
         ]:
             return jsonify({"error": "Module is not a challenge"}), 400
 
+        target_runtime = module.target_runtime
+        user_module = UserModule.query.filter_by(
+            user_id=user_id, module_id=module_id
+        ).first()
+        if user_module.submitted_runtime is None:
+            user_module.submitted_runtime = target_runtime
+            db.session.commit()
+
         test_cases = module.test_cases
         for test_case in test_cases:
             user_test_case = UserTestCase.query.filter_by(
@@ -655,7 +663,7 @@ def get_user_challenge_test_cases(module_id):
                     user_id=user_id, test_case_id=test_case.id, verified=False
                 )
                 db.session.add(user_test_case)
-                db.session.commit()
+
             verified = user_test_case.verified
             user_test_case_data.append(
                 {
@@ -665,10 +673,17 @@ def get_user_challenge_test_cases(module_id):
                     "verified": verified,
                 }
             )
+        db.session.commit()
+
         logger.debug(
             f"Test cases fetched successfully for challenge {module_id}: {user_test_case_data}"
         )
-        return jsonify(user_test_case_data), 200
+        return (
+            jsonify(
+                {"targetRuntime": target_runtime, "testCases": user_test_case_data}
+            ),
+            200,
+        )
     except Exception as e:
         logger.error(f"Error fetching test cases for challenge {module_id}: {str(e)}")
         return jsonify({"error": str(e)}), 500

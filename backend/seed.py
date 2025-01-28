@@ -171,16 +171,19 @@ def load_test_cases():
         )
         .all()
     )
-    module_title_to_id = {module.title: module.id for module in modules}
+    module_title_to_module = {module.title: module for module in modules}
 
     data = load_yaml("seed_data/test_cases.yaml")["test_cases"]
     test_cases_to_add = []
     for module_data in data:
-        module_id = module_title_to_id.get(module_data["module_title"])
-        if module_id:
+        module = module_title_to_module.get(module_data["module_title"])
+        if module:
+            module.target_runtime = module_data.get(
+                "target_runtime"
+            )
             for test_case in module_data["test_cases"]:
                 test_case_instance = TestCase(
-                    module_id=module_id,
+                    module_id=module.id,
                     input=test_case["input"],
                     output=test_case["output"],
                 )
