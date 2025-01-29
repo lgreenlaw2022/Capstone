@@ -647,6 +647,17 @@ def get_user_challenge_test_cases(module_id):
 
         target_runtime = module.target_runtime
 
+        user_module = (
+            db.session.query(UserModule)
+            .filter_by(user_id=user_id, module_id=module_id)
+            .first()
+        )
+        prior_runtime = (
+            user_module.submitted_runtime
+            if user_module and user_module.submitted_runtime
+            else None
+        )
+
         test_cases = module.test_cases
         for test_case in test_cases:
             user_test_case = UserTestCase.query.filter_by(
@@ -674,7 +685,13 @@ def get_user_challenge_test_cases(module_id):
         )
         return (
             jsonify(
-                {"targetRuntime": target_runtime, "testCases": user_test_case_data}
+                {
+                    "runtime": {
+                        "target": target_runtime,
+                        "prior": prior_runtime,
+                    },
+                    "testCases": user_test_case_data,
+                }
             ),
             200,
         )

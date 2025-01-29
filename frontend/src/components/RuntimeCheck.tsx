@@ -1,18 +1,22 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import styles from "@/styles/CodeCheck.module.css";
 
 interface RuntimeProps {
-    targetRuntime: string;
+    priorRuntime: string | null;
     onCheck: (userSelection: string) => void;
 }
 
-export default function RuntimeCheck({ targetRuntime, onCheck }: RuntimeProps) {
-    const [userSelection, setUserSelection] = useState("");
+export default function RuntimeCheck({ priorRuntime, onCheck }: RuntimeProps) {
+    const [userSelection, setUserSelection] = useState(priorRuntime || "");
 
     const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         setUserSelection(event.target.value);
     };
+
+    useEffect(() => {
+        setUserSelection(priorRuntime || "");
+    }, [priorRuntime]);
 
     const handleCheck = () => {
         onCheck(userSelection);

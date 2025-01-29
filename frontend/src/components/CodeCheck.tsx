@@ -48,7 +48,9 @@ export default function CodeCheck({
 
     const [runtimeFeedback, setRuntimeFeedback] = useState<string>("");
     const [targetRuntime, setTargetRuntime] = useState<string>("");
-    // TODO: what about tracking the user's prior runtime submission?
+    const [priorSubmittedRuntime, setPriorSubmittedRuntime] = useState<
+        string | null
+    >(null);
 
     const handleRuntimeCheck = async (userRuntime: string) => {
         await submitRuntimeResponse(moduleId, userRuntime);
@@ -66,7 +68,8 @@ export default function CodeCheck({
         try {
             const data = await getUserChallengeTestCases(moduleId);
             setTestCases(data.testCases);
-            setTargetRuntime(data.targetRuntime);
+            setTargetRuntime(data.runtime.target);
+            setPriorSubmittedRuntime(data.runtime.prior || null);
 
             const initialTestCaseFeedback = data.testCases.map(
                 (testCase: TestCase) =>
@@ -153,7 +156,7 @@ export default function CodeCheck({
             ))}
 
             <RuntimeCheck
-                targetRuntime={targetRuntime}
+                priorRuntime={priorSubmittedRuntime}
                 onCheck={handleRuntimeCheck}
             />
 
