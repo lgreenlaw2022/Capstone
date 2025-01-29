@@ -646,12 +646,6 @@ def get_user_challenge_test_cases(module_id):
             return jsonify({"error": "Module is not a challenge"}), 400
 
         target_runtime = module.target_runtime
-        user_module = UserModule.query.filter_by(
-            user_id=user_id, module_id=module_id
-        ).first()
-        if user_module.submitted_runtime is None:
-            user_module.submitted_runtime = target_runtime
-            db.session.commit()
 
         test_cases = module.test_cases
         for test_case in test_cases:
@@ -712,6 +706,7 @@ def mark_user_test_case_verified(test_case_id):
         logger.error(f"Error verifying test case {test_case_id}: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
+
 @content_bp.route("/modules/<int:module_id>/runtime/submit", methods=["POST"])
 @jwt_required()
 def store_user_runtime_answer(module_id):
@@ -736,5 +731,7 @@ def store_user_runtime_answer(module_id):
         db.session.commit()
         return jsonify({"message": "Runtime answer submitted successfully"}), 200
     except Exception as e:
-        logger.error(f"Error submitting runtime answer for module {module_id}: {str(e)}")
+        logger.error(
+            f"Error submitting runtime answer for module {module_id}: {str(e)}"
+        )
         return jsonify({"error": str(e)}), 500

@@ -4,13 +4,10 @@ import styles from "@/styles/CodeCheck.module.css";
 
 interface RuntimeProps {
     targetRuntime: string;
-    onCheck: (userSelection: string, targetRuntime: string) => void;
+    onCheck: (userSelection: string) => void;
 }
 
-export default function RuntimeCheck({
-    targetRuntime,
-    onCheck,
-}: RuntimeProps) {
+export default function RuntimeCheck({ targetRuntime, onCheck }: RuntimeProps) {
     const [userSelection, setUserSelection] = useState("");
 
     const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -18,7 +15,7 @@ export default function RuntimeCheck({
     };
 
     const handleCheck = () => {
-        onCheck(userSelection, targetRuntime);
+        onCheck(userSelection);
     };
 
     return (
@@ -40,7 +37,9 @@ export default function RuntimeCheck({
                     <option value="O(n^3)">O(n^3)</option>
                     <option value="O(2^n)">O(2^n)</option>
                 </select>
-                <button onClick={handleCheck}>Submit</button>
+                <button onClick={handleCheck} disabled={!userSelection}>
+                    Submit
+                </button>
             </div>
         </div>
     );

@@ -2,7 +2,11 @@ import { useEffect, useState } from "react";
 
 import styles from "@/styles/CodeCheck.module.css";
 import TestCase from "./TestCase";
-import { getUserChallengeTestCases, submitTestCase, submitRuntimeResponse } from "@/api/api";
+import {
+    getUserChallengeTestCases,
+    submitTestCase,
+    submitRuntimeResponse,
+} from "@/api/api";
 import RuntimeCheck from "./RuntimeCheck";
 
 interface CodeCheckProps {
@@ -18,6 +22,17 @@ interface TestCase {
     verified: boolean;
 }
 
+const runtimeComplexityMap: { [key: string]: number } = {
+    "O(1)": 1,
+    "O(log n)": 2,
+    "O(n)": 3,
+    "O(n log n)": 4,
+    "O(n^2)": 5,
+    "O(n^3)": 6,
+    "O(2^n)": 7,
+    "O(n!)": 8,
+};
+
 enum TestCaseFeedbackMessages {
     Correct = "Correct!",
     AlreadyComplete = "Correct! You have already submitted the correct answer.",
@@ -32,21 +47,26 @@ export default function CodeCheck({
     const [testCases, setTestCases] = useState<TestCase[]>([]);
 
     const [runtimeFeedback, setRuntimeFeedback] = useState<string>("");
-    let targetRuntime: string | "" = "";
+    const [targetRuntime, setTargetRuntime] = useState<string>("");
     // TODO: what about tracking the user's prior runtime submission?
 
-    const handleRuntimeCheck = async (userRuntime: string, targetRuntime: string) => {
+    const handleRuntimeCheck = async (userRuntime: string) => {
         await submitRuntimeResponse(moduleId, userRuntime);
-        // TODO: problem begins here
-        // also: am I doing the function pass and callback with the params correctly?
-        setRuntimeFeedback("submitted");
+        if (
+            runtimeComplexityMap[userRuntime] >
+            runtimeComplexityMap[targetRuntime]
+        ) {
+            setRuntimeFeedback("Can you optimize your solution?");
+        } else {
+            setRuntimeFeedback("Submitted.");
+        }
     };
 
     const fetchTestCases = async () => {
         try {
             const data = await getUserChallengeTestCases(moduleId);
             setTestCases(data.testCases);
-            targetRuntime = data.targetRuntime;
+            setTargetRuntime(data.targetRuntime);
 
             const initialTestCaseFeedback = data.testCases.map(
                 (testCase: TestCase) =>
@@ -136,7 +156,19 @@ export default function CodeCheck({
                 targetRuntime={targetRuntime}
                 onCheck={handleRuntimeCheck}
             />
-            {runtimeFeedback && <p>submitted</p>}
+
+            {runtimeFeedback && (
+                <p
+                    className={
+                        runtimeFeedback === "Submitted."
+                            ? // TODO: don't love it being green because its possible a lower runtime than the target is impossible
+                              styles.correctFeedback
+                            : styles.incorrectFeedback
+                    }
+                >
+                    {runtimeFeedback}
+                </p>
+            )}
         </div>
     );
 }
