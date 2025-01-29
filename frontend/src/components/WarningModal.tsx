@@ -20,7 +20,7 @@ const WarningModal: React.FC<WarningModalProps> = ({
         <div className={styles.modalOverlay}>
             <div className={styles.modalContent}>
                 <p>
-                    Your solution has not passed all test cases. Are you sure
+                    Your solution has not passed all code checks. Are you sure
                     you want to skip to the solution?
                 </p>
                 <div className={styles.buttonContainer}>

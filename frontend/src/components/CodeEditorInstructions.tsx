@@ -10,7 +10,7 @@ import openedCaret from "../../public/assets/opened-caret.svg";
 import closedCaret from "../../public/assets/closed-caret.svg";
 
 export default function CodeEditorInstructions() {
-    const [isVisible, setIsVisible] = useState(true);
+    const [isVisible, setIsVisible] = useState(false);
 
     const toggleVisibility = () => {
         setIsVisible(!isVisible);

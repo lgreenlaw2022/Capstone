@@ -70,6 +70,9 @@ export default function CodeCheck({
             setTestCases(data.testCases);
             setTargetRuntime(data.runtime.target);
             setPriorSubmittedRuntime(data.runtime.prior || null);
+            if (data.runtime.prior) {
+                setRuntimeFeedback("Submitted.");
+            }
 
             const initialTestCaseFeedback = data.testCases.map(
                 (testCase: TestCase) =>
@@ -88,9 +91,11 @@ export default function CodeCheck({
     }, []);
 
     useEffect(() => {
-        const allCompleted = testCases.every((testCase) => testCase.verified);
+        const allCompleted =
+            testCases.every((testCase) => testCase.verified) &&
+            runtimeFeedback === "Submitted.";
         onTestCasesCompleted(allCompleted);
-    }, [testCases, onTestCasesCompleted]);
+    }, [testCases, runtimeFeedback, onTestCasesCompleted]);
 
     const handleCheck = async (
         userOutput: string,
