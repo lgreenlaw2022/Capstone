@@ -502,3 +502,48 @@ export const buyHint = async (hintId: number) => {
         throw error;
     }
 }
+
+export const getUserChallengeCodeChecks = async (moduleId: number) => {
+    try {
+        const response = await axiosInstance.get(`/content/code-checks/${moduleId}`); // And this    
+        return response.data;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error fetching user challenge code checks:', error.message);
+        } else {
+            console.error('Unknown error fetching user challenge code checks:', error);
+        }
+        throw error;
+    }
+};
+
+
+export const submitTestCase = async (testCaseId: number) => {
+    try {
+        const response = await axiosInstance.post(`/content/test-cases/${testCaseId}/verify`);
+        return response.data;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error verifying user challenge test case:', error.message);
+        } else {
+            console.error('Unknown error verifying user challenge test case:', error);
+        }
+        throw error;
+    }
+}
+
+export const submitRuntimeResponse = async (moduleId: number, runtime: string) => {
+    try {
+        const response = await axiosInstance.post(`/content/modules/${moduleId}/runtime/submit`, {
+            runtime: runtime
+        });
+        return response.data;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error submitting runtime response:', error.message);
+        } else {
+            console.error('Unknown error submitting runtime response:', error);
+        }
+        throw error;
+    }
+}

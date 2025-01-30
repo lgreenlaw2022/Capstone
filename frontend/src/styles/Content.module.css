@@ -1,9 +1,19 @@
 .container {
+    display: flex;
+    flex-direction: column;
     padding: 50px;
 }
 
-.container button {
+.buttonContainer {
+    /* TODO: decide where I want these to be on the page */
+    display: flex;
+    gap: 20px;
     margin-top: 30px;
+}
+
+.buttonContainer button:disabled {
+    cursor: default;
+    background-color: #d9d9d9;
 }
 
 .editor {

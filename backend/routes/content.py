@@ -6,15 +6,17 @@ from config.constants import (
 )
 from services.user_activity_service import update_daily_xp
 from services.badge_awarding_service import BadgeAwardingService
-from enums import EventType, ModuleType
+from enums import EventType, ModuleType, RuntimeValues
 from flask import Blueprint, request, jsonify, send_file, abort
 import logging
 from models import (
     DailyUserActivity,
     Hint,
+    TestCase,
     User,
     UserHint,
     UserQuizQuestion,
+    UserTestCase,
     UserUnit,
     db,
     Unit,
@@ -57,6 +59,7 @@ def get_modules_in_unit(unit_id):
         Module.query.filter(
             Module.unit_id == unit_id,
             Module.module_type != ModuleType.BONUS_CHALLENGE,
+            Module.module_type != ModuleType.BONUS_SOLUTION,
         )
         .order_by(Module.order)
         .all()
@@ -76,6 +79,7 @@ def get_modules_in_unit(unit_id):
         is_open = module.order == 1 or (user_module is not None and user_module.open)
         is_completed = user_module is not None and user_module.completed
         if is_completed:
+            # TODO: need to exclude bonus challenges from the count
             completed_modules += 1
         modules_data.append(
             {
@@ -134,7 +138,7 @@ def get_module_content(module_id):
     if module_type in [
         ModuleType.CHALLENGE,
         ModuleType.CHALLENGE_SOLUTION,
-        ModuleType.BONUS_CHALLENGE,
+        ModuleType.BONUS_CHALLENGE,  # TODO: add bonus solution
     ]:
         if module_type == ModuleType.CHALLENGE:
             sub_dir = f"{order}_challenge"
@@ -395,7 +399,9 @@ def are_all_modules_completed(unit_id, user_id):
     total_modules = (
         db.session.query(Module)
         .filter(
-            Module.unit_id == unit_id, Module.module_type != ModuleType.BONUS_CHALLENGE
+            Module.unit_id == unit_id,
+            Module.module_type != ModuleType.BONUS_CHALLENGE,
+            Module.module_type != ModuleType.BONUS_SOLUTION,
         )
         .count()
     )
@@ -623,4 +629,133 @@ def buy_hint(hint_id):
         return jsonify({"message": "Hint unlocked successfully"}), 200
     except Exception as e:
         logger.error(f"Error unlocking hint {hint_id}: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+
+
+@content_bp.route("/code-checks/<int:module_id>", methods=["GET"])
+@jwt_required()
+def get_user_challenge_code_checks(module_id):
+    try:
+        user_id = get_jwt_identity()
+        user_test_case_data = []
+
+        module = db.session.query(Module).filter(Module.id == module_id).first()
+        if module is None:
+            return jsonify({"error": "Module not found"}), 404
+        if module.module_type not in [
+            ModuleType.CHALLENGE,
+            ModuleType.BONUS_CHALLENGE,
+        ]:
+            return jsonify({"error": "Module is not a challenge"}), 400
+
+        # get the runtime check values for the challenge
+        target_runtime = module.target_runtime.value
+
+        user_module = (
+            db.session.query(UserModule)
+            .filter_by(user_id=user_id, module_id=module_id)
+            .first()
+        )
+        prior_runtime = (
+            user_module.submitted_runtime.value
+            if user_module and user_module.submitted_runtime
+            else None
+        )
+
+        # get all test cases for the challenge
+        test_cases = module.test_cases
+        for test_case in test_cases:
+            user_test_case = UserTestCase.query.filter_by(
+                user_id=user_id,
+                test_case_id=test_case.id,
+            ).first()
+            # create a new UserTestCase record if
+            if not user_test_case:
+                user_test_case = UserTestCase(
+                    user_id=user_id, test_case_id=test_case.id, verified=False
+                )
+                db.session.add(user_test_case)
+
+            verified = user_test_case.verified
+            user_test_case_data.append(
+                {
+                    "testCaseId": test_case.id,
+                    "input": test_case.input,
+                    "output": test_case.output,
+                    "verified": verified,
+                }
+            )
+        db.session.commit()
+
+        logger.debug(
+            f"Test cases fetched successfully for challenge {module_id}: {user_test_case_data}"
+        )
+        return (
+            jsonify(
+                {
+                    "runtime": {
+                        "target": target_runtime,
+                        "prior": prior_runtime,
+                    },
+                    "testCases": user_test_case_data,
+                }
+            ),
+            200,
+        )
+    except Exception as e:
+        logger.error(f"Error fetching test cases for challenge {module_id}: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+
+
+@content_bp.route("/test-cases/<int:test_case_id>/verify", methods=["POST"])
+@jwt_required()
+def mark_user_test_case_verified(
+    test_case_id,
+):  # only called when the user has submitted the correct output
+    try:
+        user_id = get_jwt_identity()
+        # Validate test case exists
+        test_case = TestCase.query.get(test_case_id)
+        if test_case is None:
+            return jsonify({"error": "Test case not found"}), 404
+
+        user_test_case = UserTestCase.query.filter_by(
+            user_id=user_id,
+            test_case_id=test_case_id,
+        ).first()
+        if user_test_case is None:
+            return jsonify({"error": "User test case not found"}), 404
+
+        user_test_case.verified = True
+        db.session.commit()
+        return jsonify({"message": "Test case verified successfully"}), 200
+    except Exception as e:
+        logger.error(f"Error verifying test case {test_case_id}: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+
+
+@content_bp.route("/modules/<int:module_id>/runtime/submit", methods=["POST"])
+@jwt_required()
+def store_user_runtime_answer(module_id):
+    try:
+        user_id = get_jwt_identity()
+        data = request.get_json()
+        submitted_runtime = data.get("runtime")
+        if submitted_runtime is None:
+            return jsonify({"error": "Runtime is required"}), 400
+
+        user_module = UserModule.query.filter_by(
+            user_id=user_id, module_id=module_id
+        ).first()
+        if user_module is None:
+            return jsonify({"error": "User module not found"}), 404
+
+        # Convert the string value back to the enum
+        user_module.submitted_runtime = RuntimeValues(submitted_runtime)
+        db.session.commit()
+        return jsonify({"message": "Runtime answer submitted successfully"}), 200
+    except Exception as e:
+        logger.error(
+            f"Error submitting runtime answer for module {module_id}: {str(e)}"
+        )
         return jsonify({"error": str(e)}), 500

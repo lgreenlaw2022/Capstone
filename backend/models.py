@@ -1,8 +1,9 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import CheckConstraint
 from datetime import datetime, timezone
-from enums import BadgeType, MetricType, TimePeriodType, ModuleType, QuizType, EventType
+from enums import BadgeType, MetricType, TimePeriodType, ModuleType, QuizType, EventType, RuntimeValues
 from werkzeug.security import generate_password_hash, check_password_hash
+from sqlalchemy.orm import validates
 
 db = SQLAlchemy()
 
@@ -59,6 +60,9 @@ class User(db.Model):
     )
     user_hints = db.relationship(
         "UserHint", back_populates="user", cascade="all, delete-orphan"
+    )
+    user_test_cases = db.relationship(
+        "UserTestCase", back_populates="user", cascade="all, delete-orphan"
     )
 
     # Set and check for password using Werkzeug functions.
@@ -176,6 +180,7 @@ class Module(db.Model):
     title = db.Column(db.String(255), nullable=False)
     module_type = db.Column(db.Enum(ModuleType), nullable=False, index=True)
     order = db.Column(db.Integer)  # order in unit
+    target_runtime = db.Column(db.Enum(RuntimeValues), nullable=True)  # Only for challenges
 
     # TODO: figure out what delete to use here
     unit = db.relationship("Unit", back_populates="modules")
@@ -185,10 +190,21 @@ class Module(db.Model):
     quiz_questions = db.relationship(
         "QuizQuestion", back_populates="module", cascade="all, delete-orphan"
     )
-    # TODO: work on how to handle hints
     hints = db.relationship(
         "Hint", back_populates="module", cascade="all, delete-orphan"
     )  # Cascade delete
+    test_cases = db.relationship(
+        "TestCase", back_populates="module", cascade="all, delete-orphan"
+    )
+
+    @validates("target_runtime")
+    def validate_target_runtime(self, _key, value):
+        if value is not None and self.module_type not in [
+            ModuleType.CHALLENGE,
+            ModuleType.BONUS_CHALLENGE,
+        ]:
+            raise ValueError("Only challenge modules can have a target runtime")
+        return value
 
 
 class UserModule(db.Model):
@@ -200,9 +216,21 @@ class UserModule(db.Model):
         db.Boolean, default=False
     )  # flag for if the user can start the module
     completed_date = db.Column(db.DateTime, nullable=True)  # used to help with review
+    submitted_runtime = db.Column(db.Enum(RuntimeValues), nullable=True)  # only for challenges
 
     user = db.relationship("User", back_populates="modules")
     module = db.relationship("Module", back_populates="users")
+
+    @validates("submitted_runtime")
+    def validate_submitted_runtime(self, _key, value):
+        if value is not None:
+            module = Module.query.get(self.module_id)
+            if module.module_type not in [
+                ModuleType.CHALLENGE,
+                ModuleType.BONUS_CHALLENGE,
+            ]:
+                raise ValueError("Runtime can only be submitted for challenge modules")
+        return value
 
 
 class QuizQuestion(db.Model):
@@ -239,7 +267,6 @@ class QuizQuestionOption(db.Model):
     # TODO: it doesn't make sense that this is using the QuizType enum
     option_type = db.Column(db.Enum(QuizType), nullable=False)
 
-    # Relationships
     question = db.relationship("QuizQuestion", back_populates="options")
 
 
@@ -270,15 +297,9 @@ class Hint(db.Model):
         "UserHint", back_populates="hint", cascade="all, delete-orphan"
     )
 
-    # Check constraint ensuring that the associated module is of type 'CHALLENGE'
-    def __init__(self, text, order, module_id):
-        self.text = text
-        self.order = order
-        self.module_id = module_id
-        self.validate_module_type()
-
-    def validate_module_type(self):
-        module = Module.query.get(self.module_id)
+    @validates("module_id")
+    def validate_module_type(self, _key, module_id):
+        module = Module.query.get(module_id)
         if module and module.module_type not in [
             ModuleType.CHALLENGE,
             ModuleType.BONUS_CHALLENGE,
@@ -286,6 +307,7 @@ class Hint(db.Model):
             raise ValueError(
                 "Associated module must be of type 'CHALLENGE' or 'BONUS_CHALLENGE'"
             )
+        return module_id
 
 
 class UserHint(db.Model):
@@ -296,6 +318,44 @@ class UserHint(db.Model):
 
     hint = db.relationship("Hint", back_populates="user_hints")
     user = db.relationship("User", back_populates="user_hints")
+
+
+class TestCase(db.Model):
+    __tablename__ = "test_cases"
+
+    id = db.Column(db.Integer, primary_key=True)
+    input = db.Column(db.Text, nullable=False)
+    output = db.Column(db.Text, nullable=False)
+    module_id = db.Column(db.Integer, db.ForeignKey("modules.id"), nullable=False)
+
+    module = db.relationship("Module", back_populates="test_cases")
+    user_test_cases = db.relationship(
+        "UserTestCase", back_populates="test_case", cascade="all, delete-orphan"
+    )
+
+    @validates("module_id")
+    def validate_module_type(self, _key, module_id):
+        module = Module.query.get(module_id)
+        if module and module.module_type not in [
+            ModuleType.CHALLENGE,
+            ModuleType.BONUS_CHALLENGE,
+        ]:
+            raise ValueError(
+                "Associated module must be of type 'CHALLENGE' or 'BONUS_CHALLENGE'"
+            )
+        return module_id
+
+
+class UserTestCase(db.Model):
+    __tablename__ = "user_test_cases"
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), primary_key=True)
+    test_case_id = db.Column(
+        db.Integer, db.ForeignKey("test_cases.id"), primary_key=True
+    )
+    verified = db.Column(db.Boolean, default=False) # indicates if the user's code is verified for this test case
+
+    test_case = db.relationship("TestCase", back_populates="user_test_cases")
+    user = db.relationship("User", back_populates="user_test_cases")
 
 
 class DailyUserActivity(db.Model):

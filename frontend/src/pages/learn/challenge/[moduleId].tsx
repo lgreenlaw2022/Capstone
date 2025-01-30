@@ -7,6 +7,8 @@ import { getModuleContent, submitCompleteModule } from "../../../api/api";
 import styles from "@/styles/Content.module.css";
 import CodeEditorInstructions from "@/components/CodeEditorInstructions";
 import Hints from "@/components/Hints";
+import CodeCheck from "@/components/CodeCheck";
+import WarningModal from "@/components/WarningModal";
 
 const CodeChallengePage: React.FC = () => {
     const router = useRouter();
@@ -14,6 +16,9 @@ const CodeChallengePage: React.FC = () => {
     const [content, setContent] = useState<string | null>(null);
     const [code, setCode] = useState<string | undefined>("");
     const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
+    const [testCasesCompleted, setTestCasesCompleted] =
+        useState<boolean>(false);
+    const [showWarning, setShowWarning] = useState<boolean>(false);
 
     const handleEditorDidMount: OnMount = (editor, monaco) => {
         // here is the editor instance, store it in `useRef` for further usage
@@ -38,11 +43,37 @@ const CodeChallengePage: React.FC = () => {
 
     const handleComplete = async () => {
         try {
-            await submitCompleteModule(Number(moduleId));
-            router.push("/learn");
+            if (testCasesCompleted) {
+                await submitCompleteModule(Number(moduleId));
+                router.push("/learn");
+            }
         } catch (error) {
             console.error("Error setting module as complete:", error);
         }
+    };
+
+    const handleGoToSolutionGuide = async () => {
+        try {
+            if (!testCasesCompleted) {
+                setShowWarning(true);
+            } else {
+                await submitCompleteModule(Number(moduleId));
+                const solutionModuleId = Number(moduleId) + 1; // TODO: this is a placeholder, need to get the actual solution module id
+                router.push(`/learn/challenge-solution/${solutionModuleId}`);
+            }
+        } catch (error) {
+            console.error("Error continuing to solution guide:", error);
+        }
+    };
+
+    const handleBack = () => {
+        router.push("/learn");
+    };
+
+    const handleWarningContinue = () => {
+        setShowWarning(false);
+        const solutionModuleId = Number(moduleId) + 1;
+        router.push(`/learn/challenge-solution/${solutionModuleId}`);
     };
 
     // Show loading state until content is fetched
@@ -72,16 +103,45 @@ const CodeChallengePage: React.FC = () => {
                     }}
                 />
             </div>
-            <Hints moduleId={Number(moduleId)}/> 
-            <CodeEditorInstructions />
 
-            <button
-                onClick={handleComplete}
-                aria-label="Mark module as complete"
-            >
-                Complete
-            </button>
-            {/* TODO: add a continue to solution button -- this will be necessary for bonus challenges*/}
+            <CodeEditorInstructions />
+            <Hints moduleId={Number(moduleId)} />
+            {/* TODO: pass the test cases from here? */}
+            <CodeCheck
+                moduleId={Number(moduleId)}
+                onTestCasesCompleted={setTestCasesCompleted}
+            />
+
+            <WarningModal
+                show={showWarning}
+                onClose={() => setShowWarning(false)}
+                onContinue={handleWarningContinue}
+            />
+
+            <div className={styles.buttonContainer}>
+                <button
+                    type="button"
+                    onClick={handleBack}
+                    aria-label="Back to learn page"
+                >
+                    Back
+                </button>
+                <button
+                    type="button"
+                    onClick={handleComplete}
+                    disabled={!testCasesCompleted}
+                    aria-label="Mark module as complete"
+                >
+                    Complete
+                </button>
+                <button
+                    type="button"
+                    onClick={handleGoToSolutionGuide}
+                    aria-label="View solution guide"
+                >
+                    Solution Guide
+                </button>
+            </div>
         </div>
     );
 };
