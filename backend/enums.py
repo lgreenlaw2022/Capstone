@@ -42,3 +42,14 @@ class EventType(Enum):
     QUIZ_PERFECT_SCORE = "quiz_perfect_score"
     STREAK_ACHIEVEMENT = "streak_achievement"
     # goals completed
+
+
+class RuntimeValues(Enum):
+    O_1 = "O(1)"
+    O_LOG_N = "O(log n)"
+    O_N = "O(n)"
+    O_N_LOG_N = "O(n log n)"
+    O_N_SQUARED = "O(n^2)"
+    O_N_CUBED = "O(n^3)"
+    O_2_N = "O(2^n)"
+    O_N_FACTORIAL = "O(n!)"

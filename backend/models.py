@@ -1,7 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import CheckConstraint
 from datetime import datetime, timezone
-from enums import BadgeType, MetricType, TimePeriodType, ModuleType, QuizType, EventType
+from enums import BadgeType, MetricType, TimePeriodType, ModuleType, QuizType, EventType, RuntimeValues
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.orm import validates
 
@@ -180,7 +180,7 @@ class Module(db.Model):
     title = db.Column(db.String(255), nullable=False)
     module_type = db.Column(db.Enum(ModuleType), nullable=False, index=True)
     order = db.Column(db.Integer)  # order in unit
-    target_runtime = db.Column(db.String, nullable=True)  # Only for challenges
+    target_runtime = db.Column(db.Enum(RuntimeValues), nullable=True)  # Only for challenges
 
     # TODO: figure out what delete to use here
     unit = db.relationship("Unit", back_populates="modules")
@@ -216,7 +216,7 @@ class UserModule(db.Model):
         db.Boolean, default=False
     )  # flag for if the user can start the module
     completed_date = db.Column(db.DateTime, nullable=True)  # used to help with review
-    submitted_runtime = db.Column(db.String, nullable=True)  # only for challenges
+    submitted_runtime = db.Column(db.Enum(RuntimeValues), nullable=True)  # only for challenges
 
     user = db.relationship("User", back_populates="modules")
     module = db.relationship("Module", back_populates="users")

@@ -2,7 +2,7 @@ test_cases:
 # Hash maps
   - module_type: "CHALLENGE"
     module_title: "Contains Duplicate"
-    target_runtime: "O(n)"
+    target_runtime: O_N
     test_cases:
       - input: "[0,1,2,3,0]"
         output: "true"
@@ -13,7 +13,7 @@ test_cases:
 
   - module_type: "BONUS_CHALLENGE"
     module_title: "Longest Substring Without Repeating Characters"
-    target_runtime: "O(n)"
+    target_runtime: O_N
     test_cases:
       - input: "aab cd aab"
         output: "4"
@@ -26,7 +26,7 @@ test_cases:
   - module_type: "CHALLENGE"
     module_title: "Remove Nth Node From End of List"
     # TODO: make runtime an enum on the backend?
-    run_time: "O(n)"
+    target_runtime: O_N
     test_cases:
       - input: "[1,2,3,4,5] n=5"
         output: "[2,3,4,5]"
@@ -37,7 +37,7 @@ test_cases:
 
   - module_type: "BONUS_CHALLENGE"
     module_title: "Reverse Linked List"
-    target_runtime: "O(n)"
+    target_runtime: O_N
     test_cases:
       - input: "[2,2,2]"
         output: "[2,2,2]"

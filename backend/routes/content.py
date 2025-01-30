@@ -6,7 +6,7 @@ from config.constants import (
 )
 from services.user_activity_service import update_daily_xp
 from services.badge_awarding_service import BadgeAwardingService
-from enums import EventType, ModuleType
+from enums import EventType, ModuleType, RuntimeValues
 from flask import Blueprint, request, jsonify, send_file, abort
 import logging
 from models import (
@@ -645,7 +645,7 @@ def get_user_challenge_code_checks(module_id):
             return jsonify({"error": "Module is not a challenge"}), 400
 
         # get the runtime check values for the challenge
-        target_runtime = module.target_runtime
+        target_runtime = module.target_runtime.value
 
         user_module = (
             db.session.query(UserModule)
@@ -653,7 +653,7 @@ def get_user_challenge_code_checks(module_id):
             .first()
         )
         prior_runtime = (
-            user_module.submitted_runtime
+            user_module.submitted_runtime.value
             if user_module and user_module.submitted_runtime
             else None
         )
@@ -744,7 +744,8 @@ def store_user_runtime_answer(module_id):
         if user_module is None:
             return jsonify({"error": "User module not found"}), 404
 
-        user_module.submitted_runtime = submitted_runtime
+        # Convert the string value back to the enum
+        user_module.submitted_runtime = RuntimeValues(submitted_runtime)
         db.session.commit()
         return jsonify({"message": "Runtime answer submitted successfully"}), 200
     except Exception as e:

@@ -19,7 +19,14 @@ from models import (
     UserUnit,
     DailyUserActivity,
 )
-from enums import MetricType, ModuleType, BadgeType, EventType, TimePeriodType
+from enums import (
+    MetricType,
+    ModuleType,
+    BadgeType,
+    EventType,
+    TimePeriodType,
+    RuntimeValues,
+)
 import logging
 
 logger = logging.getLogger(__name__)
@@ -178,7 +185,7 @@ def load_code_checks():
     for module_data in data:
         module = module_title_to_module.get(module_data["module_title"])
         if module:
-            module.target_runtime = module_data.get("target_runtime")
+            module.target_runtime = RuntimeValues[module_data.get("target_runtime")]
             for test_case in module_data["test_cases"]:
                 test_case_instance = TestCase(
                     module_id=module.id,
@@ -328,7 +335,7 @@ def seed_data():
         # Reset user progress
         # clear_users()
         # clear_user_units()
-        # clear_user_modules()
+        clear_user_modules()
         # clear_user_badges()
         # clear_daily_user_activity()
         # db.session.query(UserGoal).delete()
@@ -372,7 +379,7 @@ def seed_data():
         logger.info("Seeding hints...")
         load_hints()
 
-        logger.info("Seeding test cases...")
+        logger.info("Seeding code checks...")
         load_code_checks()
 
         logger.info("Database seeded successfully.")
