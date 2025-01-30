@@ -162,8 +162,8 @@ def load_hints():
     logger.info("Hints loaded successfully.")
 
 
-def load_test_cases():
-    # Load modules with BONUS_CHALLENGE and CHALLENGE types and create a mapping of module titles to module IDs
+def load_code_checks():
+    # Load modules with BONUS_CHALLENGE and CHALLENGE types and create a mapping of module titles to modules
     modules = (
         db.session.query(Module)
         .filter(
@@ -178,9 +178,7 @@ def load_test_cases():
     for module_data in data:
         module = module_title_to_module.get(module_data["module_title"])
         if module:
-            module.target_runtime = module_data.get(
-                "target_runtime"
-            )
+            module.target_runtime = module_data.get("target_runtime")
             for test_case in module_data["test_cases"]:
                 test_case_instance = TestCase(
                     module_id=module.id,
@@ -193,7 +191,7 @@ def load_test_cases():
 
     db.session.bulk_save_objects(test_cases_to_add)
     db.session.commit()
-    logger.info("Test Cases loaded successfully.")
+    logger.info("Code checks loaded successfully.")
 
 
 # this function can be used if I want to manually seed the user's progress in the unit
@@ -375,7 +373,7 @@ def seed_data():
         load_hints()
 
         logger.info("Seeding test cases...")
-        load_test_cases()
+        load_code_checks()
 
         logger.info("Database seeded successfully.")
 

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import styles from "@/styles/CodeCheck.module.css";
 import TestCase from "./TestCase";
 import {
-    getUserChallengeTestCases,
+    getUserChallengeCodeChecks,
     submitTestCase,
     submitRuntimeResponse,
 } from "@/api/api";
@@ -66,14 +66,8 @@ export default function CodeCheck({
 
     const fetchTestCases = async () => {
         try {
-            const data = await getUserChallengeTestCases(moduleId);
+            const data = await getUserChallengeCodeChecks(moduleId);
             setTestCases(data.testCases);
-            setTargetRuntime(data.runtime.target);
-            setPriorSubmittedRuntime(data.runtime.prior || null);
-            if (data.runtime.prior) {
-                setRuntimeFeedback("Submitted.");
-            }
-
             const initialTestCaseFeedback = data.testCases.map(
                 (testCase: TestCase) =>
                     testCase.verified
@@ -81,6 +75,12 @@ export default function CodeCheck({
                         : ""
             );
             setTestCaseFeedback(initialTestCaseFeedback);
+
+            setTargetRuntime(data.runtime.target);
+            setPriorSubmittedRuntime(data.runtime.prior || null);
+            if (data.runtime.prior) {
+                setRuntimeFeedback("Submitted.");
+            }
         } catch (error) {
             console.error("Error fetching test cases:", error);
         }
@@ -94,6 +94,7 @@ export default function CodeCheck({
         const allCompleted =
             testCases.every((testCase) => testCase.verified) &&
             runtimeFeedback === "Submitted.";
+        // Calback used to enable the complete button as soon as code checks are passed
         onTestCasesCompleted(allCompleted);
     }, [testCases, runtimeFeedback, onTestCasesCompleted]);
 
@@ -116,7 +117,7 @@ export default function CodeCheck({
 
             newFeedback[index] = TestCaseFeedbackMessages.Correct;
             const newTestCases = [...testCases];
-            newTestCases[index].verified = true; // TODO: this is overriding the backend, I am not refetching the data in this case
+            newTestCases[index].verified = true;
             setTestCases(newTestCases);
         } else {
             newFeedback[index] = TestCaseFeedbackMessages.Incorrect;

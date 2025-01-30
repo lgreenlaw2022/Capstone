@@ -190,7 +190,6 @@ class Module(db.Model):
     quiz_questions = db.relationship(
         "QuizQuestion", back_populates="module", cascade="all, delete-orphan"
     )
-    # TODO: work on how to handle hints
     hints = db.relationship(
         "Hint", back_populates="module", cascade="all, delete-orphan"
     )  # Cascade delete
@@ -268,7 +267,6 @@ class QuizQuestionOption(db.Model):
     # TODO: it doesn't make sense that this is using the QuizType enum
     option_type = db.Column(db.Enum(QuizType), nullable=False)
 
-    # Relationships
     question = db.relationship("QuizQuestion", back_populates="options")
 
 
@@ -299,15 +297,9 @@ class Hint(db.Model):
         "UserHint", back_populates="hint", cascade="all, delete-orphan"
     )
 
-    # Check constraint ensuring that the associated module is of type 'CHALLENGE'
-    def __init__(self, text, order, module_id):
-        self.text = text
-        self.order = order
-        self.module_id = module_id
-        self.validate_module_type()
-
-    def validate_module_type(self):
-        module = Module.query.get(self.module_id)
+    @validates("module_id")
+    def validate_module_type(self, key, module_id):
+        module = Module.query.get(module_id)
         if module and module.module_type not in [
             ModuleType.CHALLENGE,
             ModuleType.BONUS_CHALLENGE,
@@ -315,6 +307,7 @@ class Hint(db.Model):
             raise ValueError(
                 "Associated module must be of type 'CHALLENGE' or 'BONUS_CHALLENGE'"
             )
+        return module_id
 
 
 class UserHint(db.Model):
@@ -340,15 +333,9 @@ class TestCase(db.Model):
         "UserTestCase", back_populates="test_case", cascade="all, delete-orphan"
     )
 
-    # Check constraint ensuring that the associated module is of type 'CHALLENGE'
-    def __init__(self, input, output, module_id):
-        self.input = input
-        self.output = output
-        self.module_id = module_id
-        self.validate_module_type()
-
-    def validate_module_type(self):
-        module = Module.query.get(self.module_id)
+    @validates("module_id")
+    def validate_module_type(self, key, module_id):
+        module = Module.query.get(module_id)
         if module and module.module_type not in [
             ModuleType.CHALLENGE,
             ModuleType.BONUS_CHALLENGE,
@@ -356,6 +343,7 @@ class TestCase(db.Model):
             raise ValueError(
                 "Associated module must be of type 'CHALLENGE' or 'BONUS_CHALLENGE'"
             )
+        return module_id
 
 
 class UserTestCase(db.Model):
@@ -364,7 +352,7 @@ class UserTestCase(db.Model):
     test_case_id = db.Column(
         db.Integer, db.ForeignKey("test_cases.id"), primary_key=True
     )
-    verified = db.Column(db.Boolean, default=False)
+    verified = db.Column(db.Boolean, default=False) # indicates if the user's code is verfied for this test case
 
     test_case = db.relationship("TestCase", back_populates="user_test_cases")
     user = db.relationship("User", back_populates="user_test_cases")

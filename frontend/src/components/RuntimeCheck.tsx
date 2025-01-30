@@ -29,8 +29,6 @@ export default function RuntimeCheck({ priorRuntime, onCheck }: RuntimeProps) {
             </p>
             <p>Evaluate the time complexity of your solution:</p>
             <div className={styles.userInput}>
-                {/* TODO: I want to remember their submited value, but I don't want to stop them from resubmitting */}
-                {/* TODO: customize the styling */}
                 <select value={userSelection} onChange={handleChange}>
                     <option value="">Select the runtime</option>
                     <option value="O(1)">O(1)</option>

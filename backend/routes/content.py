@@ -628,14 +628,13 @@ def buy_hint(hint_id):
         return jsonify({"error": str(e)}), 500
 
 
-@content_bp.route("/test-cases/<int:module_id>", methods=["GET"])
+@content_bp.route("/code-checks/<int:module_id>", methods=["GET"])
 @jwt_required()
-def get_user_challenge_test_cases(module_id):
+def get_user_challenge_code_checks(module_id):
     try:
         user_id = get_jwt_identity()
         user_test_case_data = []
 
-        # get all test cases for the challenge
         module = db.session.query(Module).filter(Module.id == module_id).first()
         if module is None:
             return jsonify({"error": "Module not found"}), 404
@@ -645,6 +644,7 @@ def get_user_challenge_test_cases(module_id):
         ]:
             return jsonify({"error": "Module is not a challenge"}), 400
 
+        # get the runtime check values for the challenge
         target_runtime = module.target_runtime
 
         user_module = (
@@ -658,11 +658,13 @@ def get_user_challenge_test_cases(module_id):
             else None
         )
 
+        # get all test cases for the challenge
         test_cases = module.test_cases
         for test_case in test_cases:
             user_test_case = UserTestCase.query.filter_by(
                 user_id=user_id, test_case_id=test_case.id
             ).first()
+            # create a new UserTestCase record if
             if not user_test_case:
                 user_test_case = UserTestCase(
                     user_id=user_id, test_case_id=test_case.id, verified=False
@@ -702,7 +704,9 @@ def get_user_challenge_test_cases(module_id):
 
 @content_bp.route("/test-cases/<int:test_case_id>/verify", methods=["POST"])
 @jwt_required()
-def mark_user_test_case_verified(test_case_id):
+def mark_user_test_case_verified(
+    test_case_id,
+):  # only called when the user has submitted the correct output
     try:
         user_id = get_jwt_identity()
         # Validate test case exists
@@ -733,10 +737,6 @@ def store_user_runtime_answer(module_id):
         submitted_runtime = data.get("runtime")
         if submitted_runtime is None:
             return jsonify({"error": "Runtime is required"}), 400
-
-        module = Module.query.filter_by(id=module_id).first()
-        if module is None:
-            return jsonify({"error": "Module not found"}), 404
 
         user_module = UserModule.query.filter_by(
             user_id=user_id, module_id=module_id

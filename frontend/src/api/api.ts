@@ -503,15 +503,15 @@ export const buyHint = async (hintId: number) => {
     }
 }
 
-export const getUserChallengeTestCases = async (moduleId: number) => {
+export const getUserChallengeCodeChecks = async (moduleId: number) => {
     try {
-        const response = await axiosInstance.get(`/content/test-cases/${moduleId}`);
+        const response = await axiosInstance.get(`/content/code-checks/${moduleId}`); // And this    
         return response.data;
     } catch (error) {
         if (error instanceof Error) {
-            console.error('Error fetching user challenge test cases:', error.message);
+            console.error('Error fetching user challenge code checks:', error.message);
         } else {
-            console.error('Unknown error fetching user challenge test cases:', error);
+            console.error('Unknown error fetching user challenge code checks:', error);
         }
         throw error;
     }
