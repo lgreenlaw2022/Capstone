@@ -119,10 +119,15 @@ const CodeChallengePage: React.FC = () => {
             />
 
             <div className={styles.buttonContainer}>
-                <button onClick={handleBack} aria-label="Back to learn page">
+                <button
+                    type="button"
+                    onClick={handleBack}
+                    aria-label="Back to learn page"
+                >
                     Back
                 </button>
                 <button
+                    type="button"
                     onClick={handleComplete}
                     disabled={!testCasesCompleted}
                     aria-label="Mark module as complete"
@@ -130,6 +135,7 @@ const CodeChallengePage: React.FC = () => {
                     Complete
                 </button>
                 <button
+                    type="button"
                     onClick={handleGoToSolutionGuide}
                     aria-label="View solution guide"
                 >

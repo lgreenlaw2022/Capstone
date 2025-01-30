@@ -24,8 +24,12 @@ const WarningModal: React.FC<WarningModalProps> = ({
                     you want to skip to the solution?
                 </p>
                 <div className={styles.buttonContainer}>
-                    <button onClick={onContinue}>Yes</button>
-                    <button onClick={onClose}>No</button>
+                    <button type="button" onClick={onContinue}>
+                        Yes
+                    </button>
+                    <button type="button" onClick={onClose}>
+                        No
+                    </button>
                 </div>
             </div>
         </div>

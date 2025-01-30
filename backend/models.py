@@ -198,7 +198,7 @@ class Module(db.Model):
     )
 
     @validates("target_runtime")
-    def validate_target_runtime(self, key, value):
+    def validate_target_runtime(self, _key, value):
         if value is not None and self.module_type not in [
             ModuleType.CHALLENGE,
             ModuleType.BONUS_CHALLENGE,
@@ -222,7 +222,7 @@ class UserModule(db.Model):
     module = db.relationship("Module", back_populates="users")
 
     @validates("submitted_runtime")
-    def validate_submitted_runtime(self, key, value):
+    def validate_submitted_runtime(self, _key, value):
         if value is not None:
             module = Module.query.get(self.module_id)
             if module.module_type not in [
@@ -298,7 +298,7 @@ class Hint(db.Model):
     )
 
     @validates("module_id")
-    def validate_module_type(self, key, module_id):
+    def validate_module_type(self, _key, module_id):
         module = Module.query.get(module_id)
         if module and module.module_type not in [
             ModuleType.CHALLENGE,
@@ -334,7 +334,7 @@ class TestCase(db.Model):
     )
 
     @validates("module_id")
-    def validate_module_type(self, key, module_id):
+    def validate_module_type(self, _key, module_id):
         module = Module.query.get(module_id)
         if module and module.module_type not in [
             ModuleType.CHALLENGE,
@@ -352,7 +352,7 @@ class UserTestCase(db.Model):
     test_case_id = db.Column(
         db.Integer, db.ForeignKey("test_cases.id"), primary_key=True
     )
-    verified = db.Column(db.Boolean, default=False) # indicates if the user's code is verfied for this test case
+    verified = db.Column(db.Boolean, default=False) # indicates if the user's code is verified for this test case
 
     test_case = db.relationship("TestCase", back_populates="user_test_cases")
     user = db.relationship("User", back_populates="user_test_cases")

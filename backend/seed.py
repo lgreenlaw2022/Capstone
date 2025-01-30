@@ -335,7 +335,7 @@ def seed_data():
         # Reset user progress
         # clear_users()
         # clear_user_units()
-        clear_user_modules()
+        # clear_user_modules()
         # clear_user_badges()
         # clear_daily_user_activity()
         # db.session.query(UserGoal).delete()

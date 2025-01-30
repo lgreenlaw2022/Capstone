@@ -98,6 +98,9 @@ export default function CodeCheck({
         onTestCasesCompleted(allCompleted);
     }, [testCases, runtimeFeedback, onTestCasesCompleted]);
 
+    const normalizeString = (str: string) =>
+        str.replace(/\s+/g, "").toLowerCase();
+
     const handleCheck = async (
         userOutput: string,
         correctOutput: string,
@@ -105,12 +108,8 @@ export default function CodeCheck({
         index: number
     ) => {
         const newFeedback = [...testCaseFeedback];
-        const standardizedUserOutput = userOutput
-            .replace(/\s+/g, "")
-            .toLowerCase();
-        const standardizedCorrectOutput = correctOutput
-            .replace(/\s+/g, "")
-            .toLowerCase();
+        const standardizedUserOutput = normalizeString(userOutput);
+        const standardizedCorrectOutput = normalizeString(correctOutput);
 
         if (standardizedUserOutput === standardizedCorrectOutput) {
             await submitTestCase(testCaseId);

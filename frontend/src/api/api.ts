@@ -528,7 +528,7 @@ export const submitTestCase = async (testCaseId: number) => {
         } else {
             console.error('Unknown error verifying user challenge test case:', error);
         }
-        throw error
+        throw error;
     }
 }
 

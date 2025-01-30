@@ -59,6 +59,7 @@ def get_modules_in_unit(unit_id):
         Module.query.filter(
             Module.unit_id == unit_id,
             Module.module_type != ModuleType.BONUS_CHALLENGE,
+            Module.module_type != ModuleType.BONUS_SOLUTION,
         )
         .order_by(Module.order)
         .all()
@@ -78,6 +79,7 @@ def get_modules_in_unit(unit_id):
         is_open = module.order == 1 or (user_module is not None and user_module.open)
         is_completed = user_module is not None and user_module.completed
         if is_completed:
+            # TODO: need to exclude bonus challenges from the count
             completed_modules += 1
         modules_data.append(
             {
@@ -136,7 +138,7 @@ def get_module_content(module_id):
     if module_type in [
         ModuleType.CHALLENGE,
         ModuleType.CHALLENGE_SOLUTION,
-        ModuleType.BONUS_CHALLENGE,
+        ModuleType.BONUS_CHALLENGE,  # TODO: add bonus solution
     ]:
         if module_type == ModuleType.CHALLENGE:
             sub_dir = f"{order}_challenge"
@@ -397,7 +399,9 @@ def are_all_modules_completed(unit_id, user_id):
     total_modules = (
         db.session.query(Module)
         .filter(
-            Module.unit_id == unit_id, Module.module_type != ModuleType.BONUS_CHALLENGE
+            Module.unit_id == unit_id,
+            Module.module_type != ModuleType.BONUS_CHALLENGE,
+            Module.module_type != ModuleType.BONUS_SOLUTION,
         )
         .count()
     )
@@ -662,7 +666,8 @@ def get_user_challenge_code_checks(module_id):
         test_cases = module.test_cases
         for test_case in test_cases:
             user_test_case = UserTestCase.query.filter_by(
-                user_id=user_id, test_case_id=test_case.id
+                user_id=user_id,
+                test_case_id=test_case.id,
             ).first()
             # create a new UserTestCase record if
             if not user_test_case:
@@ -715,7 +720,8 @@ def mark_user_test_case_verified(
             return jsonify({"error": "Test case not found"}), 404
 
         user_test_case = UserTestCase.query.filter_by(
-            user_id=user_id, test_case_id=test_case_id
+            user_id=user_id,
+            test_case_id=test_case_id,
         ).first()
         if user_test_case is None:
             return jsonify({"error": "User test case not found"}), 404

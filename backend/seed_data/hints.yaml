@@ -7,7 +7,7 @@ hints:
         order: 1
       - text: "A hash set could be useful."
         order: 2
-        
+ 
   - module_type: "BONUS_CHALLENGE"
     module_title: "Longest Substring Without Repeating Characters"
     hints:

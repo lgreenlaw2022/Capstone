@@ -7,6 +7,17 @@ interface RuntimeProps {
     onCheck: (userSelection: string) => void;
 }
 
+const RUNTIME_OPTIONS = [
+    { value: "", label: "Select the runtime" },
+    { value: "O(1)", label: "O(1)" },
+    { value: "O(log n)", label: "O(log n)" },
+    { value: "O(n)", label: "O(n)" },
+    { value: "O(n log n)", label: "O(n log n)" },
+    { value: "O(n^2)", label: "O(n^2)" },
+    { value: "O(n^3)", label: "O(n^3)" },
+    { value: "O(2^n)", label: "O(2^n)" },
+];
+
 export default function RuntimeCheck({ priorRuntime, onCheck }: RuntimeProps) {
     const [userSelection, setUserSelection] = useState(priorRuntime || "");
 
@@ -29,17 +40,24 @@ export default function RuntimeCheck({ priorRuntime, onCheck }: RuntimeProps) {
             </p>
             <p>Evaluate the time complexity of your solution:</p>
             <div className={styles.userInput}>
-                <select value={userSelection} onChange={handleChange}>
-                    <option value="">Select the runtime</option>
-                    <option value="O(1)">O(1)</option>
-                    <option value="O(log n)">O(log n)</option>
-                    <option value="O(n)">O(n)</option>
-                    <option value="O(n log n)">O(n log n)</option>
-                    <option value="O(n^2)">O(n^2)</option>
-                    <option value="O(n^3)">O(n^3)</option>
-                    <option value="O(2^n)">O(2^n)</option>
+                <select
+                    value={userSelection}
+                    onChange={handleChange}
+                    aria-label="Runtime complexity"
+                >
+                    {RUNTIME_OPTIONS.map(({ value, label }) => (
+                        <option key={value} value={value}>
+                            {label}
+                        </option>
+                    ))}
                 </select>
-                <button onClick={handleCheck} disabled={!userSelection}>
+                
+                <button
+                    type="button"
+                    onClick={handleCheck}
+                    disabled={!userSelection}
+                    aria-label="Submit runtime complexity"
+                >
                     Submit
                 </button>
             </div>

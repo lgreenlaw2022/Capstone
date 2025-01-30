@@ -46,7 +46,10 @@ modules:
     order: 1
     module_type: BONUS_CHALLENGE
 
-  # TODO: need the solutions
+  - unit_title: "Hash Maps"
+    title: "Longest Substring Without Repeating Characters"
+    order: 2
+    module_type: BONUS_SOLUTION
 
 # UNIT 2: LINKED LISTS
   - unit_title: "Linked Lists"
@@ -85,4 +88,7 @@ modules:
     order: 1
     module_type: BONUS_CHALLENGE
   
-  # TODO: need to add the solution
+  - unit_title: "Linked Lists"
+    title: "Reverse Linked List"
+    order: 2
+    module_type: BONUS_SOLUTION

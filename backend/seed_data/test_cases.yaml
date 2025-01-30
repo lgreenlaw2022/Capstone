@@ -25,7 +25,6 @@ test_cases:
 # Linked Lists
   - module_type: "CHALLENGE"
     module_title: "Remove Nth Node From End of List"
-    # TODO: make runtime an enum on the backend?
     target_runtime: O_N
     test_cases:
       - input: "[1,2,3,4,5] n=5"
@@ -45,4 +44,4 @@ test_cases:
         output: "[2,3,5,1]"
       - input: "[]"
         output: "[]"
-    
+

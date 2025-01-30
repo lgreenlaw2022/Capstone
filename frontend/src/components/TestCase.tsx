@@ -38,8 +38,15 @@ export default function TestCase({
                     onChange={handleChange}
                     placeholder="Enter your output"
                     disabled={verified}
+                    aria-label="Test case output"
+                    maxLength={1000}
                 />
-                <button onClick={handleCheck} disabled={verified}>
+                <button
+                    type="button"
+                    onClick={handleCheck}
+                    disabled={verified}
+                    aria-label="Check test case output"
+                >
                     Check
                 </button>
             </div>
