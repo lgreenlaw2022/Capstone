@@ -5,12 +5,14 @@ import { useEffect, useState } from "react";
 import { getDailyGoals, getMonthlyGoals } from "@/api/api";
 import { Goal } from "../types/GoalTypes";
 import GoalReward from "@/components/GoalReward";
+import GoalSettingModal from "@/components/GoalSettingModal";
 
 export default function Goals() {
     const [dailyGoals, setDailyGoals] = useState<Goal[]>([]);
     const [monthlyGoals, setMonthlyGoals] = useState<Goal[]>([]);
     const [newlyCompletedGoals, setNewlyCompletedGoals] = useState<Goal[]>([]);
     const [goalsReviewed, setGoalsReviewed] = useState(false);
+    const [showGoalSettingModal, setShowGoalSettingModal] = useState(true); // default to true for now
 
     const fetchGoals = async () => {
         const [dailyData, monthlyData] = await Promise.all([
@@ -55,7 +57,11 @@ export default function Goals() {
                         <h2>Daily Goals</h2>
                         <GoalsList goals={dailyGoals} />
                     </div>
-                    <WeeklyGift />
+                    <div>
+                        {/* TODO: will need an onClose to trigger if the user can't set a goal anymore  */}
+                        <GoalSettingModal show={showGoalSettingModal} />
+                        <WeeklyGift />
+                    </div>
                 </div>
                 <div className={styles.containerRow}>
                     <div>

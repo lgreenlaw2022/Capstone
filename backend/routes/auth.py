@@ -50,6 +50,8 @@ def register():
     db.session.add(new_user)
     db.session.commit()
 
+    goal_service.initialize_user_goals(new_user.id)
+
     return jsonify({"message": "User registered successfully"}), 201
 
 

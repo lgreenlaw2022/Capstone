@@ -231,3 +231,9 @@ class GoalService:
             self.populate_monthly_goals(user_id)
 
         logger.info("New goals populated successfully")
+
+    def initialize_user_goals(self, user_id: int):
+        # Used when signs up for the first time to account for sign up date 
+        # being after the first of the month
+        self.populate_daily_goals(user_id)
+        self.populate_monthly_goals(user_id)
