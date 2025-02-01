@@ -6,11 +6,12 @@ export interface UserModule {
 }
 
 export enum ModuleType {
-    // TODO: make sure this enum is adjusted to the right vocab in backend
-    CONCEPT_GUIDE = "concept_guide",
-    PYTHON_GUIDE = "python_guide",
-    RECOGNITION_GUIDE = "recognition_guide",
-    QUIZ = "quiz",
-    CHALLENGE = "challenge",
-    CHALLENGE_SOLUTION = "solution_guide",
+    CONCEPT_GUIDE = "CONCEPT_GUIDE",
+    PYTHON_GUIDE = "PYTHON_GUIDE",
+    RECOGNITION_GUIDE = "RECOGNITION_GUIDE",
+    QUIZ = "QUIZ",
+    CHALLENGE = "CHALLENGE",
+    CHALLENGE_SOLUTION = "CHALLENGE_SOLUTION",
+    BONUS_CHALLENGE = "BONUS_CHALLENGE",
+    BONUS_SOLUTION = "BONUS_SOLUTION",
 }
