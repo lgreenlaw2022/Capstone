@@ -92,3 +92,56 @@ modules:
     title: "Reverse Linked List"
     order: 2
     module_type: BONUS_SOLUTION
+
+# UNIT 3: BINARY TREES
+  - unit_title: "Binary Trees"
+    title: "Binary Trees Concept Guide"
+    order: 1
+    module_type: CONCEPT_GUIDE
+
+  - unit_title: "Binary Trees"
+    title: "Binary Trees Concept Quiz"
+    order: 2
+    module_type: QUIZ
+
+  - unit_title: "Binary Trees"
+    title: "Binary Search Trees Concept Guide"
+    order: 3
+    module_type: CONCEPT_GUIDE
+  
+  - unit_title: "Binary Trees"
+    title: "Binary Search Trees Concept Quiz"
+    order: 4
+    module_type: QUIZ
+
+  - unit_title: "Binary Trees"
+    title: "Binary Trees Recognition Guide"
+    order: 5
+    module_type: RECOGNITION_GUIDE
+
+  - unit_title: "Binary Trees"
+    title: "Binary Trees Recognition Quiz"
+    order: 6
+    module_type: QUIZ
+
+  - unit_title: "Binary Trees"
+    title: "Invert Binary Tree"
+    order: 7
+    module_type: CHALLENGE
+
+  # TODO: inconsistency in whether I include "Solution" in the title
+  - unit_title: "Binary Trees"
+    title: "Invert Binary Tree"
+    order: 8
+    module_type: CHALLENGE_SOLUTION
+
+  # Bonus challenges
+  - unit_title: "Binary Trees"
+    title: "Convert Sorted Array to Balanced Binary Search Tree"
+    order: 1
+    module_type: BONUS_CHALLENGE
+
+  - unit_title: "Binary Trees"
+    title: "Convert Sorted Array to Balanced Binary Search Tree"
+    order: 2
+    module_type: BONUS_SOLUTION

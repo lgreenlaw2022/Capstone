@@ -1,5 +1,5 @@
 quiz_questions:
-# Hash Maps Concept Quiz
+  # Hash Maps Concept Quiz
   - module_title: "Hash Maps Concept Quiz"
     title: "What is a Hash Map?"
     options:
@@ -86,7 +86,7 @@ quiz_questions:
         is_correct: false
         option_type: CONCEPT
 
-# Hash Sets Concept Quiz
+  # Hash Sets Concept Quiz
   - module_title: "Hash Sets Concept Quiz"
     title: "What is the primary purpose of a hash set?"
     options:
@@ -126,7 +126,7 @@ quiz_questions:
         is_correct: false
         option_type: CONCEPT
 
-# Hash Maps Recognition Quiz
+  # Hash Maps Recognition Quiz
   - module_title: "Hash Maps Recognition Quiz"
     title: "Which scenario would benefit most from the use of a hash table?"
     options:
@@ -192,7 +192,7 @@ quiz_questions:
         is_correct: false
         option_type: CONCEPT
 
-# Linked Lists Concept Quiz
+  # Linked Lists Concept Quiz
   - module_title: "Linked Lists Concept Quiz"
     title: "What is a linked list composed of?"
     options:
@@ -374,7 +374,7 @@ quiz_questions:
         is_correct: false
         option_type: CONCEPT
 
-# Linked Lists Recognition Quiz
+  # Linked Lists Recognition Quiz
   - module_title: "Linked Lists Recognition Quiz"
     title: 'When would the "two pointers" strategy be an appropriate technique to use in a linked list problem?'
     options:
@@ -466,3 +466,263 @@ quiz_questions:
         is_correct: false
         option_type: CONCEPT
 
+  # Binary Trees Concept Quiz
+  - module_title: "Binary Trees Concept Quiz"
+    title: "What is a binary tree?"
+    options:
+      - option_text: "A tree data structure where each node has up to two children nodes."
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "A tree data structure where each node has exactly two children nodes."
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "A tree data structure where each node has at most one child node."
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Binary Trees Concept Quiz"
+    title: "What is the maximum number of children a node can have in a binary tree?"
+    options:
+      - option_text: "0"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "1"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "2"
+        is_correct: true
+        option_type: CONCEPT
+
+  - module_title: "Binary Trees Concept Quiz"
+    title: "What is the height of a binary tree with 'n' nodes in the best case?"
+    options:
+      - option_text: "O(n)"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "O(log n)"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "O(n log n)"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Binary Trees Concept Quiz"
+    title: "What is the time complexity of searching for a value in a binary search tree?"
+    options:
+      - option_text: "O(1)"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "O(log n)"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "O(n)"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Binary Trees Concept Quiz"
+    title: "What is a leaf node?"
+    options:
+      - option_text: "A node with no children"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "A node with exactly one child"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "The first node in a binary tree"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Binary Trees Concept Quiz"
+    title: "Which of the following is true about a complete binary tree?"
+    options:
+      - option_text: "All levels are completely filled except possibly the last level, which is filled from left to right."
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "All levels are partially filled."
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "All levels are completely filled except possibly the last level, which is filled from right to left."
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Binary Trees Concept Quiz"
+    title: "What is the height of a binary tree?"
+    options:
+      - option_text: "The number of nodes in the tree"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "The number of edges on the longest path from the root to a leaf node"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "The number of levels in the tree"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "The number of edges from the root to the deepest leaf node"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Binary Trees Concept Quiz"
+    title: "What is the depth of a node in a binary tree?"
+    options:
+      - option_text: "The number of nodes in the tree"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "The number of edges on the longest path from the node to the root"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "The number of children the node has"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "The number of edges from the node to the deepest leaf node"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Binary Trees Concept Quiz"
+    title: "Which of the following describes a balanced binary tree?"
+    options:
+      - option_text: "A tree where the left and right subtrees of every node differ in height by at most one"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "A tree where all leaves are at the same depth"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "A tree where all nodes have two children"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "A tree where the left and right subtrees of every node differ in height by at most two"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Binary Trees Concept Quiz"
+    title: "In pre-order traversal, the nodes are visited in which order?"
+    options:
+      - option_text: "Root, left, right"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "Left, root, right"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "Right, root, left"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Binary Trees Concept Quiz"
+    title: "In post-order traversal, the nodes are visited in which order?"
+    options:
+      - option_text: "Left, right, root"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "Root, left, right"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "Right, root, left"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Binary Trees Concept Quiz"
+    title: "In in-order traversal, the nodes are visited in which order?"
+    options:
+      - option_text: "Left, root, right"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "Root, left, right"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "Right, root, left"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Binary Trees Concept Quiz"
+    title: "Which of the following is not a depth-first traversal technique?"
+    options:
+      - option_text: "Pre-order"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "In-order"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "Post-order"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "Level order"
+        is_correct: true
+        option_type: CONCEPT
+
+  - module_title: "Binary Trees Concept Quiz"
+    title: "In a level-order traversal of a binary tree, the nodes are visited in which order?"
+    options:
+      - option_text: "By levels from top to bottom and left to right"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "By levels from bottom to top and left to right"
+        is_correct: false
+        option_type: CONCEPT
+
+# Binary Search Tree Concept Quiz
+  - module_title: "Binary Search Trees Concept Quiz"
+    title: "What is the time complexity of searching for an element in a balanced binary search tree?"
+    options:
+      - option_text: "O(1)"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "O(log n)"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "O(n)"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Binary Search Trees Concept Quiz"
+    title: "How do you find the minimum value in a binary search tree?"
+    options:
+      - option_text: "Traverse the right subtree"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "Traverse the left subtree"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "Perform a level-order traversal"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Binary Search Trees Concept Quiz"
+    title: "How do you find the maximum value in a binary search tree?"
+    options:
+      - option_text: "Traverse the right subtree"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "Traverse the left subtree"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "Perform a level-order traversal"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Binary Search Trees Concept Quiz"
+    title: "What is a potential drawback of using a binary search tree (BST) compared to other data structures?"
+    options:
+      - option_text: "BSTs have slower search times than arrays"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "BSTs can become unbalanced, leading to inefficient operations"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "BSTs require more memory than linked lists"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "BSTs cannot store duplicate values"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Binary Search Trees Concept Quiz"
+    title: "When would you prefer to use a binary tree over a binary search tree (BST)?"
+    options:
+      - option_text: "When you need to perform efficient search operations"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "When you need to maintain a sorted collection of elements"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "When you need to store elements in a specific order"
+        is_correct: true
+        option_type: CONCEPT
