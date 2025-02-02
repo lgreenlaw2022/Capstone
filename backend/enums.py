@@ -4,7 +4,7 @@ from enum import Enum
 class MetricType(Enum):
     COMPLETE_MODULES = "complete_modules"
     EARN_GEMS = "earn_gems"
-    EXTEND_STREAK = "streak_length"
+    EXTEND_STREAK = "extend_streak"
     # Add more metrics as needed
     # consider: goals completed, unit completed
 

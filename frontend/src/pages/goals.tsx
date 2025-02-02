@@ -2,8 +2,8 @@ import GoalsList from "@/components/GoalsList";
 import styles from "../styles/Goals.module.css";
 import WeeklyGift from "@/components/WeeklyGift";
 import { useEffect, useState } from "react";
-import { getDailyGoals, getMonthlyGoals } from "@/api/api";
-import { Goal } from "../types/GoalTypes";
+import { getDailyGoals, getMonthlyGoals, addPersonalGoal } from "@/api/api";
+import { Goal, MeasureEnum, TimePeriodEnum } from "../types/GoalTypes";
 import GoalReward from "@/components/GoalReward";
 import GoalSettingModal from "@/components/GoalSettingModal";
 
@@ -12,7 +12,7 @@ export default function Goals() {
     const [monthlyGoals, setMonthlyGoals] = useState<Goal[]>([]);
     const [newlyCompletedGoals, setNewlyCompletedGoals] = useState<Goal[]>([]);
     const [goalsReviewed, setGoalsReviewed] = useState(false);
-    const [showGoalSettingModal, setShowGoalSettingModal] = useState(true); // default to true for now
+    const [showGoalSettingModal, setShowGoalSettingModal] = useState(false); // default to true for now
 
     const fetchGoals = async () => {
         const [dailyData, monthlyData] = await Promise.all([
@@ -42,6 +42,18 @@ export default function Goals() {
         }
     };
 
+    const handleAddGoal = async (
+        timePeriod: TimePeriodEnum,
+        measure: MeasureEnum,
+        goal: number
+    ) => {
+        // TODO: handle errors
+        // TODO: need to convert values somewhere to match the API enums
+        await addPersonalGoal(timePeriod, measure, goal);
+        setShowGoalSettingModal(false);
+        fetchGoals();
+    };
+
     return (
         <>
             {newlyCompletedGoals.length > 0 && (
@@ -58,8 +70,17 @@ export default function Goals() {
                         <GoalsList goals={dailyGoals} />
                     </div>
                     <div>
-                        {/* TODO: will need an onClose to trigger if the user can't set a goal anymore  */}
-                        <GoalSettingModal show={showGoalSettingModal} />
+                        <button onClick={() => setShowGoalSettingModal(true)}>
+                            Add Goal
+                        </button>
+                        {showGoalSettingModal && (
+                            <GoalSettingModal
+                                // TODO: do I need the show prop still?
+                                show={showGoalSettingModal}
+                                onClose={() => setShowGoalSettingModal(false)}
+                                onAddGoal={handleAddGoal}
+                            />
+                        )}
                         <WeeklyGift />
                     </div>
                 </div>
@@ -68,7 +89,6 @@ export default function Goals() {
                         <h2>Monthly Goals</h2>
                         <GoalsList goals={monthlyGoals} />
                     </div>
-                    {/* <h2>Calendar</h2> */}
                 </div>
             </div>
         </>

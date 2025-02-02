@@ -1,10 +1,10 @@
-from services.goals_service import GoalProgressCalculator
+from services.goals_service import GoalProgressCalculator, GoalService
 from utils import get_most_recent_monday
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
 import logging
 from datetime import datetime, timedelta, timezone
-from enums import TimePeriodType
+from enums import TimePeriodType, MetricType
 from config.constants import GEMS_FOR_COMPLETING_GOAL
 
 from models import DailyUserActivity, db, User, Goal, UserGoal
@@ -153,7 +153,7 @@ def get_num_goals_completed_weekly():
             UserGoal.user_id == user_id,
             UserGoal.date_completed.between(start_of_week, end_of_week),
         ).count()
-        
+
         logger.info(f"Number of goals completed this week: {num_completed}")
         return jsonify(num_completed), 200
     except Exception as e:
@@ -216,3 +216,59 @@ def add_gems_for_newly_completed_goal(goal_id):
     except Exception as e:
         logger.error(f"An error occurred while finishing a goal, {str(e)}")
         return jsonify({"error": "An error occurred while finishing a goal"}), 500
+
+
+@goals_bp.route("/add-personal", methods=["POST"])
+@jwt_required()
+def add_personalized_goal():
+    try:
+        user_id = get_jwt_identity()
+        user = User.query.get(user_id)
+        if user is None:
+            logger.error("User not found")
+            return jsonify({"error": "User not found"}), 404
+
+        data = request.get_json()
+        if data is None:
+            return jsonify({"error": "No data provided"}), 400
+        time_period = data.get("timePeriod")
+        goal_type = data.get("measure")
+        goal_value = data.get("goalValue")
+
+        logger.debug(f"Passed data: {data}")
+
+        if time_period is None or goal_type is None or goal_value is None:
+            return jsonify({"error": "Missing required data"}), 400
+        
+        try:
+            # TODO: this feels like a hack, I don't like it
+            time_period = TimePeriodType[time_period.upper()]
+            goal_type = MetricType[goal_type.upper()]
+        except KeyError:
+            return jsonify({"error": "Invalid time period or goal type"}), 400
+
+        # if time_period not in [
+        #     TimePeriodType.DAILY.value,
+        #     TimePeriodType.WEEKLY.value,
+        #     TimePeriodType.MONTHLY.value,
+        # ]:
+        #     return jsonify({"error": "Invalid time period"}), 400
+
+        # if goal_type not in [
+        #     MetricType.COMPLETE_MODULES.value,
+        #     MetricType.EARN_GEMS.value,
+        #     MetricType.EXTEND_STREAK.value,
+        # ]:
+        #     return jsonify({"error": "Invalid goal type"}), 400
+
+        response, status_code = GoalService.add_personalized_goal(
+            user_id, time_period, goal_type, goal_value
+        )
+        return jsonify(response), status_code
+
+    except Exception as e:
+        logger.error(f"An error occurred while adding a personalized goal, {str(e)}")
+        return (
+            jsonify({"error": "An error occurred while adding a personalized goal"}),
+            500,
+        )

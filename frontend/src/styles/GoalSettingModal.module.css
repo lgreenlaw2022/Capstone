@@ -12,6 +12,9 @@
 }
 
 .modalContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     background: white;
     padding: 30px;
     border-radius: 8px;
@@ -22,15 +25,29 @@
 
 .optionsContainer {
     display: flex;
-    justify-content: center;
-    gap: 20px;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 16px;
     margin-top: 20px;
+}
+
+.optionsContainer p {
+    font-weight: bold;
+}
+
+.modalContent input {
+    border-radius: 8px;
+    border: 2px solid #d9d9d9;
+    font-size: 16px;
+    height: 32px;
+    padding: 0 8px;
+    width: 130px;    
 }
 
 .radioButton {
     display: inline-block;
     margin-right: 10px;
-    padding: 10px 20px;
+    padding: 8px 14px;
     border: 1px solid #ccc;
     border-radius: 5px;
     background-color: #f0f0f0;
@@ -55,5 +72,5 @@
     display: flex;
     justify-content: center;
     margin-top: 20px;
-    gap: 50px;
+    gap: 30px;
 }
