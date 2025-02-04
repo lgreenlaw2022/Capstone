@@ -134,7 +134,7 @@ class GoalProgressCalculator:
     ) -> date:
         """Calculate the start of the current time period."""
         if time_period == TimePeriodType.DAILY:
-            return assigned_date  # TODO: should I change this to today?
+            return assigned_date
         elif time_period == TimePeriodType.WEEKLY:
             return get_most_recent_monday(assigned_date)
         elif time_period == TimePeriodType.MONTHLY:
@@ -274,8 +274,6 @@ class GoalService:
             return jsonify({"message": "Goal already assigned"}), 200
 
         # Remove an existing goal for this period if the user has more than 3
-        # TODO: this isn't working for daily goals
-        # TODO: I shouldn't remove a completed goal
         existing_user_goals = (
             db.session.query(UserGoal)
             .join(Goal, UserGoal.goal_id == Goal.id)

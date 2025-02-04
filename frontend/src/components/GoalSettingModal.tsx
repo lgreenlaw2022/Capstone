@@ -23,15 +23,50 @@ export default function GoalSettingModal({
     const [measure, setMeasure] = useState<MeasureEnum>(
         MeasureEnum.ExtendStreak
     );
-    const [goal, setGoal] = useState<number>(0);
+    const [goal, setGoal] = useState<string>("");
+    const [isValid, setIsValid] = useState(true);
 
     if (!show) {
         return null;
     }
 
+    const handleGoalChange = (value: string) => {
+        if (/^\d*$/.test(value)) {
+            setGoal(value);
+            setIsValid(true);
+        } else {
+            setIsValid(false);
+        }
+    };
+
+    const getSuggestedRange = () => {
+        if (timePeriod === TimePeriodEnum.Daily) {
+            if (measure === MeasureEnum.ModulesCompleted) {
+                return "Suggested range: 1-20 modules";
+            } else if (measure === MeasureEnum.GemsEarned) {
+                return "Suggested range: 5-30 gems";
+            } else if (measure === MeasureEnum.ExtendStreak) {
+                return "Suggested range: 1 day";
+            }
+        } else if (timePeriod === TimePeriodEnum.Monthly) {
+            if (measure === MeasureEnum.ModulesCompleted) {
+                return "Suggested range: 20-50 modules";
+            } else if (measure === MeasureEnum.GemsEarned) {
+                return "Suggested range: 30-100 gems";
+            } else if (measure === MeasureEnum.ExtendStreak) {
+                return "Suggested range: 2-30 days";
+            }
+        }
+        return "";
+    };
+
     const handleAddGoal = () => {
         console.log("Adding goal", timePeriod, measure, goal);
-        onAddGoal(timePeriod as TimePeriodEnum, measure as MeasureEnum, goal);
+        onAddGoal(
+            timePeriod as TimePeriodEnum,
+            measure as MeasureEnum,
+            Number(goal)
+        );
     };
 
     return (
@@ -120,13 +155,20 @@ export default function GoalSettingModal({
                         <p>Goal</p>
                         {/* TODO: put bounds on based on the measure and daily period */}
                         {/* TODO: validate that the entry is a number */}
-                        {/* TODO: the fuck happened here, why can't I type myself */}
                         <input
-                            type="number"
+                            type="text"
+                            inputMode="numeric"
+                            pattern="[0-9]*"
                             value={goal}
-                            onChange={(e) => setGoal(Number(e.target.value))}
+                            onChange={(e) => handleGoalChange(e.target.value)}
                             placeholder="Enter your goal"
                         />
+                        {!isValid && (
+                            <p className={styles.warningText}>
+                                Please enter a valid number
+                            </p>
+                        )}
+                        <p className={styles.suggestedRange}>{getSuggestedRange()}</p>
                     </div>
                 </div>
                 <div className={styles.buttonContainer}>

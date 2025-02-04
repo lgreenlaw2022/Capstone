@@ -35,13 +35,24 @@
     font-weight: bold;
 }
 
+.optionsContainer .warningText {
+    font-weight: normal;
+    color: red;
+    font-size: 14px;
+}
+
+.optionsContainer .suggestedRange {
+    font-weight: normal;
+    font-size: 14px;
+}
+
 .modalContent input {
     border-radius: 8px;
     border: 2px solid #d9d9d9;
     font-size: 16px;
     height: 32px;
     padding: 0 8px;
-    width: 130px;    
+    width: 130px;
 }
 
 .radioButton {

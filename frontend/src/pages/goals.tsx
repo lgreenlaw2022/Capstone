@@ -63,13 +63,14 @@ export default function Goals() {
                     onContinue={handleContinue}
                 />
             )}
+            {/* TODO: need to change these divs for better content alignment */}
             <div className={styles.goalsContainer}>
                 <div className={styles.containerRow}>
                     <div>
                         <h2>Daily Goals</h2>
                         <GoalsList goals={dailyGoals} />
                     </div>
-                    <div>
+                    <div className={styles.goalRightColumn}>
                         <button onClick={() => setShowGoalSettingModal(true)}>
                             Add Goal
                         </button>

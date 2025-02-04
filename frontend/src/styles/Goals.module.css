@@ -12,3 +12,11 @@
     align-items: center;
     gap: 34px;
 }
+
+.goalRightColumn {
+    /* TODO: how do I keep the button from expanding to the size of the flex box? */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+}
