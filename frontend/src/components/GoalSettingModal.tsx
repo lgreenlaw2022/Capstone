@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { TimePeriodEnum, MeasureEnum } from "@/types/GoalTypes";
 import styles from "@/styles/GoalSettingModal.module.css";
 
@@ -22,45 +22,94 @@ export default function GoalSettingModal({
         MeasureEnum.ExtendStreak
     );
     const [goal, setGoal] = useState<string>("");
-    const [isValid, setIsValid] = useState(true);
+    const [isValid, setIsValid] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
+    const [isDirty, setIsDirty] = useState(false);
 
-    const handleGoalChange = (value: string) => {
-        if (/^\d*$/.test(value)) {
-            setGoal(value);
-            setIsValid(true);
-        } else {
-            setIsValid(false);
-        }
-    };
-
-    const getSuggestedRange = () => {
+    // TODO: possible optimization and refactoring here
+    const getSuggestedRangeLimits = (): [number, number] => {
         if (timePeriod === TimePeriodEnum.Daily) {
             if (measure === MeasureEnum.ModulesCompleted) {
-                return "Suggested range: 1-20 modules";
+                return [1, 20];
             } else if (measure === MeasureEnum.GemsEarned) {
-                return "Suggested range: 5-30 gems";
+                return [5, 30];
             } else if (measure === MeasureEnum.ExtendStreak) {
-                return "Suggested range: 1 day";
+                return [1, 1];
             }
         } else if (timePeriod === TimePeriodEnum.Monthly) {
             if (measure === MeasureEnum.ModulesCompleted) {
-                return "Suggested range: 20-50 modules";
+                return [20, 50];
             } else if (measure === MeasureEnum.GemsEarned) {
-                return "Suggested range: 30-100 gems";
+                return [30, 100];
             } else if (measure === MeasureEnum.ExtendStreak) {
-                return "Suggested range: 2-30 days";
+                // TODO: small issue if its 28 or 31 days in the month
+                return [2, 31];
             }
         }
-        return "";
+        return [0, Infinity];
     };
 
+    const validateGoal = (value: string) => {
+        if (value === "") {
+            setIsValid(false);
+            setErrorMessage("Please enter a goal");
+            return;
+        }
+        if (!/^\d*$/.test(value)) {
+            setIsValid(false);
+            setErrorMessage("Please enter a valid number");
+            return;
+        }
+
+        const numericValue = Number(value);
+        const [min, max] = getSuggestedRangeLimits();
+        if (numericValue < min || numericValue > max) {
+            setIsValid(false);
+            setErrorMessage(`Value must be between ${min} and ${max}`);
+            return;
+        }
+
+        setIsValid(true);
+    };
+
+    const handleGoalChange = (value: string) => {
+        setGoal(value);
+        setIsDirty(true);
+    };
+
+    const handleTimePeriodChange = (value: TimePeriodEnum) => {
+        setTimePeriod(value);
+        if (isDirty) {
+            validateGoal(goal);
+        }
+    };
+
+    const handleMeasureChange = (value: MeasureEnum) => {
+        setMeasure(value);
+        if (isDirty) {
+            validateGoal(goal);
+        }
+    };
+
+    useEffect(() => {
+        validateGoal(goal);
+    }, [goal, timePeriod, measure, isDirty]);
+
     const handleAddGoal = () => {
-        console.log("Adding goal", timePeriod, measure, goal);
-        onAddGoal(
-            timePeriod as TimePeriodEnum,
-            measure as MeasureEnum,
-            Number(goal)
-        );
+        if (!isDirty) {
+            setIsDirty(true);
+            validateGoal(goal);
+            return;
+        }
+        if (isValid) {
+            console.log("Adding goal", timePeriod, measure, goal);
+            onAddGoal(
+                timePeriod as TimePeriodEnum,
+                measure as MeasureEnum,
+                Number(goal)
+            );
+            onClose();
+        }
     };
 
     return (
@@ -82,7 +131,7 @@ export default function GoalSettingModal({
                                 value={TimePeriodEnum.Monthly}
                                 checked={timePeriod === TimePeriodEnum.Monthly}
                                 onChange={(e) =>
-                                    setTimePeriod(
+                                    handleTimePeriodChange(
                                         e.target.value as TimePeriodEnum
                                     )
                                 }
@@ -96,7 +145,7 @@ export default function GoalSettingModal({
                                 value={TimePeriodEnum.Daily}
                                 checked={timePeriod === TimePeriodEnum.Daily}
                                 onChange={(e) =>
-                                    setTimePeriod(
+                                    handleTimePeriodChange(
                                         e.target.value as TimePeriodEnum
                                     )
                                 }
@@ -113,7 +162,9 @@ export default function GoalSettingModal({
                                 value={MeasureEnum.ExtendStreak}
                                 checked={measure === MeasureEnum.ExtendStreak}
                                 onChange={(e) =>
-                                    setMeasure(e.target.value as MeasureEnum)
+                                    handleMeasureChange(
+                                        e.target.value as MeasureEnum
+                                    )
                                 }
                             />
                             Days Practiced
@@ -125,7 +176,9 @@ export default function GoalSettingModal({
                                 value={MeasureEnum.GemsEarned}
                                 checked={measure === MeasureEnum.GemsEarned}
                                 onChange={(e) =>
-                                    setMeasure(e.target.value as MeasureEnum)
+                                    handleMeasureChange(
+                                        e.target.value as MeasureEnum
+                                    )
                                 }
                             />
                             Gems
@@ -139,7 +192,9 @@ export default function GoalSettingModal({
                                     measure === MeasureEnum.ModulesCompleted
                                 }
                                 onChange={(e) =>
-                                    setMeasure(e.target.value as MeasureEnum)
+                                    handleMeasureChange(
+                                        e.target.value as MeasureEnum
+                                    )
                                 }
                             />
                             Modules
@@ -147,8 +202,6 @@ export default function GoalSettingModal({
                     </div>
                     <div className={styles.optionsContainer}>
                         <p>Goal</p>
-                        {/* TODO: put bounds on based on the measure and daily period */}
-                        {/* TODO: validate that the entry is a number */}
                         <input
                             type="text"
                             inputMode="numeric"
@@ -157,18 +210,17 @@ export default function GoalSettingModal({
                             onChange={(e) => handleGoalChange(e.target.value)}
                             placeholder="Enter your goal"
                         />
-                        {!isValid && (
-                            <p className={styles.warningText}>
-                                Please enter a valid number
-                            </p>
+                        {!isValid && isDirty && (
+                            <p className={styles.warningText}>{errorMessage}</p>
                         )}
-                        <p className={styles.suggestedRange}>
-                            {getSuggestedRange()}
-                        </p>
                     </div>
                 </div>
                 <div className={styles.buttonContainer}>
-                    <button type="button" onClick={handleAddGoal}>
+                    <button
+                        type="button"
+                        onClick={handleAddGoal}
+                        disabled={!isValid || !isDirty}
+                    >
                         Add
                     </button>
                     <button type="button" onClick={onClose}>
