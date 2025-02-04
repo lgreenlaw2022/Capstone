@@ -69,35 +69,30 @@ export default function Goals() {
                     onContinue={handleContinue}
                 />
             )}
-            {/* TODO: need to change these divs for better content alignment */}
             <div className={styles.goalsContainer}>
-                <div className={styles.containerRow}>
-                    <div>
+                <div className={styles.goalLeftColumn}>
+                    <div className={styles.goalGroup}>
                         <h2>Daily Goals</h2>
                         <GoalsList goals={dailyGoals} />
                     </div>
-                    <div className={styles.goalRightColumn}>
-                        {showPersonalGoalButton && (
-                            <button
-                                onClick={() => setShowGoalSettingModal(true)}
-                            >
-                                Change Goal
-                            </button>
-                        )}
-                        {showGoalSettingModal && (
-                            <GoalSettingModal
-                                onClose={() => setShowGoalSettingModal(false)}
-                                onAddGoal={handleAddGoal}
-                            />
-                        )}
-                        <WeeklyGift />
-                    </div>
-                </div>
-                <div className={styles.containerRow}>
-                    <div>
+                    <div className={styles.goalGroup}>
                         <h2>Monthly Goals</h2>
                         <GoalsList goals={monthlyGoals} />
                     </div>
+                </div>
+                <div className={styles.goalRightColumn}>
+                    {showPersonalGoalButton && (
+                        <button onClick={() => setShowGoalSettingModal(true)}>
+                            Change Goal
+                        </button>
+                    )}
+                    {showGoalSettingModal && (
+                        <GoalSettingModal
+                            onClose={() => setShowGoalSettingModal(false)}
+                            onAddGoal={handleAddGoal}
+                        />
+                    )}
+                    <WeeklyGift />
                 </div>
             </div>
         </>
