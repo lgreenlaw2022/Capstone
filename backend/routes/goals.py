@@ -247,20 +247,6 @@ def add_personalized_goal():
         except KeyError:
             return jsonify({"error": "Invalid time period or goal type"}), 400
 
-        # if time_period not in [
-        #     TimePeriodType.DAILY.value,
-        #     TimePeriodType.WEEKLY.value,
-        #     TimePeriodType.MONTHLY.value,
-        # ]:
-        #     return jsonify({"error": "Invalid time period"}), 400
-
-        # if goal_type not in [
-        #     MetricType.COMPLETE_MODULES.value,
-        #     MetricType.EARN_GEMS.value,
-        #     MetricType.EXTEND_STREAK.value,
-        # ]:
-        #     return jsonify({"error": "Invalid goal type"}), 400
-
         response, status_code = GoalService.add_personalized_goal(
             user_id, time_period, goal_type, goal_value
         )
@@ -270,5 +256,29 @@ def add_personalized_goal():
         logger.error(f"An error occurred while adding a personalized goal, {str(e)}")
         return (
             jsonify({"error": "An error occurred while adding a personalized goal"}),
+            500,
+        )
+
+
+@goals_bp.route("/should-allow-personal", methods=["GET"])
+@jwt_required()
+def should_show_personal_goal_button():
+    try:
+        user_id = get_jwt_identity()
+        user = User.query.get(user_id)
+        if user is None:
+            logger.error("User not found")
+            return jsonify({"error": "User not found"}), 404
+
+        current_date = datetime.now().date()
+        if current_date.day <= 7:
+            return jsonify({"showButton": True}), 200
+        else:
+            return jsonify({"showButton": False}), 200
+
+    except Exception as e:
+        logger.error(f"An error occurred while checking allow personalized goals, {str(e)}")
+        return (
+            jsonify({"error": "An error occurred while checking allow personal goals"}),
             500,
         )

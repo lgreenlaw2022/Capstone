@@ -3,7 +3,6 @@ import { TimePeriodEnum, MeasureEnum } from "@/types/GoalTypes";
 import styles from "@/styles/GoalSettingModal.module.css";
 
 interface GoalSettingModalProps {
-    show: boolean;
     onClose: () => void;
     onAddGoal: (
         timePeriod: TimePeriodEnum,
@@ -13,7 +12,6 @@ interface GoalSettingModalProps {
 }
 
 export default function GoalSettingModal({
-    show,
     onClose,
     onAddGoal,
 }: GoalSettingModalProps) {
@@ -25,10 +23,6 @@ export default function GoalSettingModal({
     );
     const [goal, setGoal] = useState<string>("");
     const [isValid, setIsValid] = useState(true);
-
-    if (!show) {
-        return null;
-    }
 
     const handleGoalChange = (value: string) => {
         if (/^\d*$/.test(value)) {
@@ -74,9 +68,9 @@ export default function GoalSettingModal({
             <div className={styles.modalContent}>
                 <h2>Add a Goal</h2>
                 <p>
-                    You can add personal goals each month to replace the
-                    automatic goals. Daily goals will persist for the duration
-                    of the month.
+                    Set personal goals in the first week of each month to
+                    replace automatic ones. Daily goals persist for the month,
+                    and your existing progress is preserved.
                 </p>
                 <div>
                     <div className={styles.optionsContainer}>
@@ -168,7 +162,9 @@ export default function GoalSettingModal({
                                 Please enter a valid number
                             </p>
                         )}
-                        <p className={styles.suggestedRange}>{getSuggestedRange()}</p>
+                        <p className={styles.suggestedRange}>
+                            {getSuggestedRange()}
+                        </p>
                     </div>
                 </div>
                 <div className={styles.buttonContainer}>
