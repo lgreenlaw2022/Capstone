@@ -32,7 +32,7 @@ const getSuggestedRangeLimits = (
             return [2, 30];
         }
     }
-    return [0, Infinity];
+    return [0, Number.POSITIVE_INFINITY];
 };
 
 export default function GoalSettingModal({
@@ -109,7 +109,6 @@ export default function GoalSettingModal({
             return;
         }
         if (isValid) {
-            console.log("Adding goal", timePeriod, measure, goal);
             onAddGoal(
                 timePeriod as TimePeriodEnum,
                 measure as MeasureEnum,
@@ -216,6 +215,7 @@ export default function GoalSettingModal({
                             value={goal}
                             onChange={(e) => handleGoalChange(e.target.value)}
                             placeholder="Enter your goal"
+                            aria-label="Enter numeric goal value"
                         />
                         {!isValid && isDirty && (
                             <p className={styles.warningText}>{errorMessage}</p>

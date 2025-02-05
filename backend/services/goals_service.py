@@ -239,7 +239,7 @@ class GoalService:
 
         logger.info("New goals populated successfully")
 
-    def initialize_user_goals(self, user_id: int):
+    def initialize_user_goals(self, user_id: int) -> None:
         # Used when signs up for the first time to account for sign up date
         # being after the first of the month
         self.populate_daily_goals(user_id)
@@ -330,24 +330,22 @@ class GoalService:
         if type == MetricType.EXTEND_STREAK:
             if requirement == 1:
                 return "Extend your streak by 1 day"
-            else:
-                return f"Practice on {requirement} days"
-        return None
+            return f"Practice on {requirement} days"
 
     @staticmethod
     def _is_goal_req_in_range(type, time_period, requirement):
         if time_period == TimePeriodType.DAILY:
             if type == MetricType.COMPLETE_MODULES:
                 return 1 <= requirement <= 20
-            elif type == MetricType.EARN_GEMS:
+            if type == MetricType.EARN_GEMS:
                 return 5 <= requirement <= 30
-            elif type == MetricType.EXTEND_STREAK:
+            if type == MetricType.EXTEND_STREAK:
                 return requirement == 1
-        elif time_period == TimePeriodType.MONTHLY:
+        if time_period == TimePeriodType.MONTHLY:
             if type == MetricType.COMPLETE_MODULES:
                 return 20 <= requirement <= 50
-            elif type == MetricType.EARN_GEMS:
+            if type == MetricType.EARN_GEMS:
                 return 30 <= requirement <= 100
-            elif type == MetricType.EXTEND_STREAK:
+            if type == MetricType.EXTEND_STREAK:
                 return 2 <= requirement <= 30
         return False

@@ -235,8 +235,6 @@ def add_personalized_goal():
         goal_type = data.get("measure")
         goal_value = data.get("goalValue")
 
-        logger.debug(f"Passed data: {data}")
-
         if time_period is None or goal_type is None or goal_value is None:
             return jsonify({"error": "Missing required data"}), 400
         
@@ -245,7 +243,7 @@ def add_personalized_goal():
             time_period = TimePeriodType[time_period.upper()]
             goal_type = MetricType[goal_type.upper()]
         except KeyError:
-            return jsonify({"error": "Invalid time period or goal type"}), 400
+            return jsonify({"error": f"Invalid data: {str(e)}"}), 400
 
         response, status_code = GoalService.add_personalized_goal(
             user_id, time_period, goal_type, goal_value
@@ -270,11 +268,12 @@ def should_show_personal_goal_button():
             logger.error("User not found")
             return jsonify({"error": "User not found"}), 404
 
+        # TODO: will eventually be best to adjust to the user's timezone
         current_date = datetime.now().date()
         if current_date.day <= 7:
             return jsonify({"showButton": True}), 200
-        else:
-            return jsonify({"showButton": False}), 200
+        
+        return jsonify({"showButton": False}), 200
 
     except Exception as e:
         logger.error(f"An error occurred while checking allow personalized goals, {str(e)}")

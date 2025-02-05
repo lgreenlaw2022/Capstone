@@ -21,18 +21,23 @@ export default function Goals() {
     const [showPersonalGoalButton, setShowPersonalGoalButton] = useState(false);
 
     const fetchGoals = async () => {
-        const [dailyData, monthlyData, showButton] = await Promise.all([
-            getDailyGoals(),
-            getMonthlyGoals(),
-            getShouldShowPersonalGoalButton(),
-        ]);
-        setDailyGoals(dailyData.goals);
-        setMonthlyGoals(monthlyData.goals);
-        setNewlyCompletedGoals([
-            ...dailyData.newly_completed_goals,
-            ...monthlyData.newly_completed_goals,
-        ]);
-        setShowPersonalGoalButton(showButton.showButton);
+        try {
+            const [dailyData, monthlyData, showButton] = await Promise.all([
+                getDailyGoals(),
+                getMonthlyGoals(),
+                getShouldShowPersonalGoalButton(),
+            ]);
+            setDailyGoals(dailyData.goals);
+            setMonthlyGoals(monthlyData.goals);
+            setNewlyCompletedGoals([
+                ...dailyData.newly_completed_goals,
+                ...monthlyData.newly_completed_goals,
+            ]);
+            setShowPersonalGoalButton(showButton.showButton);
+        } catch (error) {
+            // TODO: these try/catch only helps debug, not the user
+            console.error("Failed to fetch goals:", error);
+        }
     };
 
     useEffect(() => {
@@ -54,10 +59,13 @@ export default function Goals() {
         measure: MeasureEnum,
         goal: number
     ) => {
-        // TODO: handle errors
-        await addPersonalGoal(timePeriod, measure, goal);
-        setShowGoalSettingModal(false);
-        fetchGoals();
+        try {
+            await addPersonalGoal(timePeriod, measure, goal);
+            setShowGoalSettingModal(false);
+            fetchGoals();
+        } catch (error) {
+            console.error("Failed to add goal:", error);
+        }
     };
 
     return (
@@ -82,7 +90,10 @@ export default function Goals() {
                 </div>
                 <div className={styles.goalRightColumn}>
                     {showPersonalGoalButton && (
-                        <button onClick={() => setShowGoalSettingModal(true)}>
+                        <button
+                            type="button"
+                            onClick={() => setShowGoalSettingModal(true)}
+                        >
                             Change Goal
                         </button>
                     )}
