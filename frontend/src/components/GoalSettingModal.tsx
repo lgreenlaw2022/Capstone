@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { TimePeriodEnum, MeasureEnum } from "@/types/GoalTypes";
 import styles from "@/styles/GoalSettingModal.module.css";
 
@@ -10,6 +10,30 @@ interface GoalSettingModalProps {
         goal: number
     ) => void;
 }
+
+const getSuggestedRangeLimits = (
+    timePeriod: TimePeriodEnum,
+    measure: MeasureEnum
+): [number, number] => {
+    if (timePeriod === TimePeriodEnum.Daily) {
+        if (measure === MeasureEnum.ModulesCompleted) {
+            return [1, 20];
+        } else if (measure === MeasureEnum.GemsEarned) {
+            return [5, 30];
+        } else if (measure === MeasureEnum.ExtendStreak) {
+            return [1, 1];
+        }
+    } else if (timePeriod === TimePeriodEnum.Monthly) {
+        if (measure === MeasureEnum.ModulesCompleted) {
+            return [20, 50];
+        } else if (measure === MeasureEnum.GemsEarned) {
+            return [30, 100];
+        } else if (measure === MeasureEnum.ExtendStreak) {
+            return [2, 30];
+        }
+    }
+    return [0, Infinity];
+};
 
 export default function GoalSettingModal({
     onClose,
@@ -26,29 +50,6 @@ export default function GoalSettingModal({
     const [errorMessage, setErrorMessage] = useState("");
     const [isDirty, setIsDirty] = useState(false);
 
-    // TODO: possible optimization and refactoring here
-    const getSuggestedRangeLimits = (): [number, number] => {
-        if (timePeriod === TimePeriodEnum.Daily) {
-            if (measure === MeasureEnum.ModulesCompleted) {
-                return [1, 20];
-            } else if (measure === MeasureEnum.GemsEarned) {
-                return [5, 30];
-            } else if (measure === MeasureEnum.ExtendStreak) {
-                return [1, 1];
-            }
-        } else if (timePeriod === TimePeriodEnum.Monthly) {
-            if (measure === MeasureEnum.ModulesCompleted) {
-                return [20, 50];
-            } else if (measure === MeasureEnum.GemsEarned) {
-                return [30, 100];
-            } else if (measure === MeasureEnum.ExtendStreak) {
-                // TODO: small issue if its 28 or 31 days in the month
-                return [2, 31];
-            }
-        }
-        return [0, Infinity];
-    };
-
     const validateGoal = (value: string) => {
         if (value === "") {
             setIsValid(false);
@@ -62,7 +63,7 @@ export default function GoalSettingModal({
         }
 
         const numericValue = Number(value);
-        const [min, max] = getSuggestedRangeLimits();
+        const [min, max] = getSuggestedRangeLimits(timePeriod, measure);
         if (numericValue < min || numericValue > max) {
             setIsValid(false);
             setErrorMessage(`Value must be between ${min} and ${max}`);
@@ -72,24 +73,30 @@ export default function GoalSettingModal({
         setIsValid(true);
     };
 
-    const handleGoalChange = (value: string) => {
+    const handleGoalChange = useCallback((value: string) => {
         setGoal(value);
         setIsDirty(true);
-    };
+    }, []);
 
-    const handleTimePeriodChange = (value: TimePeriodEnum) => {
-        setTimePeriod(value);
-        if (isDirty) {
-            validateGoal(goal);
-        }
-    };
+    const handleTimePeriodChange = useCallback(
+        (value: TimePeriodEnum) => {
+            setTimePeriod(value);
+            if (isDirty) {
+                validateGoal(goal);
+            }
+        },
+        [goal, isDirty]
+    );
 
-    const handleMeasureChange = (value: MeasureEnum) => {
-        setMeasure(value);
-        if (isDirty) {
-            validateGoal(goal);
-        }
-    };
+    const handleMeasureChange = useCallback(
+        (value: MeasureEnum) => {
+            setMeasure(value);
+            if (isDirty) {
+                validateGoal(goal);
+            }
+        },
+        [goal, isDirty]
+    );
 
     useEffect(() => {
         validateGoal(goal);

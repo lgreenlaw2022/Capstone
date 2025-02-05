@@ -253,14 +253,14 @@ class GoalService:
             logger.error("User not found")
             return {"error": "User not found"}, 404
 
-        # Check if the goal already exists
+        if not GoalService._is_goal_req_in_range(type, time_period, requirement):
+            return {"error": "Invalid goal requirement"}, 400
+
         goal = Goal.query.filter_by(
             time_period=time_period, metric=type, requirement=requirement
         ).first()
         # Create the goal for general db if it doesn't exist
-        if goal is None and GoalService._is_goal_req_in_range(
-            type, time_period, requirement
-        ):
+        if goal is None:
             title = GoalService._create_goal_title(type, requirement)
             goal = Goal(
                 title=title,
@@ -295,6 +295,7 @@ class GoalService:
         )
         if len(existing_user_goals) >= 3:
             # Remove the goal with the same metric type if it exists
+            # TODO: second case for which should be removed?
             goal_to_remove = next(
                 (
                     old_goal
