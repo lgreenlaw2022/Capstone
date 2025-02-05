@@ -50,6 +50,11 @@ def register():
     db.session.add(new_user)
     db.session.commit()
 
+    try:
+        goal_service.initialize_user_goals(new_user.id)
+    except Exception as e:
+        logger.error(f"Error initializing goals for user {new_user.id}: {str(e)}")
+
     return jsonify({"message": "User registered successfully"}), 201
 
 

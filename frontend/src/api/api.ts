@@ -471,6 +471,38 @@ export const addGoalReward = async (goalId: number) => {
     }
 }
 
+export const addPersonalGoal = async (timePeriod: string, measure: string, goalValue: number) => {
+    try {
+        const response = await axiosInstance.post('/goals/add-personal', {
+            timePeriod: timePeriod,
+            measure: measure,
+            goalValue: goalValue
+        });
+        return response.data;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error adding personal goal:', error.message);
+        } else {
+            console.error('Unknown error adding personal goal:', error);
+        }
+        throw error;
+    }
+}
+
+export const getShouldShowPersonalGoalButton = async () => {
+    try {
+        const response = await axiosInstance.get('/goals/should-allow-personal');
+        return response.data;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error fetching personal goal button status:', error.message);
+        } else {
+            console.error('Unknown error fetching personal goal button status:', error);
+        }
+        throw error;
+    }
+}
+
 export const getUserChallengeHints = async (moduleId: number) => {
     try {
         const response = await axiosInstance.get(`/content/hints/${moduleId}`);
@@ -547,3 +579,4 @@ export const submitRuntimeResponse = async (moduleId: number, runtime: string) =
         throw error;
     }
 }
+

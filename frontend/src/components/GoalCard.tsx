@@ -20,7 +20,7 @@ export default function GoalCard({ goal }: GoalCardProps) {
                     />
                 )}
             </div>
-            <div>
+            <div className={styles.goalInfo}>
                 <h4>{goal.title}</h4>
                 <ProgressBar percentage={goal.progressPercentage} />
                 <p>

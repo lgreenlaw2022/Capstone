@@ -2,28 +2,42 @@ import GoalsList from "@/components/GoalsList";
 import styles from "../styles/Goals.module.css";
 import WeeklyGift from "@/components/WeeklyGift";
 import { useEffect, useState } from "react";
-import { getDailyGoals, getMonthlyGoals } from "@/api/api";
-import { Goal } from "../types/GoalTypes";
+import {
+    getDailyGoals,
+    getMonthlyGoals,
+    addPersonalGoal,
+    getShouldShowPersonalGoalButton,
+} from "@/api/api";
+import { Goal, MeasureEnum, TimePeriodEnum } from "../types/GoalTypes";
 import GoalReward from "@/components/GoalReward";
+import GoalSettingModal from "@/components/GoalSettingModal";
 
 export default function Goals() {
     const [dailyGoals, setDailyGoals] = useState<Goal[]>([]);
     const [monthlyGoals, setMonthlyGoals] = useState<Goal[]>([]);
     const [newlyCompletedGoals, setNewlyCompletedGoals] = useState<Goal[]>([]);
     const [goalsReviewed, setGoalsReviewed] = useState(false);
+    const [showGoalSettingModal, setShowGoalSettingModal] = useState(false);
+    const [showPersonalGoalButton, setShowPersonalGoalButton] = useState(false);
 
     const fetchGoals = async () => {
-        const [dailyData, monthlyData] = await Promise.all([
-            getDailyGoals(),
-            getMonthlyGoals(),
-        ]);
-        setDailyGoals(dailyData.goals);
-        setMonthlyGoals(monthlyData.goals);
-        setNewlyCompletedGoals([
-            ...dailyData.newly_completed_goals,
-            ...monthlyData.newly_completed_goals,
-        ]);
-        console.log("Newly completed goals:", newlyCompletedGoals);
+        try {
+            const [dailyData, monthlyData, showButton] = await Promise.all([
+                getDailyGoals(),
+                getMonthlyGoals(),
+                getShouldShowPersonalGoalButton(),
+            ]);
+            setDailyGoals(dailyData.goals);
+            setMonthlyGoals(monthlyData.goals);
+            setNewlyCompletedGoals([
+                ...dailyData.newly_completed_goals,
+                ...monthlyData.newly_completed_goals,
+            ]);
+            setShowPersonalGoalButton(showButton.showButton);
+        } catch (error) {
+            // TODO: these try/catch only helps debug, not the user
+            console.error("Failed to fetch goals:", error);
+        }
     };
 
     useEffect(() => {
@@ -40,6 +54,20 @@ export default function Goals() {
         }
     };
 
+    const handleAddGoal = async (
+        timePeriod: TimePeriodEnum,
+        measure: MeasureEnum,
+        goal: number
+    ) => {
+        try {
+            await addPersonalGoal(timePeriod, measure, goal);
+            setShowGoalSettingModal(false);
+            fetchGoals();
+        } catch (error) {
+            console.error("Failed to add goal:", error);
+        }
+    };
+
     return (
         <>
             {newlyCompletedGoals.length > 0 && (
@@ -50,19 +78,32 @@ export default function Goals() {
                 />
             )}
             <div className={styles.goalsContainer}>
-                <div className={styles.containerRow}>
-                    <div>
+                <div className={styles.goalLeftColumn}>
+                    <div className={styles.goalGroup}>
                         <h2>Daily Goals</h2>
                         <GoalsList goals={dailyGoals} />
                     </div>
-                    <WeeklyGift />
-                </div>
-                <div className={styles.containerRow}>
-                    <div>
+                    <div className={styles.goalGroup}>
                         <h2>Monthly Goals</h2>
                         <GoalsList goals={monthlyGoals} />
                     </div>
-                    {/* <h2>Calendar</h2> */}
+                </div>
+                <div className={styles.goalRightColumn}>
+                    {showPersonalGoalButton && (
+                        <button
+                            type="button"
+                            onClick={() => setShowGoalSettingModal(true)}
+                        >
+                            Change Goal
+                        </button>
+                    )}
+                    {showGoalSettingModal && (
+                        <GoalSettingModal
+                            onClose={() => setShowGoalSettingModal(false)}
+                            onAddGoal={handleAddGoal}
+                        />
+                    )}
+                    <WeeklyGift />
                 </div>
             </div>
         </>
