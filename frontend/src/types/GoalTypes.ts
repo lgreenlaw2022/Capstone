@@ -4,6 +4,18 @@ export interface Goal {
     currentValue: number;
     targetValue: number;
     progressPercentage: number;
-    timePeriod: string; /* TODO: gonna change this to an enum */
+    timePeriod: string; /* TODO: change this to an enum */
     completed: boolean;
+}
+
+export enum TimePeriodEnum {
+    Daily = "daily",
+    Weekly = "weekly",
+    Monthly = "monthly",
+}
+
+export enum MeasureEnum {
+    ModulesCompleted = "complete_modules",
+    GemsEarned = "earn_gems",
+    ExtendStreak = "extend_streak",
 }

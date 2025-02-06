@@ -4,7 +4,7 @@ import random
 from utils import get_most_recent_monday
 from enums import MetricType, TimePeriodType
 from typing import Dict, List, Tuple
-from models import db, DailyUserActivity, Goal, UserGoal
+from models import db, DailyUserActivity, Goal, UserGoal, User
 from sqlalchemy import func
 
 logger = logging.getLogger(__name__)
@@ -133,7 +133,7 @@ class GoalProgressCalculator:
     ) -> date:
         """Calculate the start of the current time period."""
         if time_period == TimePeriodType.DAILY:
-            return assigned_date  # TODO: should I change this to today?
+            return assigned_date
         elif time_period == TimePeriodType.WEEKLY:
             return get_most_recent_monday(assigned_date)
         elif time_period == TimePeriodType.MONTHLY:
@@ -173,23 +173,24 @@ class GoalService:
         total_daily_goals = Goal.query.filter_by(
             time_period=TimePeriodType.DAILY
         ).count()
-        random_indices = random.sample(range(total_daily_goals), 3)
-        daily_goals = []
-        for index in random_indices:
-            daily_goals.append(
+
+        selected_goals = []
+        selected_metrics = set()
+        while len(selected_goals) < 3:
+            random_index = random.randint(0, total_daily_goals - 1)
+            goal = (
                 Goal.query.filter_by(time_period=TimePeriodType.DAILY)
-                .offset(index)
+                .offset(random_index)
                 .limit(1)
                 .one()
             )
-        existing_goals = UserGoal.query.filter_by(user_id=user_id).all()
-        for goal in existing_goals:
-            if goal.goal.time_period == TimePeriodType.DAILY:
-                logger.debug(f"existing goal: {goal.goal.title}, {goal.date_assigned}")
+            if goal.metric not in selected_metrics:
+                selected_goals.append(goal)
+                selected_metrics.add(goal.metric)
 
         user_goals = [
             UserGoal(user_id=user_id, goal_id=goal.id, date_assigned=today)
-            for goal in daily_goals
+            for goal in selected_goals
         ]
         db.session.bulk_save_objects(user_goals)
         db.session.commit()
@@ -200,18 +201,24 @@ class GoalService:
         total_monthly_goals = Goal.query.filter_by(
             time_period=TimePeriodType.MONTHLY
         ).count()
-        random_indices = random.sample(range(total_monthly_goals), 3)
-        monthly_goals = []
-        for index in random_indices:
-            monthly_goals.append(
+
+        selected_goals = []
+        selected_metrics = set()
+        while len(selected_goals) < 3:
+            random_index = random.randint(0, total_monthly_goals - 1)
+            goal = (
                 Goal.query.filter_by(time_period=TimePeriodType.MONTHLY)
-                .offset(index)
+                .offset(random_index)
                 .limit(1)
                 .one()
             )
+            if goal.metric not in selected_metrics:
+                selected_goals.append(goal)
+                selected_metrics.add(goal.metric)
+
         user_goals = [
             UserGoal(user_id=user_id, goal_id=goal.id, date_assigned=first_of_month)
-            for goal in monthly_goals
+            for goal in selected_goals
         ]
         db.session.bulk_save_objects(user_goals)
         db.session.commit()
@@ -231,3 +238,114 @@ class GoalService:
             self.populate_monthly_goals(user_id)
 
         logger.info("New goals populated successfully")
+
+    def initialize_user_goals(self, user_id: int) -> None:
+        # Used when signs up for the first time to account for sign up date
+        # being after the first of the month
+        self.populate_daily_goals(user_id)
+        self.populate_monthly_goals(user_id)
+
+    @staticmethod
+    def add_personalized_goal(user_id, time_period, type, requirement):
+        # TODO: is this user validation necessary?
+        user = User.query.get(user_id)
+        if user is None:
+            logger.error("User not found")
+            return {"error": "User not found"}, 404
+
+        if not GoalService._is_goal_req_in_range(type, time_period, requirement):
+            return {"error": "Invalid goal requirement"}, 400
+
+        goal = Goal.query.filter_by(
+            time_period=time_period, metric=type, requirement=requirement
+        ).first()
+        # Create the goal for general db if it doesn't exist
+        if goal is None:
+            title = GoalService._create_goal_title(type, requirement)
+            goal = Goal(
+                title=title,
+                time_period=time_period,
+                metric=type,
+                requirement=requirement,
+            )
+            db.session.add(goal)
+            db.session.commit()
+
+        # Check if the user already has this goal assigned
+        date_assigned = GoalProgressCalculator()._get_time_period_start(
+            datetime.now(timezone.utc).date(), time_period
+        )
+        user_goal = UserGoal.query.filter_by(
+            user_id=user_id, goal_id=goal.id, date_assigned=date_assigned
+        ).first()
+        if user_goal:
+            logger.info("Goal already assigned")
+            return {"message": "Goal already assigned"}, 200
+
+        # Remove an existing goal for this period if the user has more than 3
+        existing_user_goals = (
+            db.session.query(UserGoal)
+            .join(Goal, UserGoal.goal_id == Goal.id)
+            .filter(
+                UserGoal.user_id == user_id,
+                Goal.time_period == time_period,
+                UserGoal.date_assigned == date_assigned,
+            )
+            .all()
+        )
+        if len(existing_user_goals) >= 3:
+            # Remove the goal with the same metric type if it exists
+            # TODO: second case for which should be removed?
+            goal_to_remove = next(
+                (
+                    old_goal
+                    for old_goal in existing_user_goals
+                    if old_goal.goal.metric == goal.metric
+                ),
+                None,
+            )
+            if goal_to_remove is None:
+                goal_to_remove = existing_user_goals[0]
+            db.session.delete(goal_to_remove)
+            db.session.commit()
+
+        # Assign the goal to the user
+        user_goal = UserGoal(
+            user_id=user_id,
+            goal_id=goal.id,
+            date_assigned=date_assigned,
+        )
+        db.session.add(user_goal)
+        db.session.commit()
+
+        logger.info("Personalized goal added successfully")
+        return {"message": "Personalized goal added successfully"}, 200
+
+    @staticmethod
+    def _create_goal_title(type, requirement):
+        if type == MetricType.COMPLETE_MODULES:
+            return f"Complete {requirement} modules"
+        if type == MetricType.EARN_GEMS:
+            return f"Earn {requirement} gems"
+        if type == MetricType.EXTEND_STREAK:
+            if requirement == 1:
+                return "Extend your streak by 1 day"
+            return f"Practice on {requirement} days"
+
+    @staticmethod
+    def _is_goal_req_in_range(type, time_period, requirement):
+        if time_period == TimePeriodType.DAILY:
+            if type == MetricType.COMPLETE_MODULES:
+                return 1 <= requirement <= 20
+            if type == MetricType.EARN_GEMS:
+                return 5 <= requirement <= 30
+            if type == MetricType.EXTEND_STREAK:
+                return requirement == 1
+        if time_period == TimePeriodType.MONTHLY:
+            if type == MetricType.COMPLETE_MODULES:
+                return 20 <= requirement <= 50
+            if type == MetricType.EARN_GEMS:
+                return 30 <= requirement <= 100
+            if type == MetricType.EXTEND_STREAK:
+                return 2 <= requirement <= 30
+        return False

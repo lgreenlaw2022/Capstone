@@ -1,14 +1,29 @@
 .goalsContainer {
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
     padding: 50px;
-    gap: 25px;
+    gap: 38px;
 }
 
-.containerRow {
+.goalGroup {
     display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.goalLeftColumn {
+    display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 34px;
+    gap: 20px;
+}
+
+.goalRightColumn {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 16px;
+    /* TODO: UX design: exactly how should this align with the daily goals? */
+    margin-top: 32px;
 }

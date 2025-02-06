@@ -4,7 +4,7 @@ from enum import Enum
 class MetricType(Enum):
     COMPLETE_MODULES = "complete_modules"
     EARN_GEMS = "earn_gems"
-    EXTEND_STREAK = "streak_length"
+    EXTEND_STREAK = "extend_streak"
     # Add more metrics as needed
     # consider: goals completed, unit completed
 
@@ -22,14 +22,14 @@ class QuizType(Enum):
 
 
 class ModuleType(Enum):
-    CONCEPT_GUIDE = "concept_guide"
-    PYTHON_GUIDE = "python_guide"
-    RECOGNITION_GUIDE = "recognition_guide"
-    QUIZ = "quiz"
-    CHALLENGE = "challenge"
-    CHALLENGE_SOLUTION = "solution_guide"
-    BONUS_CHALLENGE = "bonus_challenge"
-    BONUS_SOLUTION = "bonus_solution_guide"
+    CONCEPT_GUIDE = "CONCEPT_GUIDE"
+    PYTHON_GUIDE = "PYTHON_GUIDE"
+    RECOGNITION_GUIDE = "RECOGNITION_GUIDE"
+    QUIZ = "QUIZ"
+    CHALLENGE = "CHALLENGE"
+    CHALLENGE_SOLUTION = "CHALLENGE_SOLUTION"
+    BONUS_CHALLENGE = "BONUS_CHALLENGE"
+    BONUS_SOLUTION = "BONUS_SOLUTION"
 
 
 class BadgeType(Enum):

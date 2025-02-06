@@ -23,12 +23,16 @@ logging.basicConfig(level=logging.DEBUG)
 def create_app():
 
     # Create and configure the Flask application
-    app = Flask(__name__)
+    app = Flask(__name__, instance_relative_config=True)
+
+    # Create instance folder if it doesn't exist
+    os.makedirs(app.instance_path, exist_ok=True)
 
     # Configure the app with necessary settings
     app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "default_secret_key")
     app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
-        "SQLALCHEMY_DATABASE_URI", "sqlite:///site.db"
+        "SQLALCHEMY_DATABASE_URI", 
+        f"sqlite:///{os.path.join(app.instance_path, 'site.db')}"
     )
     app.config["JWT_SECRET_KEY"] = os.environ.get(
         "JWT_SECRET_KEY", "default_jwt_secret_key"
