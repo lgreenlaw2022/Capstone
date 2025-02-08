@@ -1,0 +1,18 @@
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def sortedArrayToBST(self, nums: List[int]) -> Optional[TreeNode]:
+        # base case
+        if not nums:
+            return None
+        # get the index of the next root node
+        median_i = nums[len(nums) // 2]
+        root = TreeNode(nums[median_i])
+        # recursively build the left and right subtrees
+        root.left = sorted_array_to_BST(self, nums[:median_node])
+        root.right = sorted_array_to_BST(self, nums[median_node+1:])
+        return root

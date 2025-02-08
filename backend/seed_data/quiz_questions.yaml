@@ -466,7 +466,7 @@ quiz_questions:
         is_correct: false
         option_type: CONCEPT
 
-  # Binary Trees Concept Quiz
+# Binary Trees Concept Quiz
   - module_title: "Binary Trees Concept Quiz"
     title: "What is a binary tree?"
     options:
@@ -659,6 +659,7 @@ quiz_questions:
         option_type: CONCEPT
 
 # Binary Search Tree Concept Quiz
+# TODO: FINISH BST Questions
   - module_title: "Binary Search Trees Concept Quiz"
     title: "What is the time complexity of searching for an element in a balanced binary search tree?"
     options:
@@ -725,4 +726,163 @@ quiz_questions:
         option_type: CONCEPT
       - option_text: "When you need to store elements in a specific order"
         is_correct: true
+        option_type: CONCEPT
+  # TODO: FINISH BST Questions
+
+# Binary Trees Recognition Quiz
+  - module_title: "Binary Trees Recognition Quiz"
+    title: "When should you use a binary search tree (BST) over a simple binary tree?"
+    options:
+      - option_text: "When you need to maintain a balanced tree structure"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "When you need to store hierarchical data"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "When you need to perform efficient search, insertion, and deletion operations"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "When you need to perform level-order traversal efficiently"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Binary Trees Recognition Quiz"
+    title: "When should you use a binary tree instead of a binary search tree (BST)?"
+    options:
+      - option_text: "When you need to keep the elements in sorted order"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "When you require fast search, insertion, and deletion operations"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "When the structure of the tree matters more than the order of the elements"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "When you need to ensure that the tree remains balanced"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Binary Trees Recognition Quiz"
+    title: "When would you use pre-order traversal of a binary tree?"
+    options:
+      - option_text: "When you need to process each node before its children"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "When you need to process all leaf nodes before their parent nodes"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "When you need to get the nodes in sorted order"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "When you need to traverse nodes level by level"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Binary Trees Recognition Quiz"
+    title: "When is in-order traversal most useful?"
+    options:
+      - option_text: "When you need to process each node before its children"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "When you need to process all leaf nodes before their parent nodes"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "When you need to retrieve the nodes in a BST in sorted order"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "When you need to traverse nodes level by level"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Binary Trees Recognition Quiz"
+    title: "In which situation would post-order traversal be the best choice?"
+    options:
+      - option_text: "When you need to process each node before its children"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "When you need to delete or free nodes in a safe manner"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "When you need to get the nodes in sorted order"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "When you need to traverse nodes level by level"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Binary Trees Recognition Quiz"
+    title: "For which of the following tasks is a binary tree structure particularly useful?"
+    options:
+      - option_text: "Implementing a sorted list of elements"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "Building a heap data structure"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "Managing hierarchical data such as a family tree or file system"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "Ensuring constant time complexity for search operations"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Binary Trees Recognition Quiz"
+    title: "When would you use depth-first search (DFS) over breadth-first search (BFS) in tree traversal?"
+    options:
+      - option_text: "When you need to find the shortest path in an unweighted tree"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "When you need to visit all nodes at the present depth level before moving on to the next level"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "When you need to explore as far down a branch as possible before backtracking"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "When you need to print nodes level by level"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Binary Trees Recognition Quiz"
+    title: "For which scenario is level-order traversal particularly useful?"
+    options:
+      - option_text: "When you need to print all leaf nodes before their parent nodes"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "When you need to visit nodes in a specific depth-first order"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "When you need to find the shortest path in an unweighted tree"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "When you need to evaluate arithmetic expressions"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Binary Trees Recognition Quiz"
+    title: "When is a binary search tree (BST) preferred over an array for searching operations?"
+    options:
+      - option_text: "When you need insertions and deletions while maintaining order"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "When the data is static and won't change"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "When you require random access to elements"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Binary Trees Recognition Quiz"
+    title: "When is it most suitable to use pre-order traversal in a binary tree?"
+    options:
+      - option_text: "When you need to evaluate postfix expressions"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "When you need to create a copy of the tree"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "When you need to retrieve elements in sorted order"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "When you need to traverse nodes level by level"
+        is_correct: false
         option_type: CONCEPT
