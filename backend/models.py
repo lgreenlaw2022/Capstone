@@ -126,7 +126,6 @@ class UserGoal(db.Model):
     # to do this I'll need some delete/cascade rules
     __tablename__ = "user_goals"
 
-    # TODO: when developing queries, check if these columns are in the right tables for efficiency
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), primary_key=True)
     goal_id = db.Column(db.Integer, db.ForeignKey("goals.id"), primary_key=True)
     date_assigned = db.Column(db.Date, default=current_date, primary_key=True)
