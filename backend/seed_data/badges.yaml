@@ -3,13 +3,13 @@ badges:
   - title: "Hash Maps"
     description: "Awarded for completing the hash tables unit."
     type: CONTENT
-    criteria_expression: "user_unit.completed == True and user_unit.order == 1"
+    criteria_expression: "user_unit_completed == True and unit_title == 'Hash Maps'"
     event_type: UNIT_COMPLETION # NOTE: new challenge, need to convert enums
 
   - title: "Linked Lists"
     description: "Awarded for completing the linked lists unit."
     type: CONTENT
-    criteria_expression: "user_unit.completed == True and user_unit.order == 2"
+    criteria_expression: "user_unit_completed == True and unit_title == 'Linked Lists'"
     event_type: UNIT_COMPLETION # NOTE: new challenge, need to convert enums
 
 # Award Badges
