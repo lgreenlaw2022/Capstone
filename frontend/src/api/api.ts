@@ -240,10 +240,24 @@ export const getCodeChallenge = async (moduleId: number) => {
     }
 };
 
-export const getBonusCodingChallenges = async () => {
+export const getCodeChallengeSolution = async (moduleId: number) => {
     try {
-        console.log('Fetching coding challenges');
-        const response = await axiosInstance.get('/content/bonus-code-challenges');
+        const response = await axiosInstance.get(`/content/modules/code-challenges/${moduleId}/solution`);
+        return response.data;
+    }
+    catch (error) {
+        if (error instanceof Error) {
+            console.error('Error fetching code challenge solution:', error.message);
+        } else {
+            console.error('Unknown error fetching code challenge solution:', error);
+        }
+        throw error;
+    }
+}
+
+export const getOpenBonusCodingChallenges = async () => {
+    try {
+        const response = await axiosInstance.get('/content/bonus-code-challenges/open');
         return response.data;
     } catch (error) {
         if (error instanceof Error) {
@@ -537,7 +551,7 @@ export const buyHint = async (hintId: number) => {
 
 export const getUserChallengeCodeChecks = async (moduleId: number) => {
     try {
-        const response = await axiosInstance.get(`/content/code-checks/${moduleId}`); // And this    
+        const response = await axiosInstance.get(`/content/code-checks/${moduleId}`);
         return response.data;
     } catch (error) {
         if (error instanceof Error) {

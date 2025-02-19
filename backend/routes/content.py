@@ -79,7 +79,6 @@ def get_modules_in_unit(unit_id):
         is_open = module.order == 1 or (user_module is not None and user_module.open)
         is_completed = user_module is not None and user_module.completed
         if is_completed:
-            # TODO: need to exclude bonus challenges from the count
             completed_modules += 1
         modules_data.append(
             {
@@ -138,7 +137,8 @@ def get_module_content(module_id):
     if module_type in [
         ModuleType.CHALLENGE,
         ModuleType.CHALLENGE_SOLUTION,
-        ModuleType.BONUS_CHALLENGE,  # TODO: add bonus solution
+        ModuleType.BONUS_CHALLENGE,
+        ModuleType.BONUS_SOLUTION,
     ]:
         if module_type == ModuleType.CHALLENGE:
             sub_dir = f"{order}_challenge"
@@ -147,6 +147,12 @@ def get_module_content(module_id):
         elif module_type == ModuleType.BONUS_CHALLENGE:
             sub_dir = f"{order}_bonus_challenge"
             base_content_dir = os.path.join(base_content_dir, "bonus_challenges")
+        elif module_type == ModuleType.BONUS_SOLUTION:
+            sub_dir = f"{order}_bonus_solution"
+            base_content_dir = os.path.join(base_content_dir, "bonus_challenges")
+            logger.debug(
+                f"base_content_dir: {base_content_dir}, sub_dir: {sub_dir}, order: {order}"
+            )
 
         content_file_path = os.path.join(
             base_content_dir, f"unit_{unit_id}", sub_dir, f"{order}_content.html"
@@ -301,16 +307,16 @@ def mark_module_complete_and_open_next(module_id, user_id):
         user_module = UserModule.query.filter_by(
             module_id=module_id, user_id=user_id
         ).first()
-        # Special case: add the first module to the UserModule table
-        if order == 1 and user_module is None:
+
+        # TODO: refactoring -- if I create the user_module here, I do not need to keep checking for it later
+        if user_module is None:
+            logger.debug(f"Adding first module {module_id} to UserModule table")
             user_module = UserModule(
                 module_id=module_id,
                 user_id=user_id,
             )
+            # TODO: add UserUnit here?
             db.session.add(user_module)
-
-        if user_module is None:
-            raise ValueError(f"UserModule with module_id {module_id} not found")
 
         # Update the user's daily XP
         if current_module.module_type not in [
@@ -324,7 +330,42 @@ def mark_module_complete_and_open_next(module_id, user_id):
         update_daily_xp(user_id, earned_xp)
 
         if current_module.module_type == ModuleType.BONUS_CHALLENGE:
-            return {"message": "Bonus challenge marked as complete"}
+            # mark the bonus challenge as complete
+            user_module.completed = True
+
+            solution_module, error_message, status_code = (
+                get_solution_module_for_challenge(module_id)
+            )
+            if solution_module is None:
+                logger.error(
+                    f"Error getting solution module for bonus challenge: {error_message}"
+                )
+                return jsonify({"error": error_message}), status_code
+
+            # create and open the bonus solution module for the user
+            user_solution_module = UserModule.query.filter_by(
+                user_id=user_id, module_id=solution_module.id
+            ).first()
+            if user_solution_module is None:
+                logger.debug(
+                    f"UserModule not found for solution module {solution_module.id}, adding it"
+                )
+                user_solution_module = UserModule(
+                    user_id=user_id, module_id=solution_module.id, open=True
+                )
+                db.session.add(user_solution_module)
+            else:
+                user_solution_module.open = True
+            db.session.commit()
+            logger.info("Bonus challenge marked as complete and solution opened")
+            return {"message": "Bonus challenge marked as complete and solution opened"}
+
+        if current_module.module_type == ModuleType.BONUS_SOLUTION:
+            # mark the bonus solution as complete
+            user_module.completed = True
+            db.session.commit()
+            logger.info("Bonus solution marked as complete")
+            return {"message": "Bonus solution marked as complete"}
 
         # Check if the module is already marked as complete
         if user_module.completed:
@@ -337,7 +378,6 @@ def mark_module_complete_and_open_next(module_id, user_id):
         user_module.completed_date = current_date
 
         # add daily activity record for completing a module
-        # TODO: do I want this to only be for the first time a module is completed?
         today_activity = DailyUserActivity.query.filter_by(
             user_id=user_id, date=current_date
         ).first()
@@ -345,7 +385,6 @@ def mark_module_complete_and_open_next(module_id, user_id):
             today_activity = DailyUserActivity(user_id=user_id, date=current_date)
             db.session.add(today_activity)
         today_activity.modules_completed += 1
-
         db.session.commit()
 
         # If this module completes the unit, mark the unit as complete
@@ -361,7 +400,7 @@ def mark_module_complete_and_open_next(module_id, user_id):
         next_modules = Module.query.filter(
             Module.unit_id == unit_id,
             Module.order == order + 1,  # +1 for the next module
-        ).all()
+        ).all()  # allows for parallel modules
         # Update the UserModule entries for the next modules to open
         for next_module in next_modules:
             user_module_next = UserModule.query.filter_by(
@@ -389,6 +428,81 @@ def mark_module_complete_and_open_next(module_id, user_id):
             f"Error marking module {module_id} as complete and opening next modules: {str(e)}"
         )
         raise
+
+
+def get_solution_module_for_challenge(module_id):
+    try:
+        module = Module.query.filter_by(id=module_id).first()
+        if module is None:
+            logger.error(f"Module not found for module_id {module_id}")
+            return None, "Module not found", 404
+
+        module_type = module.module_type
+        order = module.order
+
+        if module_type == ModuleType.CHALLENGE:
+            solution_module = Module.query.filter_by(
+                order=order + 1, module_type=ModuleType.CHALLENGE_SOLUTION
+            ).first()
+        elif module_type == ModuleType.BONUS_CHALLENGE:
+            solution_module = Module.query.filter_by(
+                order=order + 1, module_type=ModuleType.BONUS_SOLUTION
+            ).first()
+        else:
+            logger.error(f"Module is not a challenge for module_id {module_id}")
+            return None, "Module is not a challenge", 400
+
+        if solution_module is None:
+            logger.error(f"Solution not found for module_id {module_id}")
+            return None, "Solution not found", 404
+
+        logger.debug(f"Solution module found: {solution_module.id}")
+        return solution_module, None, 200
+
+    except Exception as e:
+        logger.error(
+            f"Error identifying challenge solution module for module {module_id}: {str(e)}"
+        )
+        return None, str(e), 500
+
+
+@content_bp.route("/modules/code-challenges/<int:module_id>/solution", methods=["GET"])
+@jwt_required()
+def get_challenge_solution(module_id):
+    try:
+        solution_module, error_message, status_code = get_solution_module_for_challenge(
+            module_id
+        )
+        if solution_module is None:
+            return jsonify({"error": error_message}), status_code
+
+        user_solution_module = UserModule.query.filter_by(
+            user_id=get_jwt_identity(), module_id=solution_module.id
+        ).first()
+        if user_solution_module is None:
+            user_solution_module = UserModule(
+                user_id=get_jwt_identity(), module_id=solution_module.id, open=True
+            )
+            db.session.add(user_solution_module)
+        else:
+            user_solution_module.open = True
+        db.session.commit()
+
+        logger.info(f"Solution module {solution_module.id} opened for user")
+        return (
+            jsonify(
+                {
+                    "solutionId": solution_module.id,
+                    "moduleType": solution_module.module_type.name,
+                }
+            ),
+            200,
+        )
+    except Exception as e:
+        logger.error(
+            f"Error identifying challenge solution module for module {module_id}: {str(e)}"
+        )
+        return jsonify({"error": str(e)}), 500
 
 
 def are_all_modules_completed(unit_id, user_id):
@@ -421,18 +535,17 @@ def are_all_modules_completed(unit_id, user_id):
 def is_unit_newly_completed(unit_id, user_id):
     # check if the unit is newly completed by checking db for unit and module records
     # method is used to trigger events like badge checks
-    logger.debug(f"Checking if unit {unit_id} is newly completed for user {user_id}")
     user_unit = UserUnit.query.filter_by(unit_id=unit_id, user_id=user_id).first()
     if user_unit is not None and user_unit.completed:
         logger.debug(f"found UserUnit {unit_id} record as already completed")
         return False
     if are_all_modules_completed(unit_id, user_id):
+        logger.debug(f"Unit {unit_id} is newly completed")
         return True
     return False
 
 
 def complete_unit(unit_id, user_id):
-    logger.debug(f"Marking unit {unit_id} as complete for user {user_id}")
     user_unit = UserUnit.query.filter_by(unit_id=unit_id, user_id=user_id).first()
     if user_unit is None:
         user_unit = UserUnit(unit_id=unit_id, user_id=user_id, completed=True)
@@ -441,11 +554,16 @@ def complete_unit(unit_id, user_id):
         user_unit.completed = True
     db.session.commit()
 
+    # TODO: these events shouldn't need to be triggered if the unit is already marked as complete?
     # Trigger the UNIT_COMPLETION event to award badges
+    unit = Unit.query.filter_by(id=unit_id).first()
     badge_awarding_service = BadgeAwardingService(user_id)
     badge_awarding_service.check_and_award_badges(
-        EventType.UNIT_COMPLETION, user_unit=user_unit
+        EventType.UNIT_COMPLETION,
+        user_unit_completed=user_unit.completed,
+        unit_title=unit.title,
     )
+    logger.debug(f"Badges checked for unit {unit_id} completion")
 
     # add bonus challenge questions to the user's modules
     bonus_challenge_modules = (
@@ -453,20 +571,21 @@ def complete_unit(unit_id, user_id):
         .filter_by(unit_id=unit_id, module_type=ModuleType.BONUS_CHALLENGE)
         .all()
     )
-    logger.debug(
-        f"adding bonus_challenge_modules to UserModules: {bonus_challenge_modules}"
-    )
+
     for bonus_challenge_module in bonus_challenge_modules:
         user_module = UserModule.query.filter_by(
             user_id=user_id, module_id=bonus_challenge_module.id
         ).first()
         if user_module is None:
             user_module = UserModule(
-                user_id=user_id, module_id=bonus_challenge_module.id
+                user_id=user_id, module_id=bonus_challenge_module.id, open=True
             )
             db.session.add(user_module)
+        else:
+            user_module.open = True
     db.session.commit()
 
+    logger.debug(f"Bonus challenges added to UserModules")
     return {"message": "Unit marked as complete"}
 
 
@@ -532,11 +651,12 @@ def get_user_completed_units():
         return jsonify({"error": str(e)}), 500
 
 
-@content_bp.route("/bonus-code-challenges", methods=["GET"])
+@content_bp.route("/bonus-code-challenges/open", methods=["GET"])
 @jwt_required()
 def get_bonus_challenges():
     try:
         user_id = get_jwt_identity()
+
         bonus_challenges = (
             db.session.query(UserModule, Module, Unit)
             .join(Module, UserModule.module_id == Module.id)
@@ -544,6 +664,7 @@ def get_bonus_challenges():
             .filter(
                 UserModule.user_id == user_id,
                 Module.module_type == ModuleType.BONUS_CHALLENGE,
+                UserModule.open == True,
             )
             .all()
         )
@@ -557,6 +678,7 @@ def get_bonus_challenges():
             }
             for user_module, module, unit in bonus_challenges
         ]
+        logger.debug(f"Bonus challenges data: {bonus_challenges_data}")
 
         return jsonify(bonus_challenges_data), 200
     except Exception as e:
@@ -677,11 +799,14 @@ def get_user_challenge_code_checks(module_id):
                 db.session.add(user_test_case)
 
             verified = user_test_case.verified
+
+            outputs = [output.output for output in test_case.outputs]
+
             user_test_case_data.append(
                 {
                     "testCaseId": test_case.id,
                     "input": test_case.input,
-                    "output": test_case.output,
+                    "outputs": outputs,
                     "verified": verified,
                 }
             )
@@ -750,9 +875,14 @@ def store_user_runtime_answer(module_id):
         if user_module is None:
             return jsonify({"error": "User module not found"}), 404
 
-        # Convert the string value back to the enum
-        user_module.submitted_runtime = RuntimeValues(submitted_runtime)
+        try:
+            # Convert the string value back to the enum
+            user_module.submitted_runtime = RuntimeValues(submitted_runtime)
+        except ValueError:
+            return jsonify({"error": "Invalid runtime value"}), 400
+
         db.session.commit()
+        logger.info(f"Runtime answer submitted successfully for module {module_id}")
         return jsonify({"message": "Runtime answer submitted successfully"}), 200
     except Exception as e:
         logger.error(

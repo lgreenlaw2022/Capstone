@@ -1,7 +1,7 @@
 import CodingChallengeCard from "@/components/CodingChallengeCard";
 import styles from "@/styles/CodingChallengeReview.module.css";
 import { useEffect, useState } from "react";
-import { getBonusCodingChallenges } from "@/api/api";
+import { getOpenBonusCodingChallenges } from "@/api/api";
 
 interface CodingChallenge {
     id: number;
@@ -24,16 +24,14 @@ export default function CodingChallengeReview() {
 
     const getChallenges = async () => {
         try {
-            const data = await getBonusCodingChallenges();
+            const data = await getOpenBonusCodingChallenges();
             setCodingChallenges(data);
         } catch (error) {
             console.error("Error fetching coding challenges:", error);
         }
     };
 
-    // fetch coding reviews
     useEffect(() => {
-        // fetch coding challenges
         getChallenges();
     }, []);
 
@@ -49,7 +47,6 @@ export default function CodingChallengeReview() {
                             module_id={challenge.id}
                             title={challenge.title}
                             unit={challenge.unit_title}
-                            completed={challenge.completed}
                         />
                     ))
                 ) : (
@@ -65,7 +62,6 @@ export default function CodingChallengeReview() {
                             module_id={challenge.id}
                             title={challenge.title}
                             unit={challenge.unit_title}
-                            completed={challenge.completed}
                         />
                     ))
                 ) : (
