@@ -40,33 +40,37 @@ export default function CodingChallengeReview() {
             <h3>Bonus Coding Challenges </h3>
             <div>
                 <p>Earn gems to unlock bonus code challenges</p>
-                {incompleteChallenges.length > 0 ? (
-                    incompleteChallenges.map((challenge) => (
-                        <CodingChallengeCard
-                            key={challenge.id}
-                            module_id={challenge.id}
-                            title={challenge.title}
-                            unit={challenge.unit_title}
-                        />
-                    ))
-                ) : (
-                    <p>No incomplete challenges available.</p>
-                )}
+                <div className={styles.challengeList}>
+                    {incompleteChallenges.length > 0 ? (
+                        incompleteChallenges.map((challenge) => (
+                            <CodingChallengeCard
+                                key={challenge.id}
+                                module_id={challenge.id}
+                                title={challenge.title}
+                                unit={challenge.unit_title}
+                            />
+                        ))
+                    ) : (
+                        <p>No incomplete challenges available.</p>
+                    )}
+                </div>
             </div>
             <div>
                 <h4>Completed</h4>
-                {completedChallenges.length > 0 ? (
-                    completedChallenges.map((challenge) => (
-                        <CodingChallengeCard
-                            key={challenge.id}
-                            module_id={challenge.id}
-                            title={challenge.title}
-                            unit={challenge.unit_title}
-                        />
-                    ))
-                ) : (
-                    <p>No completed challenges yet.</p>
-                )}
+                <div className={styles.challengeList}>
+                    {completedChallenges.length > 0 ? (
+                        completedChallenges.map((challenge) => (
+                            <CodingChallengeCard
+                                key={challenge.id}
+                                module_id={challenge.id}
+                                title={challenge.title}
+                                unit={challenge.unit_title}
+                            />
+                        ))
+                    ) : (
+                        <p>No completed challenges yet.</p>
+                    )}
+                </div>
             </div>
         </div>
     );

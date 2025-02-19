@@ -18,7 +18,7 @@ export default function WeeklyReviewCard({completed}: WeeklyReviewCardProps) {
 
     return (
         // TODO: conditional styling
-        <div className={styles.card} onClick={handleClick}>
+        <div className={styles.weeklyCard} onClick={handleClick}>
             <div className={styles.checkbox}>
                 {completed && (
                     <img
@@ -29,7 +29,7 @@ export default function WeeklyReviewCard({completed}: WeeklyReviewCardProps) {
                 )}
             </div>
             <div>
-                <h2>Weekly Review</h2>
+                <h3>Weekly Review</h3>
                 {completed ? <p>Completed</p> : <p>Not completed</p>}
             </div>
         </div>

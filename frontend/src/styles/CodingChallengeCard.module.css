@@ -1,4 +1,4 @@
-.card {
+.challengeCard {
     display: inline-flex;
     flex-direction: column;
     justify-content: center;
@@ -6,18 +6,23 @@
     gap: 1px;
     margin-top: 9px;
     margin-bottom: 14px;
+    max-width: 300px;
 
     border-radius: 12px;
     border: 2px solid #d9d9d9;
     background: #f7f7f7;
 }
 
-.card:hover {
+.challengeCard h4 {
+    font-size: 16px;
+}
+
+.challengeCard:hover {
     cursor: pointer;
 }
 
-.card p {
+.challengeCard p {
     color: #3c4dff;
     font-weight: 500; /* TODO: after loading fonts this should be 600 weight */
-    font-size: 12px;
+    font-size: 14px;
 }

@@ -18,7 +18,7 @@ export default function ConceptReviewCard({
         router.push(`/learn/challenge/${module_id}`);
     };
     return (
-        <div className={styles.card} onClick={handleClick}>
+        <div className={styles.challengeCard} onClick={handleClick}>
             <h4>{title}</h4>
             <p>{unit}</p>
         </div>

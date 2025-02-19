@@ -71,7 +71,7 @@ export default function Hints({ moduleId }: { moduleId: number }) {
                 (isModalOpen ? (
                     <div className={styles.modal}>
                         <h4>Unlock Hint</h4>
-                        <div className={styles.buttons}>
+                        <div className={styles.buttonGroup}>
                             <button type="button" onClick={handleBuy}>
                                 <Image
                                     src={gem}

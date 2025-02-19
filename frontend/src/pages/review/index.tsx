@@ -35,13 +35,15 @@ export default function Review() {
             <div>
                 <h3>Concept Review</h3>
                 {units.length === 0 && <p>No units to review</p>}
-                {units.map((unit, index) => (
-                    <ConceptReviewCard
-                        key={unit.id}
-                        unitId={unit.id}
-                        unitTitle={unit.title}
-                    />
-                ))}
+                <div className={styles.conceptReviewContainer}>
+                    {units.map((unit, index) => (
+                        <ConceptReviewCard
+                            key={unit.id}
+                            unitId={unit.id}
+                            unitTitle={unit.title}
+                        />
+                    ))}
+                </div>
             </div>
             <CodingChallengeReview />
         </div>
