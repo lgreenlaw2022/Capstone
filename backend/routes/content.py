@@ -442,11 +442,15 @@ def get_solution_module_for_challenge(module_id):
 
         if module_type == ModuleType.CHALLENGE:
             solution_module = Module.query.filter_by(
-                order=order + 1, module_type=ModuleType.CHALLENGE_SOLUTION
+                order=order + 1,
+                module_type=ModuleType.CHALLENGE_SOLUTION,
+                unit_id=module.unit_id,
             ).first()
         elif module_type == ModuleType.BONUS_CHALLENGE:
             solution_module = Module.query.filter_by(
-                order=order + 1, module_type=ModuleType.BONUS_SOLUTION
+                order=order + 1,
+                module_type=ModuleType.BONUS_SOLUTION,
+                unit_id=module.unit_id,
             ).first()
         else:
             logger.error(f"Module is not a challenge for module_id {module_id}")

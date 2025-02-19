@@ -427,7 +427,7 @@ quiz_questions:
   - module_title: "Linked Lists Recognition Quiz"
     title: 'When would the "temporary head" strategy be most appropriate?'
     options:
-      - option_text: "When you need to sort the linked list."
+      - option_text: "When detecting a cycle."
         is_correct: false
         option_type: CONCEPT
       - option_text: "When modifying or creating a new list."
@@ -551,14 +551,11 @@ quiz_questions:
       - option_text: "The number of nodes in the tree"
         is_correct: false
         option_type: CONCEPT
-      - option_text: "The number of edges on the longest path from the root to a leaf node"
-        is_correct: true
-        option_type: CONCEPT
       - option_text: "The number of levels in the tree"
         is_correct: false
         option_type: CONCEPT
       - option_text: "The number of edges from the root to the deepest leaf node"
-        is_correct: false
+        is_correct: true
         option_type: CONCEPT
 
   - module_title: "Binary Trees Concept Quiz"
@@ -567,7 +564,7 @@ quiz_questions:
       - option_text: "The number of nodes in the tree"
         is_correct: false
         option_type: CONCEPT
-      - option_text: "The number of edges on the longest path from the node to the root"
+      - option_text: "The number of edges from the root to the node"
         is_correct: true
         option_type: CONCEPT
       - option_text: "The number of children the node has"
