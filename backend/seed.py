@@ -5,6 +5,7 @@ from models import (
     Goal,
     Hint,
     TestCase,
+    TestCaseOutput,
     User,
     UserGoal,
     db,
@@ -182,6 +183,7 @@ def load_code_checks():
 
     data = load_yaml("seed_data/test_cases.yaml")["test_cases"]
     test_cases_to_add = []
+    test_case_outputs_to_add = []
     for module_data in data:
         module = module_title_to_module.get(module_data["module_title"])
         if module:
@@ -190,13 +192,24 @@ def load_code_checks():
                 test_case_instance = TestCase(
                     module_id=module.id,
                     input=test_case["input"],
-                    output=test_case["output"],
+                    # output=test_case["output"],
                 )
                 test_cases_to_add.append(test_case_instance)
+                db.session.add(test_case_instance)
+                db.session.flush()  # Ensure the test case id is available for outputs data
+
+                # add outputs for each test case
+                outputs = test_case["outputs"]
+                for output in outputs:
+                    test_case_output_instance = TestCaseOutput(
+                        test_case_id=test_case_instance.id,
+                        output=output,
+                    )
+                    test_case_outputs_to_add.append(test_case_output_instance)
         else:
             logger.error(f"Module with title {module_data['module_title']} not found.")
 
-    db.session.bulk_save_objects(test_cases_to_add)
+    db.session.bulk_save_objects(test_case_outputs_to_add)
     db.session.commit()
     logger.info("Code checks loaded successfully.")
 
@@ -336,7 +349,10 @@ def seed_data():
         # clear_users()
         # clear_user_units()
         # clear_user_modules()
-        # clear_user_badges()
+        db.session.query(UserUnit).filter_by(user_id=1).delete()
+        db.session.query(UserModule).filter_by(user_id=1).delete()
+        # db.session.commit()
+        clear_user_badges()
         # clear_daily_user_activity()
         # db.session.query(UserGoal).delete()
 
