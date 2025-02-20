@@ -18,8 +18,8 @@
 }
 
 .awardBadge {
-    width: 150px;
-    height: 150px;
+    width: 155px;
+    height: 155px;
 
     display: flex;
     flex-direction: column;
@@ -41,8 +41,7 @@
 .badgeText {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    text-align: center;
     gap: 2px;
-    align-self: stretch;
+    max-width: 135px;
 }

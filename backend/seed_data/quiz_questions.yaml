@@ -507,19 +507,6 @@ quiz_questions:
         option_type: CONCEPT
 
   - module_title: "Binary Trees Concept Quiz"
-    title: "What is the time complexity of searching for a value in a binary search tree?"
-    options:
-      - option_text: "O(1)"
-        is_correct: false
-        option_type: CONCEPT
-      - option_text: "O(log n)"
-        is_correct: true
-        option_type: CONCEPT
-      - option_text: "O(n)"
-        is_correct: false
-        option_type: CONCEPT
-
-  - module_title: "Binary Trees Concept Quiz"
     title: "What is a leaf node?"
     options:
       - option_text: "A node with no children"
@@ -656,9 +643,37 @@ quiz_questions:
         option_type: CONCEPT
 
 # Binary Search Tree Concept Quiz
-# TODO: FINISH BST Questions
   - module_title: "Binary Search Trees Concept Quiz"
     title: "What is the time complexity of searching for an element in a balanced binary search tree?"
+    options:
+      - option_text: "O(1)"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "O(log n)"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "O(n)"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Binary Search Trees Concept Quiz"
+    title: "What is the worst case time complexity of searching for an element in a binary search tree?"
+    options:
+      - option_text: "O(1)"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "O(log n)"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "O(n)"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "O(n log n)"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Binary Search Trees Concept Quiz"
+    title: "What is the average time complexity of inserting an element into a binary search tree?"
     options:
       - option_text: "O(1)"
         is_correct: false
@@ -697,6 +712,48 @@ quiz_questions:
         option_type: CONCEPT
 
   - module_title: "Binary Search Trees Concept Quiz"
+    title: "What is the process of deleting a node with two children in a binary search tree?"
+    options:
+      - option_text: "Replace the node with the minimum value in the right subtree"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "Replace the node with its left child"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "Replace the node with its right child"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "Replace the node with the maximum value in the left subtree"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Binary Search Trees Concept Quiz"
+    title: "How does the insertion operation work in a binary search tree?"
+    options:
+      - option_text: "The new node is added as a child of the root node"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "The new node is compared with existing nodes and inserted as a leaf node"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "The new node is added as a child of the leftmost node"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Binary Search Trees Concept Quiz"
+    title: "What is the average and worst-case time complexity for loading an unsorted array with 'n' elements into a binary search tree?"
+    options:
+      - option_text: "Average: O(n), Worst-case: O(n^2)"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "Average: O(n log n), Worst-case: O(n)"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "Average: O(n log n), Worst-case: O(n^2)"
+        is_correct: true
+        option_type: CONCEPT
+
+  - module_title: "Binary Search Trees Concept Quiz"
     title: "What is a potential drawback of using a binary search tree (BST) compared to other data structures?"
     options:
       - option_text: "BSTs have slower search times than arrays"
@@ -724,7 +781,6 @@ quiz_questions:
       - option_text: "When you need to store elements in a specific order"
         is_correct: true
         option_type: CONCEPT
-  # TODO: FINISH BST Questions
 
 # Binary Trees Recognition Quiz
   - module_title: "Binary Trees Recognition Quiz"

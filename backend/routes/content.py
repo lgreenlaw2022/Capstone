@@ -387,6 +387,13 @@ def mark_module_complete_and_open_next(module_id, user_id):
         today_activity.modules_completed += 1
         db.session.commit()
 
+        # check module count badges
+        badge_awarding_service = BadgeAwardingService(user_id)
+        badge_awarding_service.check_and_award_badges(
+            EventType.COMPLETE_MODULE,
+            user_modules_completed=get_num_modules_completed(user_id, unit_id),
+        )
+
         # If this module completes the unit, mark the unit as complete
         finished_unit = is_unit_newly_completed(unit_id, user_id)
 
@@ -508,8 +515,20 @@ def get_challenge_solution(module_id):
         )
         return jsonify({"error": str(e)}), 500
 
+def get_num_modules_completed(user_id, unit_id):
+    completed_modules_count = (
+        db.session.query(UserModule)
+        .filter(
+            UserModule.user_id == user_id,
+            UserModule.completed == True,
+        )
+        .count()
+    )
 
-def are_all_modules_completed(unit_id, user_id):
+    return completed_modules_count
+
+
+def are_all_unit_modules_completed(unit_id, user_id):
     logger.debug(
         f"Checking if all modules are completed for unit {unit_id} and user {user_id}"
     )
@@ -543,7 +562,7 @@ def is_unit_newly_completed(unit_id, user_id):
     if user_unit is not None and user_unit.completed:
         logger.debug(f"found UserUnit {unit_id} record as already completed")
         return False
-    if are_all_modules_completed(unit_id, user_id):
+    if are_all_unit_modules_completed(unit_id, user_id):
         logger.debug(f"Unit {unit_id} is newly completed")
         return True
     return False
