@@ -363,7 +363,7 @@ class TestCaseOutput(db.Model):
     __tablename__ = "test_case_outputs"
 
     id = db.Column(db.Integer, primary_key=True)
-    test_case_id = db.Column(db.Integer, db.ForeignKey("test_cases.id"), nullable=False)
+    test_case_id = db.Column(db.Integer, db.ForeignKey("test_cases.id"), nullable=False, index=True)
     output = db.Column(db.Text, nullable=False)
 
     test_case = db.relationship("TestCase", back_populates="outputs")

@@ -391,7 +391,7 @@ def mark_module_complete_and_open_next(module_id, user_id):
         badge_awarding_service = BadgeAwardingService(user_id)
         badge_awarding_service.check_and_award_badges(
             EventType.COMPLETE_MODULE,
-            user_modules_completed=get_num_modules_completed(user_id, unit_id),
+            user_modules_completed=get_num_modules_completed(user_id),
         )
 
         # If this module completes the unit, mark the unit as complete
@@ -515,7 +515,8 @@ def get_challenge_solution(module_id):
         )
         return jsonify({"error": str(e)}), 500
 
-def get_num_modules_completed(user_id, unit_id):
+
+def get_num_modules_completed(user_id):
     completed_modules_count = (
         db.session.query(UserModule)
         .filter(

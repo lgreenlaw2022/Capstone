@@ -13,6 +13,6 @@ class Solution:
         median_i = nums[len(nums) // 2]
         root = TreeNode(nums[median_i])
         # recursively build the left and right subtrees
-        root.left = sorted_array_to_BST(self, nums[:median_node])
-        root.right = sorted_array_to_BST(self, nums[median_node+1:])
+        root.left = sorted_array_to_BST(self, nums[:median_i])
+        root.right = sorted_array_to_BST(self, nums[median_i+1:])
         return root

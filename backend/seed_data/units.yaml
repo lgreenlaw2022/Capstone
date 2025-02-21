@@ -6,7 +6,7 @@ units:
   - title: "Linked Lists"
     order: 2
     course_id: 1
-  
+
   - title: "Binary Trees"
     order: 3
     course_id: 1

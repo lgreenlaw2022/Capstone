@@ -14,7 +14,7 @@
     style="width: 500px; height: auto"
   />
   <p>In python, each node of the tree can be represented as an object.</p>
-  <pre><code class="codeBlock">class TreeNode():
+  <pre><code class="codeBlock language-python">class TreeNode():
   def __init__(self, value=None, left=None, right=None):
     self.value = value
     self.left = left
@@ -41,7 +41,7 @@
     is the height of its root node and equivalently, the depth of its deepest
     node. Because each node can have at most two children, the height of a
     <i>balanced</i>
-    binary tree is O(logn) where n is the number of nodes in the tree.
+    binary tree is O(log n) where n is the number of nodes in the tree.
   </p>
 
   <p><strong>Real-life Example</strong></p>
@@ -153,7 +153,7 @@
   <p><strong>4. Level Order</strong></p>
   <p>
     In this strategy, all the nodes on the same level are traversed before their
-    children; a top down approach. This is a useful method when ssearching for a
+    children; a top down approach. This is a useful method when searching for a
     node that satisfies a specific property or you know the desired node will
     likely be in the top levels of the tree. This is most commonly implemented
     iteratively, rather than the recursive approaches above.
@@ -167,7 +167,7 @@ def printLevelOrder(root):
   queue.append(root)
   while queue:
       node = queue.popleft()
-      print(node.data)
+      print(node.value)
       # add left child to end of queue
       if(node.left != None): queue.append(node.left)
       # add right child to end of queue

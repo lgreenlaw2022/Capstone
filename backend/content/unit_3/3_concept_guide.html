@@ -127,9 +127,9 @@ def insert(node, val):
 
     # Find the node to be deleted
     if val &lt; root.val:
-        root.left = delete_node(root.left, key)
+        root.left = delete_node(root.left, val)
     elif val &gt; root.val:
-        root.right = delete_node(root.right, key)
+        root.right = delete_node(root.right, val)
     else:
         # Node with only one child or no child
         if root.left is None:

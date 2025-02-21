@@ -129,7 +129,6 @@ modules:
     order: 7
     module_type: CHALLENGE
 
-  # TODO: review if I'd like to keep "Solution" in the title
   - unit_title: "Binary Trees"
     title: "Invert Binary Tree Solution"
     order: 8

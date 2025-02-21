@@ -43,7 +43,6 @@ export default function Badges() {
     return (
         <div className={styles.badgesContainer}>
             <h2>Badges</h2>
-            {/* TODO: conditional badge styling for locked or unlocked? maybe not worth it at this MVP */}
             <div className={styles.typeGroup}>
                 <h3>Concepts</h3>
                 <div className={styles.badgeGroup}>

@@ -8,5 +8,5 @@ class Solution:
     def invert_tree(self, root):
 		if not root:
 			return	
-		root.right, root.left = invertTree(root.left), invertTree(root.right)
+		root.right, root.left = invert_tree(root.left), invert_tree(root.right)
 		return root

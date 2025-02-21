@@ -349,10 +349,10 @@ def seed_data():
         # clear_users()
         # clear_user_units()
         # clear_user_modules()
-        db.session.query(UserUnit).filter_by(user_id=1).delete()
-        db.session.query(UserModule).filter_by(user_id=1).delete()
+        # db.session.query(UserUnit).filter_by(user_id=1).delete()
+        # db.session.query(UserModule).filter_by(user_id=1).delete()
         # db.session.commit()
-        clear_user_badges()
+        # clear_user_badges()
         # clear_daily_user_activity()
         # db.session.query(UserGoal).delete()
 

@@ -11,7 +11,7 @@ badges:
     type: CONTENT
     criteria_expression: "user_unit_completed == True and unit_title == 'Linked Lists'"
     event_type: UNIT_COMPLETION # NOTE: new challenge, need to convert enums
-  
+
   - title: "Binary Trees"
     description: "Awarded for completing the binary trees unit."
     type: CONTENT
@@ -30,7 +30,7 @@ badges:
     type: AWARD
     criteria_expression: "quiz_score == 100"
     event_type: QUIZ_PERFECT_SCORE
-  
+
   - title: "Complete 5 Modules"
     description: "Awarded for completing 5 modules."
     type: AWARD
