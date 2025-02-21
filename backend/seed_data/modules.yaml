@@ -1,5 +1,5 @@
 modules:
-# UNIT 1: HASH MAPS
+  # UNIT 1: HASH MAPS
   - unit_title: "Hash Maps"
     title: "Hash Maps Concept Guide"
     order: 1
@@ -47,11 +47,11 @@ modules:
     module_type: BONUS_CHALLENGE
 
   - unit_title: "Hash Maps"
-    title: "Longest Substring Without Repeating Characters"
+    title: "Longest Substring Without Repeating Characters Solution"
     order: 2
     module_type: BONUS_SOLUTION
 
-# UNIT 2: LINKED LISTS
+  # UNIT 2: LINKED LISTS
   - unit_title: "Linked Lists"
     title: "Linked Lists Concept Guide"
     order: 1
@@ -66,7 +66,7 @@ modules:
     title: "Linked Lists Recognition Guide"
     order: 3
     module_type: RECOGNITION_GUIDE
-  
+
   - unit_title: "Linked Lists"
     title: "Linked Lists Recognition Quiz"
     order: 4
@@ -78,7 +78,7 @@ modules:
     module_type: CHALLENGE
 
   - unit_title: "Linked Lists"
-    title: "Remove Nth Node From End of List"
+    title: "Remove Nth Node From End of List Solution"
     order: 6
     module_type: CHALLENGE_SOLUTION
 
@@ -87,8 +87,60 @@ modules:
     title: "Reverse Linked List"
     order: 1
     module_type: BONUS_CHALLENGE
-  
+
   - unit_title: "Linked Lists"
-    title: "Reverse Linked List"
+    title: "Reverse Linked List Solution"
+    order: 2
+    module_type: BONUS_SOLUTION
+
+  # UNIT 3: BINARY TREES
+  - unit_title: "Binary Trees"
+    title: "Binary Trees Concept Guide"
+    order: 1
+    module_type: CONCEPT_GUIDE
+
+  - unit_title: "Binary Trees"
+    title: "Binary Trees Concept Quiz"
+    order: 2
+    module_type: QUIZ
+
+  - unit_title: "Binary Trees"
+    title: "Binary Search Trees Concept Guide"
+    order: 3
+    module_type: CONCEPT_GUIDE
+
+  - unit_title: "Binary Trees"
+    title: "Binary Search Trees Concept Quiz"
+    order: 4
+    module_type: QUIZ
+
+  - unit_title: "Binary Trees"
+    title: "Binary Trees Recognition Guide"
+    order: 5
+    module_type: RECOGNITION_GUIDE
+
+  - unit_title: "Binary Trees"
+    title: "Binary Trees Recognition Quiz"
+    order: 6
+    module_type: QUIZ
+
+  - unit_title: "Binary Trees"
+    title: "Invert Binary Tree"
+    order: 7
+    module_type: CHALLENGE
+
+  - unit_title: "Binary Trees"
+    title: "Invert Binary Tree Solution"
+    order: 8
+    module_type: CHALLENGE_SOLUTION
+
+  # Bonus challenges
+  - unit_title: "Binary Trees"
+    title: "Convert Sorted Array to Binary Search Tree"
+    order: 1
+    module_type: BONUS_CHALLENGE
+
+  - unit_title: "Binary Trees"
+    title: "Convert Sorted Array to Binary Search Tree Solution"
     order: 2
     module_type: BONUS_SOLUTION

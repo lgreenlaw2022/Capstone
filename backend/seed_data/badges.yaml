@@ -3,14 +3,20 @@ badges:
   - title: "Hash Maps"
     description: "Awarded for completing the hash tables unit."
     type: CONTENT
-    criteria_expression: "user_unit.completed == True and user_unit.order == 1"
+    criteria_expression: "user_unit_completed == True and unit_title == 'Hash Maps'"
     event_type: UNIT_COMPLETION # NOTE: new challenge, need to convert enums
 
   - title: "Linked Lists"
     description: "Awarded for completing the linked lists unit."
     type: CONTENT
-    criteria_expression: "user_unit.completed == True and user_unit.order == 2"
+    criteria_expression: "user_unit_completed == True and unit_title == 'Linked Lists'"
     event_type: UNIT_COMPLETION # NOTE: new challenge, need to convert enums
+
+  - title: "Binary Trees"
+    description: "Awarded for completing the binary trees unit."
+    type: CONTENT
+    criteria_expression: "user_unit_completed == True and unit_title == 'Binary Trees'"
+    event_type: UNIT_COMPLETION
 
 # Award Badges
   - title: "30 day streak"
@@ -19,8 +25,14 @@ badges:
     criteria_expression: "user.streak >= 30"
     event_type: STREAK_ACHIEVEMENT
 
-  - title: "Quiz Master"
+  - title: "Perfect Quiz"
     description: "Awarded for scoring 100% on a quiz."
     type: AWARD
     criteria_expression: "quiz_score == 100"
     event_type: QUIZ_PERFECT_SCORE
+
+  - title: "Complete 5 Modules"
+    description: "Awarded for completing 5 modules."
+    type: AWARD
+    criteria_expression: "user_modules_completed >= 5"
+    event_type: COMPLETE_MODULE

@@ -1,0 +1,89 @@
+<div class="guideContainer">
+  <h1>
+    Solution Walkthrough: Convert Sorted Array to Balanced Binary Search Tree
+  </h1>
+
+  <h2>Understand the problem</h2>
+  <p><strong>Clarifying Questions</strong></p>
+  <dl>
+    <dt>Can the array be empty?</dt>
+    <dd>No.</dd>
+  </dl>
+
+  <p><strong>Test Cases</strong></p>
+  <p>
+    <img
+      src="/assets/figures/unit-3-bonus-1-tc-1.png"
+      alt="test case 1 input visual"
+      style="width: 650px; height: auto"
+    />
+    Input: <code>nums = [-10,-3,0,5,9]</code> <br />
+    Output: <code>[0,-3,9,-10,null,5]</code> or
+    <code>[0,-10,5,null,-3,null,9]</code>
+  </p>
+  <p>
+    <img
+      src="/assets/figures/unit-3-bonus-1-tc-12.png"
+      alt="test case 2 input visual"
+      style="width: 650px; height: auto"
+    />
+    Input: <code>nums = [1,3]</code> <br />
+    Output: <code>[3,1]</code> or <code>[1,null,3]</code>
+  </p>
+  <p>
+    Input: <code>nums = [1]</code> <br />
+    Output: <code>[1]</code>
+  </p>
+
+  <h2>Match</h2>
+  <p><strong>Common solutions to binary tree problems:</strong></p>
+  <ol>
+    <li>
+      Identify the appropriate Tree Traversal: Pre-Order, In-Order, Post-Order,
+      Level-Order: the input is an array so this is not applicable.
+    </li>
+    <li>
+      Use a binary search tree to find an element or sort a list: we will use a
+      BST
+    </li>
+    <li>
+      Use definitions of sorted arrays and BSTs: Since we know the data
+      structures for this problem, we need to find a root of the tree that will
+      leave the BST balanced.
+    </li>
+  </ol>
+
+  <h2>Plan</h2>
+  <p>
+    If we pick the median of the array as our root, there will be an equal
+    number of nodes in each subtree. We can recursively find the median of the
+    nodes in the array to dictate the order they are added to the BST. This
+    ensures a balanced tree.
+  </p>
+  <ol role="list" aria-label="Solution steps">
+    <li>Base case: if the list is empty, return None</li>
+    <li>
+      recursively find the median of the array
+      <ol>
+        <li>get the index of the new root node, aka the median of the list</li>
+        <li>
+          build the subtrees by recursively calling the left and right halves of
+          the array
+        </li>
+      </ol>
+    </li>
+    <li>return the root</li>
+  </ol>
+
+  <h2>Complexity Analysis</h2>
+  <p><strong>Time Complexity:</strong></p>
+  <p>O(n) because there is one recursive call to add a value to the BST.</p>
+  <p><strong>Space Complexity:</strong></p>
+  <p>
+    O(n) because we need to store each value from the array as a node in the
+    BST.
+  </p>
+
+  <!-- TODO: this is also repeated in each one, should it still be here? Maybe I will want to change the position of it in some challenges? -->
+  <h2>Code Solution</h2>
+</div>

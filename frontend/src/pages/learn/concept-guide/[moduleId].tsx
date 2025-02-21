@@ -38,6 +38,7 @@ const ConceptGuidePage = () => {
             {content ? (
                 <div>
                     <div dangerouslySetInnerHTML={{ __html: content }} />
+                    {/* TODO: this button doesn't have proper margins now */}
                     <div>
                         <button onClick={handleComplete}>Complete</button>
                     </div>

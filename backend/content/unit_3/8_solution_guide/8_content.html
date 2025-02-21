@@ -1,0 +1,84 @@
+<div class="guideContainer">
+  <h1>Solution Walkthrough: Invert Binary Tree</h1>
+
+  <h2>Understand the problem</h2>
+  <p><strong>Clarifying Questions</strong></p>
+  <dl>
+    <dt>Can the tree be empty?</dt>
+    <dd>Yes.</dd>
+  </dl>
+  <dl>
+    <dt>Can I assume the tree will be complete?</dt>
+    <dd>No, a node may have fewer than 2 children.</dd>
+  </dl>
+
+  <p><strong>Test Cases</strong></p>
+  <p>
+    <img
+      src="/assets/figures/unit-3-challenge-7-tc-1.png"
+      alt="test case 1 visual"
+      style="width: 500px; height: auto"
+    />
+    <br/>
+    Input: <code>root = [4,2,7,1,3,6,9]</code> <br />
+    Output: <code>[4,7,2,9,6,3,1]</code>
+  </p>
+  <p>
+    <img
+      src="/assets/figures/unit-3-challenge-7-tc-2.png"
+      alt="test case 2 visual"
+      style="width: 500px; height: auto"
+    />
+    <br/>
+    Input: <code>root = [2,1,3]</code><br />
+    Output: <code>[2,3,1]</code>
+  </p>
+  <p>
+    Input: <code>root = []</code><br />
+    Output: <code>[]</code>
+  </p>
+
+  <h2>Match</h2>
+  <p><strong>Common solutions to binary tree problems:</strong></p>
+  <ol>
+    <li>
+      Identify the appropriate Tree Traversal: Pre-Order, In-Order, Post-Order,
+      Level-Order:
+      <ul>
+        <li>
+          Since we need to swap the children of each node all the way down the
+          tree, we should recursively swap nodes. A Pre-Order traversal would be
+          appropriate.
+        </li>
+        <li>
+          We could swap each node by level. A level-order traversal using a
+          queue would be appropriate. However, this would be a more complex
+          approach.
+        </li>
+      </ul>
+    </li>
+    <li>
+      Use a binary search tree to find an element or sort a list: Loading the
+      nodes into a binary search tree will lose the order.
+    </li>
+  </ol>
+
+  <h2>Plan</h2>
+  <p>Perform a recursive pre order traversal.</p>
+  <ol role="list" aria-label="Solution steps">
+    <li>Base case is a null node</li>
+    <li>Switch left and right child nodes</li>
+    <li>return node</li>
+  </ol>
+
+  <h2>Complexity Analysis</h2>
+  <p><strong>Time Complexity:</strong></p>
+  <p>O(n) because we visit each node in the binary tree.</p>
+  <p><strong>Space Complexity:</strong></p>
+  <p>
+    O(1) excluding the recursive stack, O(n) including an unbalanced tree’s
+    recursive stack.
+  </p>
+
+  <h2>Code Solution</h2>
+</div>

@@ -32,3 +32,24 @@ hints:
         order: 1
       - text: Consider using three pointers (prev, current, and next) to systematically reverse the list's links.
         order: 2
+
+# Binary Trees
+  - module_type: "CHALLENGE"
+    module_title: "Invert Binary Tree"
+    hints:
+      - text: "Use a pre-order traversal to invert the tree."
+        order: 1
+      - text: "Use a recursive approach to swap each node's children."
+        order: 2
+      - text: "Remember to handle the base case of a null node."
+        order: 3
+
+  - module_type: "BONUS_CHALLENGE"
+    module_title: "Convert Sorted Array to Binary Search Tree"
+    hints:
+      - text: "Use the median element as the root of the tree."
+        order: 1
+      - text: "Use a recursive approach to build the tree"
+        order: 2
+      - text: "Remember to handle the base case of an empty array."
+        order: 3

@@ -3,7 +3,11 @@ import { useEffect, useState, useRef } from "react";
 import Editor, { OnMount } from "@monaco-editor/react";
 import * as monaco from "monaco-editor";
 
-import { getModuleContent, submitCompleteModule } from "../../../api/api";
+import {
+    getCodeChallengeSolution,
+    getModuleContent,
+    submitCompleteModule,
+} from "../../../api/api";
 import styles from "@/styles/Content.module.css";
 import CodeEditorInstructions from "@/components/CodeEditorInstructions";
 import Hints from "@/components/Hints";
@@ -45,7 +49,15 @@ const CodeChallengePage: React.FC = () => {
         try {
             if (testCasesCompleted) {
                 await submitCompleteModule(Number(moduleId));
-                router.push("/learn");
+                const solutionData = await getCodeChallengeSolution(
+                    Number(moduleId)
+                );
+                if (solutionData.moduleType === "BONUS_CHALLENGE") {
+                    // TODO: not sure about enum use here
+                    router.push("/review");
+                } else {
+                    router.push("/learn");
+                }
             }
         } catch (error) {
             console.error("Error setting module as complete:", error);
@@ -58,7 +70,11 @@ const CodeChallengePage: React.FC = () => {
                 setShowWarning(true);
             } else {
                 await submitCompleteModule(Number(moduleId));
-                const solutionModuleId = Number(moduleId) + 1; // TODO: this is a placeholder, need to get the actual solution module id
+                // TODO: better to call this twice as needed? or should I call it when the component mounts?
+                const solutionData = await getCodeChallengeSolution(
+                    Number(moduleId)
+                );
+                const solutionModuleId = solutionData.solutionId;
                 router.push(`/learn/challenge-solution/${solutionModuleId}`);
             }
         } catch (error) {

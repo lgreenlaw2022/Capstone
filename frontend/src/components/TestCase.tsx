@@ -4,14 +4,14 @@ import styles from "@/styles/CodeCheck.module.css";
 
 interface TestCaseProps {
     input: string;
-    output: string;
+    outputs: string[];
     verified: boolean;
-    onCheck: (userOutput: string, correctOutput: string) => void;
+    onCheck: (userOutput: string, correctOutputs: string[]) => void;
 }
 
 export default function TestCase({
     input,
-    output,
+    outputs,
     verified,
     onCheck,
 }: TestCaseProps) {
@@ -22,7 +22,7 @@ export default function TestCase({
     };
 
     const handleCheck = () => {
-        onCheck(userOutput, output);
+        onCheck(userOutput, outputs);
     };
 
     return (
@@ -34,7 +34,7 @@ export default function TestCase({
                 <p>Output:</p>
                 <input
                     type="text"
-                    value={verified ? output : userOutput}
+                    value={verified ? outputs[0] : userOutput} // TODO: this default might not actually match what they submitted
                     onChange={handleChange}
                     placeholder="Enter your output"
                     disabled={verified}

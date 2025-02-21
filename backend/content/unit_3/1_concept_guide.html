@@ -1,0 +1,202 @@
+<div class="guideContainer">
+  <h1>Concept Guide: Binary Trees</h1>
+  <p>
+    Binary trees are most commonly used as Binary Search Trees which will be
+    introduced later in this unit. We’ll start with a foundation in Binary
+    Trees. A binary tree is a data structure that starts with a root node and
+    every node can have up to two children. If there are no child nodes, the
+    left and right children point to null. Nodes with no children are referred
+    to as leaf nodes.
+  </p>
+  <img
+    src="/assets/figures/binary-tree.png"
+    alt="Binary tree image"
+    style="width: 500px; height: auto"
+  />
+  <p>In python, each node of the tree can be represented as an object.</p>
+  <pre><code class="codeBlock language-python">class TreeNode():
+  def __init__(self, value=None, left=None, right=None):
+    self.value = value
+    self.left = left
+    self.right = right</code></pre>
+
+  <p>Other important vocabulary includes:</p>
+  <ul>
+    <li>
+      <strong>order (of node or tree): </strong>a position in a list that
+      contains the value of whatever is stored at the position as well as at
+      least one reference to another node.
+    </li>
+    <li>
+      <strong>depth of a node: </strong>number of edges from the node to the
+      tree's root node. A root node has a depth of 0.
+    </li>
+    <li>
+      <strong>height of a node: </strong>number of edges on the longest
+      path from the node to a leaf. A leaf node has a height of 0.
+    </li>
+  </ul>
+  <p>
+    The height and depth <i>of a tree</i> are equivalent. The height of a tree
+    is the height of its root node and equivalently, the depth of its deepest
+    node. Because each node can have at most two children, the height of a
+    <i>balanced</i>
+    binary tree is O(log n) where n is the number of nodes in the tree.
+  </p>
+
+  <p><strong>Real-life Example</strong></p>
+  <p>
+    An example of a binary tree in real life is a decision tree where are two
+    choices to follow at each path. Below is an example of a decision tree for
+    buying a car. We see that the outcome of yes or no for the attribute leads
+    to 1, 2, or 0 children at the leaf nodes. Binary trees are structured
+    similarly, where each node holds data, and depending on the goal of the
+    problem, we might choose to follow the left or right child node.
+  </p>
+  <img
+    src="/assets/figures/car-decision-tree.png"
+    alt="Buying a car decision tree image"
+    style="width: 500px; height: auto"
+  />
+
+  <p><strong>Categories of Binary Trees</strong></p>
+  <p>
+    Binary Trees can be classified into types based on multiple factors. These
+    categories are important to understand as you may be asked to evaluate or
+    use a specific type of tree in an interview question.
+  </p>
+  <ul>
+    <li><strong>Full binary tree</strong>: every node has 0 or 2 children</li>
+    <li>
+      <strong>Degenerate binary tree</strong>: every parent node has only one
+      child node. This tree is effectively a linked list.
+    </li>
+    <li>
+      <strong>Skewed binary tree</strong>: a specific class of degenerate binary
+      trees. The tree only has left nodes (left-skewed) or right nodes
+      (right-skewed).
+    </li>
+    <li>
+      <strong>Complete binary tree</strong>: every level of the tree is fully
+      filled except possibly for the last level. The last level is filled from
+      left to right.
+    </li>
+    <li>
+      <strong>Perfect binary tree</strong>: all internal nodes have 2 children
+      and all the leaf nodes are at the same depth.
+    </li>
+    <li>
+      <strong>Balanced binary tree</strong>: the height of the left and right
+      subtrees of every node differs by at most 1.
+    </li>
+  </ul>
+  <img
+    src="/assets/figures/binary-tree-categories.png"
+    alt="Figure visualizing binary tree categories"
+    style="width: 650px; height: auto"
+  />
+
+  <h2>Traversing a Binary Tree</h2>
+  <p>
+    There are multiple ways to traverse binary trees. Choosing the right
+    traversal is critical to solving a problem efficiently. The traversal
+    methods can be divided into two categories: Depth First Search (DFS) and
+    Breadth First Search (BFS).
+  </p>
+  <p><strong>Depth First Search Traversal Methods</strong></p>
+  <p><strong>1. Preorder: root-left-right</strong></p>
+  <p>
+    This strategy is root first. Each root node is processed before it’s
+    children are. The left child nodes are then traversed before the right child
+    nodes. This strategy is helpful when you want to copy a tree.
+  </p>
+  <pre><code class="codeBlock">def printPreorder(node):
+  if node:
+    print(node.value)
+    # traverse left subtree
+    printPreorder(node.left)
+    # traverse right subtree
+    printPreorder(node.right)</code></pre>
+
+  <p><strong>2. Inorder: left-root-right</strong></p>
+  <p>
+    This is the most commonly used and arguably the most important traversal
+    method. An in order traversal first visits the left nodes, then the root
+    node, and then the right nodes. This traversal works from the bottom up:
+    leaf nodes to root node. This is a valuable strategy for Binary Search Trees
+    (introduced next) because it returns the nodes in sorted order.
+  </p>
+  <pre><code class="codeBlock">def printInorder(node):
+  if node:
+    # traverse left subtree
+    printInorder(node.left)
+    print(node.value)
+    # traverse right subtree
+    printInorder(node.right)</code></pre>
+
+  <p><strong>3. Postorder: left-right-root</strong></p>
+  <p>
+    This strategy is root last. Each root node is processed after it’s children
+    are. The left child nodes are traversed before the right child nodes. This
+    strategy is helpful when you want to delete a tree. It is also a bottom-up
+    strategy; use this for problems where you want to inspect the leaves first.
+  </p>
+  <pre><code class="codeBlock">def printPostorder(node):
+  if node:
+    # traverse left subtree
+    printPostorder(node.left)
+    # traverse right subtree
+    printPostorder(node.right)
+    print(node.value)</code></pre>
+
+  <p><strong>Breadth First Search Method</strong></p>
+  <p><strong>4. Level Order</strong></p>
+  <p>
+    In this strategy, all the nodes on the same level are traversed before their
+    children; a top down approach. This is a useful method when searching for a
+    node that satisfies a specific property or you know the desired node will
+    likely be in the top levels of the tree. This is most commonly implemented
+    iteratively, rather than the recursive approaches above.
+  </p>
+  <pre><code class="codeBlock">from collections import deque
+def printLevelOrder(root):
+  queue = deque()
+  if (root == None):
+      return
+  # add root to queue
+  queue.append(root)
+  while queue:
+      node = queue.popleft()
+      print(node.value)
+      # add left child to end of queue
+      if(node.left != None): queue.append(node.left)
+      # add right child to end of queue
+      if(node.right != None): queue.append(node.right)</code></pre>
+
+  <p>
+    This graphic shows how each traversal would progress through the binary
+    tree.
+  </p>
+  <img
+    src="/assets/figures/binary-tree-traversal.png"
+    alt="Figure showing binary tree traversal orders"
+    style="width: 600px; height: auto"
+  />
+  <p><strong>Traversal Runtimes</strong></p>
+  <p>
+    Every method has an O(n) runtime where n is the number of nodes because each
+    node is visited once.
+  </p>
+
+  <h2>Key Takeaways</h2>
+  <ul>
+    <li>
+      Binary trees are trees where every node has at most two child nodes.
+    </li>
+    <li>The height of a balanced binary tree is O(logn)</li>
+    <li>
+      There are four common methods of tree traversal: preorder, inorder,
+      postorder, and level order
+    </li>
+  </ul>
+</div>

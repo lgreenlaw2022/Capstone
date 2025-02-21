@@ -1,0 +1,71 @@
+<div class="guideContainer">
+    <h1>Recognition Guide: Binary Trees
+    </h1>
+    <div>
+        <strong>Signs you may want to use binary trees</strong>
+        <ol>
+            <li>
+                Use cases of binary trees include graph problems, routing, and decision trees
+            </li>
+            <li>
+                BSTs are useful in situations where you want efficient search operations
+            </li>
+        </ol>
+
+        <div>
+            <strong><i>Do not use if:</i></strong>
+            <ol>
+                <li>Storing data in an array would be less complex</li>
+            </ol>
+        </div>
+
+        <strong>Deciding between traversal strategies</strong>
+        <ol>
+            <li>
+                Use a depth-first search if you want to explore as far as possible along each branch before backtracking
+            </li>
+            <li>
+                Use pre-order traversal if you want to copy the tree
+            </li>
+            <li>
+                Use post-order traversal if you want to delete the tree.
+            </li>
+            <li>
+                Use in-order traversal if you want to get the sorted order of elements from a BST
+            </li>
+            <li>
+                Use level order traversal when you want to search for a node that satisfies a specific property
+            </li>
+        </ol>
+    </div>
+
+    <h2>Questions to ask in an interview</h2>
+    <div>
+        <ol>
+            <li>
+                Can I assume the tree is balanced or complete?
+                <ul>
+                    <li>This question is important for clarifying the run time of certain operations</li>
+                </ul>
+            </li>
+            <li>
+                What kind of tree is it? Binary tree? BST?
+            </li>
+            <li>
+                Can the tree be empty?
+            </li>
+            <li>
+                Do we know the order in which elements are added to the tree?
+                <ul>
+                    <li>This can also provide insight into the height of a tree. For example, if you have a mostly sorted array, a BST is going to be right skewed. In this case, it may be better not to use a tree. </li>
+                </ul>
+            </li>
+            <li>
+                Is the input array sorted?
+                <ul>
+                    As described in the previous question, we may opt to not use a tree when building it from a mostly sorted array. Only build BSTs when you need the lookup advantages. 
+                </ul>
+            </li>
+        </ol>
+    </div>
+</div>

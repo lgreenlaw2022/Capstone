@@ -1,0 +1,177 @@
+<div class="guideContainer">
+  <h1>Concept Guide: Binary Search Trees</h1>
+  <p>
+    Binary search trees (BSTs) are one of the most commonly used binary trees.
+    BSTs are binary trees where every left child has a value less than the
+    parent node and every right child has a value greater than the parent node.
+    This results in a recursive structure where every left and right subtree
+    must also be a binary search tree. This structure leads to efficient
+    searching, insertion, and deletion operations. The figure below is a BST.
+    Observe how the smallest value in the tree is the leftmost node and the
+    largest value in the tree is the rightmost node. This data structure is
+    helpful for storing data in a sorted order.
+  </p>
+  <img
+    src="/assets/figures/binary-search-tree.png"
+    alt="Binary search tree image"
+    style="width: 550px; height: auto"
+  />
+  <p>
+    To retrieve the elements in ascending order from a BST, we can perform an
+    in-order traversal. In-order traversals examine the left child, the root
+    node, and then the right child. The resulting sorted array is what gives
+    this traversal method its name.
+  </p>
+
+  <h2>Common Operations</h2>
+  <h3>Insertion</h3>
+  <p>
+    A new item is always added as a leaf node. To determine its placement, we
+    use the rules of BSTs to traverse down from the root until the value can be
+    added as a child of a leaf node. Below is the code demonstrating insertion.
+  </p>
+  <pre><code class="codeBlock">class Node:
+  def __init__(self, val):
+      self.val = val
+      self.left = None
+      self.right = None
+
+def insert(node, val):
+    # If the tree is empty, return a new node
+    if node is None:
+        return Node(val)
+
+    # Otherwise, recur down the tree
+    if val &lt; node.val:
+        node.left = insert(node.left, val)
+    elif val &gt; node.val:
+        node.right = insert(node.right, val)
+
+    return node
+    </code></pre>
+  <p><strong>Complexity</strong></p>
+  <p>
+    In a balanced tree, the height of the left and right subtree of any node do
+    not differ by more than one. Most BST problems begin with a series of
+    insertions to build the tree. Given the order of the values, its possible
+    the result is an unbalanced tree. Note, there are self-balancing binary
+    trees that adjust after each insertion or deletion to maintain a height of
+    O(log(n)). These include AVL trees and Red Black trees.
+  </p>
+  <p>
+    In the best case scenario, the tree is perfectly balanced. Worst case, the
+    tree is completely skewed. In the average case, the tree is balanced.
+    Inserting a single node in a balanced tree of height O(log(n)) takes
+    O(log(n)) time. Thus, the time to build a tree is O(n log(n)) as every node
+    must be inserted. In the worst case, each insertion takes O(n) time.
+  </p>
+
+  <h2>Search</h2>
+  <p>
+    BSTs are an ideal data structure for searching. Start at the root node and
+    traverse down. Given a balanced tree, for each node we examine, we can
+    eliminate the left or right subtree until the desired node is found. Below
+    is the code for searching a BST.
+  </p>
+  <pre><code class="codeBlock">def search(root, val):
+    # Base Case: root is null or val is present at root
+    if root is None or root.val == val:
+        return root
+
+    # val is greater than root's val
+    if root.val &lt; val:
+        return search(root.right, val)
+
+    # val is smaller than root's val
+    return search(root.left, val)
+  </code></pre>
+  <p><strong>Complexity</strong></p>
+  <p>
+    Similar to insertion, the complexity is O(h) where h is the height of the
+    tree. The best case scenario is when the node is the root: O(1). Otherwise,
+    on average the complexity is O(log(n))
+  </p>
+
+  <h2>Deletion</h2>
+  <p>
+    There are three possible cases that may occur when trying to delete a node.
+    It could be a leaf node, have one child, or two children. In every case, you
+    must search for the node first.
+  </p>
+  <p>
+    <ol>
+      <li>If it is a leaf node, we can simply delete it.</li>
+      <li>
+        If it has one child, we can replace the node with its child.
+      </li>
+      <li>
+        If it has two children, we must find the node’s in-order successor. This
+        is the smallest node in the right subtree. We then replace the node with
+        the in-order successor and delete the in-order successor. This is shown in the screenshot below.
+    </ol>
+    <p class="highlight">
+      In-order successor: The next greatest value in the tree. The in-order successor is the leftmost node in the right subtree.
+    </p>
+    <img
+    src="/assets/figures/binary-search-tree-delete-node.png"
+    alt="Figure showing before and after of deleting a root node in a balanced binary search tree."
+    style="width: 350px; height: auto"
+    />
+  </p>
+  <p>
+    Below is the code for deleting a node in a BST.
+  </p>
+  <pre><code class="codeBlock">def delete_node(root, val):
+    if root is None:
+        return root
+
+    # Find the node to be deleted
+    if val &lt; root.val:
+        root.left = delete_node(root.left, val)
+    elif val &gt; root.val:
+        root.right = delete_node(root.right, val)
+    else:
+        # Node with only one child or no child
+        if root.left is None:
+            return root.right
+        elif root.right is None:
+            return root.left
+
+        # Node with two children: get the inorder successor
+        temp = find_min(root.right)
+
+        # Copy the inorder successor's content to this node
+        root.val = temp.val
+
+        # Delete the inorder successor
+        root.right = delete_node(root.right, temp.val)
+
+    return root
+
+def find_min(node):
+    current = node
+    while current.left is not None:
+        current = current.left
+    return current
+  </code></pre>
+  <p><strong>Complexity</strong></p>
+  <p>
+    First we search for the node which takes maximum O(n) time. The complexity of deletion is also O(h) as we may need to search the tree again for the in-order successor. Thus, the time complexity of deleting a node from a BST is on average O(log(n)), and in the worst case, O(n). The code above is implemented using O(1) space. 
+  </p>
+  
+  <h2>Key Takeaways</h2>
+  <ul>
+    <li>
+      Binary search trees require that for each node, all nodes to the left are less than or equal to it, and all nodes to the right are greater than it.
+    </li>
+    <li>
+      On average, lookups, insertions, and deletions in BST take O(log(n)) time.
+    </li>
+    <li>
+      Common operations on BSTs include insertion, search, and deletion.
+    </li>
+    <li>
+      The in-order traversal of a BST results in a sorted array.
+    </li>
+  </ul>
+</div>

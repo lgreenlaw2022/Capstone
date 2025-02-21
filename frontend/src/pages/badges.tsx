@@ -41,12 +41,11 @@ export default function Badges() {
     }, []);
 
     return (
-        <div className={styles.badgeContainer}>
+        <div className={styles.badgesContainer}>
             <h2>Badges</h2>
-            {/* TODO: conditional badge styling for locked or unlocked? maybe not worth it at this MVP */}
-            <div className={styles.badgeGroup}>
+            <div className={styles.typeGroup}>
                 <h3>Concepts</h3>
-                <div>
+                <div className={styles.badgeGroup}>
                     {conceptBadges.map((badge, index) => (
                         <Badge
                             key={badge.id}
@@ -59,9 +58,9 @@ export default function Badges() {
                     )}
                 </div>
             </div>
-            <div className={styles.badgeGroup}>
+            <div className={styles.typeGroup}>
                 <h3>Awards</h3>
-                <div>
+                <div className={styles.badgeGroup}>
                     {awardBadges.map((badge, index) => (
                         <Badge
                             key={badge.id}

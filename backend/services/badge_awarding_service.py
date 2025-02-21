@@ -3,7 +3,7 @@ import logging
 from models import db, UserBadge, Badge
 
 logger = logging.getLogger(__name__)
-
+logger.setLevel(logging.DEBUG)
 
 class BadgeAwardingService:
     def __init__(self, user_id):
@@ -13,8 +13,7 @@ class BadgeAwardingService:
         # Get all badges for the event type
         badges = Badge.query.filter_by(event_type=event_type).all()
         for badge in badges:
-            logger.debug("Evaluating badge criteria for badge: %s", badge.title)
-            if self.evaluate_criteria(badge.criteria_expression, **kwargs):
+            if self.evaluate_criteria(badge.criteria_expression, event_type=event_type, **kwargs):
                 self.award_badge(badge)
 
     def award_badge(self, badge):
@@ -40,5 +39,13 @@ class BadgeAwardingService:
         logger.info(f"Badge awarded to user {self.user_id}: {badge.title}")
 
     def evaluate_criteria(self, criteria_expression, **kwargs):
-        # Evaluate the criteria expression dynamically
-        return eval(criteria_expression, {"user": self.user_id, **kwargs})
+        # Create evaluation context with user and all kwargs
+        context = {"user": self.user_id}
+        context.update(kwargs)
+        
+        try:
+            # Evaluate the criteria in the context
+            return eval(criteria_expression, {}, context)
+        except Exception as e:
+            logger.error(f"Error evaluating criteria '{criteria_expression}': {str(e)}")
+            return False

@@ -3,3 +3,8 @@
     flex-direction: column;
     gap: 10px;
 }
+
+.challengeList {
+    display: flex;
+    gap: 14px;
+}

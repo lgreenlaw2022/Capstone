@@ -1,7 +1,15 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import CheckConstraint
 from datetime import datetime, timezone
-from enums import BadgeType, MetricType, TimePeriodType, ModuleType, QuizType, EventType, RuntimeValues
+from enums import (
+    BadgeType,
+    MetricType,
+    TimePeriodType,
+    ModuleType,
+    QuizType,
+    EventType,
+    RuntimeValues,
+)
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.orm import validates
 
@@ -126,7 +134,6 @@ class UserGoal(db.Model):
     # to do this I'll need some delete/cascade rules
     __tablename__ = "user_goals"
 
-    # TODO: when developing queries, check if these columns are in the right tables for efficiency
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), primary_key=True)
     goal_id = db.Column(db.Integer, db.ForeignKey("goals.id"), primary_key=True)
     date_assigned = db.Column(db.Date, default=current_date, primary_key=True)
@@ -180,7 +187,9 @@ class Module(db.Model):
     title = db.Column(db.String(255), nullable=False)
     module_type = db.Column(db.Enum(ModuleType), nullable=False, index=True)
     order = db.Column(db.Integer)  # order in unit
-    target_runtime = db.Column(db.Enum(RuntimeValues), nullable=True)  # Only for challenges
+    target_runtime = db.Column(
+        db.Enum(RuntimeValues), nullable=True
+    )  # Only for challenges
 
     # TODO: figure out what delete to use here
     unit = db.relationship("Unit", back_populates="modules")
@@ -216,7 +225,9 @@ class UserModule(db.Model):
         db.Boolean, default=False
     )  # flag for if the user can start the module
     completed_date = db.Column(db.DateTime, nullable=True)  # used to help with review
-    submitted_runtime = db.Column(db.Enum(RuntimeValues), nullable=True)  # only for challenges
+    submitted_runtime = db.Column(
+        db.Enum(RuntimeValues), nullable=True
+    )  # only for challenges
 
     user = db.relationship("User", back_populates="modules")
     module = db.relationship("Module", back_populates="users")
@@ -325,9 +336,11 @@ class TestCase(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     input = db.Column(db.Text, nullable=False)
-    output = db.Column(db.Text, nullable=False)
     module_id = db.Column(db.Integer, db.ForeignKey("modules.id"), nullable=False)
 
+    outputs = db.relationship(
+        "TestCaseOutput", back_populates="test_case", cascade="all, delete-orphan"
+    )
     module = db.relationship("Module", back_populates="test_cases")
     user_test_cases = db.relationship(
         "UserTestCase", back_populates="test_case", cascade="all, delete-orphan"
@@ -346,13 +359,25 @@ class TestCase(db.Model):
         return module_id
 
 
+class TestCaseOutput(db.Model):
+    __tablename__ = "test_case_outputs"
+
+    id = db.Column(db.Integer, primary_key=True)
+    test_case_id = db.Column(db.Integer, db.ForeignKey("test_cases.id"), nullable=False, index=True)
+    output = db.Column(db.Text, nullable=False)
+
+    test_case = db.relationship("TestCase", back_populates="outputs")
+
+
 class UserTestCase(db.Model):
     __tablename__ = "user_test_cases"
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), primary_key=True)
     test_case_id = db.Column(
         db.Integer, db.ForeignKey("test_cases.id"), primary_key=True
     )
-    verified = db.Column(db.Boolean, default=False) # indicates if the user's code is verified for this test case
+    verified = db.Column(
+        db.Boolean, default=False
+    )  # indicates if the user's code is verified for this test case
 
     test_case = db.relationship("TestCase", back_populates="user_test_cases")
     user = db.relationship("User", back_populates="user_test_cases")

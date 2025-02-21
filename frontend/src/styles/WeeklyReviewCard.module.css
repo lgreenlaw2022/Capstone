@@ -1,4 +1,4 @@
-.card {
+.weeklyCard {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -11,11 +11,11 @@
     background: #f7f7f7;
 }
 
-.card:hover {
+.weeklyCard:hover {
     cursor: pointer;
 }
 
-.card p {
+.weeklyCard p {
     color: #777;
     font-weight: 500;
     font-size: 12px;

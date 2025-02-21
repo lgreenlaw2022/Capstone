@@ -18,7 +18,7 @@ interface CodeCheckProps {
 interface TestCase {
     testCaseId: number;
     input: string;
-    output: string;
+    outputs: string[];
     verified: boolean;
 }
 
@@ -77,7 +77,7 @@ export default function CodeCheck({
             setTestCaseFeedback(initialTestCaseFeedback);
 
             setTargetRuntime(data.runtime.target);
-            setPriorSubmittedRuntime(data.runtime.prior || null);
+            setPriorSubmittedRuntime(data.runtime.prior); // TODO: tried removing the null case, see if this breaks anything
             if (data.runtime.prior) {
                 setRuntimeFeedback("Submitted.");
             }
@@ -94,7 +94,7 @@ export default function CodeCheck({
         const allCompleted =
             testCases.every((testCase) => testCase.verified) &&
             runtimeFeedback === "Submitted.";
-        // Calback used to enable the complete button as soon as code checks are passed
+        // Callback used to enable the complete button as soon as code checks are passed
         onTestCasesCompleted(allCompleted);
     }, [testCases, runtimeFeedback, onTestCasesCompleted]);
 
@@ -103,15 +103,20 @@ export default function CodeCheck({
 
     const handleCheck = async (
         userOutput: string,
-        correctOutput: string,
+        correctOutputs: string[],
         testCaseId: number,
         index: number
     ) => {
         const newFeedback = [...testCaseFeedback];
         const standardizedUserOutput = normalizeString(userOutput);
-        const standardizedCorrectOutput = normalizeString(correctOutput);
 
-        if (standardizedUserOutput === standardizedCorrectOutput) {
+        // Check if the user's output matches any of the valid outputs
+        const isCorrect = correctOutputs.some((correctOutput) => {
+            const standardizedCorrectOutput = normalizeString(correctOutput);
+            return standardizedUserOutput === standardizedCorrectOutput;
+        });
+
+        if (isCorrect) {
             await submitTestCase(testCaseId);
 
             newFeedback[index] = TestCaseFeedbackMessages.Correct;
@@ -136,10 +141,10 @@ export default function CodeCheck({
                 <div key={index}>
                     <TestCase
                         {...testCase}
-                        onCheck={(userOutput, correctOutput) =>
+                        onCheck={(userOutput, correctOutputs) =>
                             handleCheck(
                                 userOutput,
-                                correctOutput,
+                                correctOutputs,
                                 testCase.testCaseId,
                                 index
                             )
