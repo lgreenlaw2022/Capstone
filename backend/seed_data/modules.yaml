@@ -93,7 +93,7 @@ modules:
     order: 2
     module_type: BONUS_SOLUTION
 
-  # UNIT 3: BINARY TREES
+# UNIT 3: BINARY TREES
   - unit_title: "Binary Trees"
     title: "Binary Trees Concept Guide"
     order: 1
@@ -144,3 +144,28 @@ modules:
     title: "Convert Sorted Array to Binary Search Tree Solution"
     order: 2
     module_type: BONUS_SOLUTION
+
+# UNIT 4: Strings and Arrays
+  - unit_title: "Strings and Arrays"
+    title: "Strings and Arrays Concept Guide"
+    order: 1
+    module_type: CONCEPT_GUIDE
+
+  - unit_title: "Strings and Arrays"
+    title: "Strings and Arrays Concept Quiz"
+    order: 2
+    module_type: QUIZ
+
+  - unit_title: "Strings and Arrays"
+    title: "Strings and Arrays Recognition Guide"
+    order: 3
+    module_type: RECOGNITION_GUIDE
+
+  - unit_title: "Strings and Arrays"
+    title: "Strings and Arrays Recognition Quiz"
+    order: 4
+    module_type: QUIZ
+
+  # Challenges: TODO
+
+  # Bonus challenges: TODO

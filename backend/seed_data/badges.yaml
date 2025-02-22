@@ -18,7 +18,20 @@ badges:
     criteria_expression: "user_unit_completed == True and unit_title == 'Binary Trees'"
     event_type: UNIT_COMPLETION
 
+  - title: "Strings and Arrays"
+    description: "Awarded for completing the strings and arrays unit."
+    type: CONTENT
+    criteria_expression: "user_unit_completed == True and unit_title == 'Strings and Arrays'"
+    event_type: UNIT_COMPLETION
+
 # Award Badges
+  # TODO: monitor how this badge is awarded
+  - title: "7 day streak"
+    description: "Awarded for reaching a 7 day streak."
+    type: AWARD
+    criteria_expression: "user.streak >= 7"
+    event_type: STREAK_ACHIEVEMENT
+  
   - title: "30 day streak"
     description: "Awarded for reaching a 30 day streak."
     type: AWARD

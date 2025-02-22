@@ -939,3 +939,276 @@ quiz_questions:
       - option_text: "When you need to traverse nodes level by level"
         is_correct: false
         option_type: CONCEPT
+
+# Strings and Arrays Concept Quiz
+  - module_title: "Strings and Arrays Concept Quiz"
+    title: "What is a list in Python?"
+    options:
+      - option_text: "A fixed-length data structure that can only hold one data type"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "A mutable, ordered collection of objects that can hold mixed data types"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "A data structure that can only store strings"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "An immutable sequence of characters"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Strings and Arrays Concept Quiz"
+    title: "What is the time complexity of accessing an element in an array by index?"
+    options:
+      - option_text: "O(1)"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "O(log n)"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "O(n)"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Strings and Arrays Concept Quiz"
+    title: "What is a string in Python?"
+    options:
+      - option_text: "A mutable sequence of characters"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "An immutable sequence of characters"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "An array of characters"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "A linked list of characters"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Strings and Arrays Concept Quiz"
+    title: "What is the time complexity of appending an element to the end of a list in Python?"
+    options:
+      - option_text: "O(1)"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "O(log n)"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "O(n)"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Strings and Arrays Concept Quiz"
+    title: "What is the time complexity of inserting an element at the beginning of a list in Python?"
+    options:
+      - option_text: "O(1)"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "O(log n)"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "O(n)"
+        is_correct: true
+        option_type: CONCEPT
+
+  - module_title: "Strings and Arrays Concept Quiz"
+    title: "What is the time complexity of concatenating two strings of length m and n in Python?"
+    options:
+      - option_text: "O(m + n)"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "O(m * n)"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "O(1)"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "O(n)"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Strings and Arrays Concept Quiz"
+    title: "What is the time complexity of inserting a character in the middle of a string?"
+    options:
+      - option_text: "O(1)"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "O(log n)"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "O(n)"
+        is_correct: true
+        option_type: CONCEPT
+
+  - module_title: "Strings and Arrays Concept Quiz"
+    title: "What is the time complexity of searching for an element in an unsorted list?"
+    options:
+      - option_text: "O(1)"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "O(log n)"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "O(n)"
+        is_correct: true
+        option_type: CONCEPT
+
+  - module_title: "Strings and Arrays Concept Quiz"
+    title: "What is the time complexity of finding a substring in a string?"
+    options:
+      - option_text: "O(1)"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "O(log n)"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "O(n)"
+        is_correct: true
+        option_type: CONCEPT
+
+  - module_title: "Strings and Arrays Concept Quiz"
+    title: "What is a subsequence of a string?"
+    options:
+      - option_text: "A substring that is a prefix of the string"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "A substring that is a suffix of the string"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "A sequence of characters that appears in the same order as the original string"
+        is_correct: true
+        option_type: CONCEPT
+
+# Strings and Arrays Recognition Quiz
+  - module_title: "Strings and Arrays Recognition Quiz"
+    title: "Given the problem: 'Find if there exists a pair of numbers in a sorted array that sum to a target value.' Which technique would be most efficient in time and space?"
+    options:
+      - option_text: "Sliding window"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "Two pointers"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "Hash table"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "Multiple Traversals"
+        is_correct: false
+        option_type: CONCEPT
+  
+  - module_title: "Strings and Arrays Recognition Quiz"
+    title: "Given the problem: 'Find the longest substring without repeating characters in a string.' Which technique would be most efficient in time and space?"
+    options:
+      - option_text: "Sliding window with hash set"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "Two pointers"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "Multiple Traversals"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "Pre-computation"
+        is_correct: false
+        option_type: CONCEPT
+  
+  - module_title: "Strings and Arrays Recognition Quiz"
+    title: "Given the problem: 'Given an array, return an array where each element is the product of all numbers except the number at that index.' Which technique would be most efficient in time and space?"
+    options:
+      - option_text: "Sliding window"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "Two pointers"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "Hash Table"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "Multiple Traversals"
+        is_correct: true
+        option_type: CONCEPT
+
+  - module_title: "Strings and Arrays Recognition Quiz"
+    title: "Given the problem: 'Determine if a string can be rearranged to form a palindrome.' Which technique would be most efficient in time and space?"
+    options:
+      - option_text: "Sliding window"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "Two pointers"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "Hash Table"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "Sorting"
+        is_correct: false
+        option_type: CONCEPT
+  
+  - module_title: "Strings and Arrays Recognition Quiz"
+    title: "Given the problem: 'Find the maximum sum of any contiguous subarray of size k.' Which technique would be most efficient in time and space?"
+    options:
+      - option_text: "Sliding window"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "Two pointers"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "Hash Table"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "Multiple Traversals"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Strings and Arrays Recognition Quiz"
+    title: "What problem characteristic would make you reconsider using a multiple traversal strategy?"
+    options:
+      - option_text: "When you need to calculate both prefix and suffix sums"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "When data needs to be processed in real-time as it arrives"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "When you need to find the global maximum or minimum"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Strings and Arrays Recognition Quiz"
+    title: "In which scenario would pre-computation likely result in the worst performance?"
+    options:
+      - option_text: "When the input data is static and unchanging"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "When the pre-computed data is used frequently"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "When there is a single query with a large input size"
+        is_correct: true
+        option_type: CONCEPT
+
+  - module_title: "Strings and Arrays Recognition Quiz"
+    title: "When would you use a sliding window technique over a hash table?"
+    options:
+      - option_text: "When you need to track the frequency of elements"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "When you need to find the maximum sum of a subarray"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "When you need to find the longest substring without repeating characters"
+        is_correct: false
+        option_type: CONCEPT
+  
+  - module_title: "Strings and Arrays Recognition Quiz"
+    title: "When would you consider using multiple traversals over the two pointer technique?"
+    options:
+      - option_text: "When you need to find the maximum sum of a subarray"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "When you need to find the longest substring without repeating characters"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "When you need to calculate both prefix and suffix sums"
+        is_correct: true
+        option_type: CONCEPT
