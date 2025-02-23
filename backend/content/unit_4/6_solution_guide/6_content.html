@@ -1,104 +1,77 @@
 <div class="guideContainer">
-  <h1>Solution Walkthrough: Product of Array Except Self</h1>
+  <h1>Solution Walkthrough: Is Subsequence</h1>
 
   <h2>Understand the problem</h2>
   <p><strong>Clarifying Questions</strong></p>
   <dl>
-    <dt>Can the array be empty?</dt>
-    <dd>No, it will always be length 2 or longer.</dd>
+    <dt>Can <code>s</code> be longer than <code>t</code>?</dt>
+    <dd>Yes.</dd>
   </dl>
   <dl>
-    <dt>Is the array sorted?</dt>
-    <dd>No.</dd>
+    <dt>Can <code>s</code> and <code>t</code> be empty strings?</dt>
+    <dd>Yes.</dd>
   </dl>
   <dl>
-    <dt>Are there any space constraints?</dt>
-    <dd>
-      You should try to solve the problem in O(1) space, not including the
-      output array.
-    </dd>
+    <dt>What are the time and space complexity restrictions?</dt>
+    <dd>Time: O(n) where n is the length of <code>t</code>. Space: O(1)</dd>
   </dl>
 
   <p><strong>Test Cases</strong></p>
   <p>
-    Input: <code>nums = [1,2,3,4]</code> <br />
-    Output: <code>[24,12,8,6]</code>
+    Input: <code>s = "abc", t = "ahbgdc"</code> <br />
+    Output: <code>true</code>
   </p>
   <p>
-    Input: <code>nums = [-1,1,0,-3,3]</code> <br />
-    Output: <code>[0,0,9,0,0]</code>
+    Input: <code>s = "axc", t = "ahbgdc"</code><br />
+    Output: <code>false</code>
   </p>
   <p>
-    Input: <code>nums = [0,0,0]</code> <br />
-    Output: <code>[0,0,0]</code>
+    Input: <code>s = "", t = ""</code><br />
+    Output: <code>true</code>
   </p>
   <p>
-    Input: <code>nums = [1,2]</code> <br />
-    Output: <code>[2,1]</code>
+    Input: <code>s = "abc", t = ""</code><br />
+    Output: <code>false</code>
   </p>
 
   <h2>Match</h2>
-  <p><strong>Common solutions to array problems:</strong></p>
+  <p><strong>Common solutions to string problems:</strong></p>
   <ol>
-    <li>
-      Two pointers: the problem requires all elements from both sides except
-      current, not pairs or position-based relationships
-    </li>
-    <li>
-      Hash Tables: storing the products wouldn't help since each position needs
-      a different combination of products
-    </li>
-    <li>Sliding Window: the products aren't based on contiguous subarrays</li>
-    <li>Sorting: the original order of the elements needs to be maintained.</li>
-    <li>
-      Multiple traversals: two passes could help us determine the products of
-      the items to the left and right of each index
-    </li>
-    <li>
-      Traverse from Right: this may be useful as part of the multiple traversals
-      strategy
-    </li>
-    <li>
-      Pre-computation: the required computation is part of the main solution,
-      preprocessing is not helpful
-    </li>
+    <li>Hash tables: storing character frequencies wouldn't help since we need to maintain sequence order.</li>
+    <li>Sliding Window: not suitable since characters don't need to be contiguous in the main string.</li>
+    <li>Multiple Traversals: a single traversal is sufficient since we need to check characters in order.</li>
+    <li>Two pointers: we can use a pointer in each string to compare characters.</li>
   </ol>
 
   <h2>Plan</h2>
   <p>
-    We'll solve this using two passes - one to build left products and another
-    for right products for each index in <code>nums</code>.
+    Iterate through each character in <code>t</code> to identify each character
+    in <code>s</code> in relative order. If we do not reach the end of
+    <code>s</code> at the end of <code>t</code>, the subsequence does not exist.
   </p>
   <ol role="list" aria-label="Solution steps">
-    <li>create the output array</li>
+    <li>Create two pointers to represent the character positions in s and t</li>
     <li>
-      iterate through the array from left to right
-      <ol>
-        <li>assign the output to the running product value</li>
-        <li>multiply the current value by the product</li>
-      </ol>
-    </li>
-    <li>
-      iterate through the array from right to left
+      While the pointers are within the bounds of their respective strings:
       <ol>
         <li>
-          multiply the existing output value at the index by the new running
-          product
+          progress the s pointer every time a character matches with the pointer
+          t character
         </li>
-        <li>multiply the current value by the product</li>
+        <li>progress pointer t every time to examine the next character</li>
       </ol>
     </li>
-    <li>return the output array</li>
+    <li>if at the end of s, return true, otherwise return false</li>
   </ol>
 
   <h2>Complexity Analysis</h2>
   <p><strong>Time Complexity:</strong></p>
-  <p>O(n): we make two passes through an array of length n.</p>
-  <p><strong>Space Complexity:</strong></p>
   <p>
-    O(1): we only use the output array which is not counted as extra space per
-    problem constraints and a constant number of variables are used.
+    O(m) where m is the number of characters in t because we only need to fully
+    progress through t to check for a subsequence.
   </p>
+  <p><strong>Space Complexity:</strong></p>
+  <p>O(1) the pointers have a constant space cost.</p>
 
   <h2>Code Solution</h2>
 </div>

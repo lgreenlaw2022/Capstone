@@ -167,13 +167,23 @@ modules:
     module_type: QUIZ
 
   - unit_title: "Strings and Arrays"
-    title: "Product of Array Except Self"
+    title: "Is Subsequence"
     order: 5
     module_type: CHALLENGE
 
   - unit_title: "Strings and Arrays"
-    title: "Product of Array Except Self Solution"
+    title: "Is Subsequence"
     order: 6
     module_type: CHALLENGE_SOLUTION
 
-  # Bonus challenges: TODO
+  # Bonus challenges
+  - unit_title: "Strings and Arrays"
+    title: "Product of Array Except Self"
+    order: 1
+    module_type: BONUS_CHALLENGE
+
+  - unit_title: "Strings and Arrays"
+    title: "Product of Array Except Self Solution"
+    order: 2
+    module_type: BONUS_SOLUTION
+  

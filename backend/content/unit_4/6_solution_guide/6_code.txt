@@ -1,18 +1,10 @@
 class Solution:
-    def productExceptSelf(self, nums: List[int]) -> List[int]:
-        n = len(nums)
-		output = [0] * n
-		
-		# Initialize the left product
-		left_product = 1
-		for i in range(n):
-			output[i] = left_product
-			left_product *= nums[i]
-		
-		# Incorporate right products
-		right_product = 1
-		for i in range(n-1, -1, -1):
-			output[i] *= right_product
-			right_product *= nums[i]
-		
-		return output
+    def isSubsequence(self, s: str, t: str) -> bool:
+        pointer_s = pointer_t = 0
+
+        while pointer_s < len(s) and pointer(t) < len(t):
+            if s[pointer_s] == t[pointer_t]:
+                pointer_s += 1
+            pointer_t += 1
+        
+        return pointer_s == len(s)

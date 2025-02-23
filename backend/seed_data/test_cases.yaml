@@ -90,6 +90,20 @@ test_cases:
 
 # Strings and Arrays
   - module_type: "CHALLENGE"
+    module_title: "Is Subsequence"
+    target_runtime: O_N
+    test_cases:
+      - input: "s = '', t = 'abc'"
+        outputs:
+          - "true"
+      - input: "s = 'acb', t = 'ahbgdc'"
+        outputs:
+          - "false"
+      - input: "s = 'aaaa', t = 'aaa'"
+        outputs:
+          - "false"
+  
+  - module_type: "BONUS_CHALLENGE"
     module_title: "Product of Array Except Self"
     target_runtime: O_N
     test_cases:

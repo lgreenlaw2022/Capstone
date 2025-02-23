@@ -56,6 +56,16 @@ hints:
 
   # Strings and Arrays
   - module_type: "CHALLENGE"
+    module_title: "Is Subsequence"
+    hints:
+      - text: "Use two pointers to compare the characters of the two strings."
+        order: 1
+      - text: "Move the pointer of s forward only when the characters match. Remember that the matching characters in t do not need to be contiguous."
+        order: 2
+      - text: "Return true if every character in s is matched with a character in t."
+        order: 3
+
+  - module_type: "BONUS_CHALLENGE"
     module_title: "Product of Array Except Self"
     hints:
       - text: "Use the multiple passes strategy, including traversing from the array from the right."

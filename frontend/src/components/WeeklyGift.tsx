@@ -35,7 +35,6 @@ export default function WeeklyGift() {
                 <p>Complete 7 goals</p>
                 <div>
                     <div>
-                        {/* TODO: figure out why this is expanding to the full width */}
                         <ProgressBar percentage={percentage} />
                     </div>
                     <p>{numGoalsCompleted} / 7</p>
