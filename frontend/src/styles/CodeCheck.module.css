@@ -17,7 +17,7 @@
     align-items: center;
 }
 
-.userInput input {  
+.userInput input {
     border-radius: 8px;
     border: 2px solid #d9d9d9;
     font-size: 16px;
@@ -25,17 +25,10 @@
     padding: 0 8px;
 }
 
-
 /* TODO: this is a bit of a hack */
 .userInput button {
     margin: 0px;
     height: 34px;
-}
-
-/* TODO: not sure why default disabled syling isn't being applied */
-.userInput button:disabled {
-    cursor: default;
-    background-color: #d9d9d9;
 }
 
 /* this only applies to the dropdown for runtime, confusing? */

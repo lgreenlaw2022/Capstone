@@ -87,3 +87,18 @@ test_cases:
       - input: "[5]"  
         outputs:
           - "[5]"
+
+# Strings and Arrays
+  - module_type: "CHALLENGE"
+    module_title: "Product of Array Except Self"
+    target_runtime: O_N
+    test_cases:
+      - input: "[3,2,7,4]"
+        outputs:
+          - "[56,84,24,42]"
+      - input: "[-2,-2,-2,-2]"
+        outputs:
+          - "[-8,-8,-8,-8]"
+      - input: "[2,3,0,0,4,2]"
+        outputs:
+          - "[0,0,0,0,0,0]"

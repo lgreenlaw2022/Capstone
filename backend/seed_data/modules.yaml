@@ -166,6 +166,14 @@ modules:
     order: 4
     module_type: QUIZ
 
-  # Challenges: TODO
+  - unit_title: "Strings and Arrays"
+    title: "Product of Array Except Self"
+    order: 5
+    module_type: CHALLENGE
+
+  - unit_title: "Strings and Arrays"
+    title: "Product of Array Except Self Solution"
+    order: 6
+    module_type: CHALLENGE_SOLUTION
 
   # Bonus challenges: TODO

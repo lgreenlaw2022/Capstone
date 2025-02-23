@@ -13,7 +13,7 @@ export default function VSCodeInstructions() {
     };
 
     return (
-        <div className="guideContainer">
+        <div>
             <div className={styles.title} onClick={toggleVisibility}>
                 <h3>Using VSCode for Practice </h3>
                 <Image
@@ -24,7 +24,7 @@ export default function VSCodeInstructions() {
                 />
             </div>
             {isVisible && (
-                <ol>
+                <ol className={styles.textBlock}>
                     <li>Set up your local development environment:</li>
                     <ul>
                         <p className="boldPoint">
