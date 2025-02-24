@@ -19,6 +19,7 @@ def calculate_percent_shorter_streak(user_streak):
         return 100.0  # If the user is the only one, they are ahead of 100% of users
     # TODO: consider adding index to streak column
     users_with_shorter_streak = User.query.filter(User.streak < user_streak).count()
+
     percent_shorter_streak = (users_with_shorter_streak / total_users) * 100
     return percent_shorter_streak
 
@@ -31,13 +32,20 @@ def calculate_percent_fewer_modules(user_id, most_recent_monday):
     user_modules_completed = UserModule.query.filter(
         UserModule.user_id == user_id, UserModule.completed_date >= most_recent_monday
     ).count()
+
+    # Include users who have completed fewer modules or none at all
     users_with_fewer_modules = (
-        User.query.join(UserModule)
-        .filter(UserModule.completed_date >= most_recent_monday)
+        db.session.query(User)
+        .outerjoin(
+            UserModule,
+            (User.id == UserModule.user_id)
+            & (UserModule.completed_date >= most_recent_monday),
+        )
         .group_by(User.id)
         .having(db.func.count(UserModule.module_id) < user_modules_completed)
         .count()
     )
+
     percent_fewer_modules = (users_with_fewer_modules / total_users) * 100
     return percent_fewer_modules
 
@@ -50,13 +58,20 @@ def calculate_percent_fewer_goals(user_id, most_recent_monday):
     user_goals_completed = UserGoal.query.filter(
         UserGoal.user_id == user_id, UserGoal.date_completed >= most_recent_monday
     ).count()
+
+    # Include users who have completed fewer goals or none at all
     users_with_fewer_goals = (
-        User.query.join(UserGoal)
-        .filter(UserGoal.date_completed >= most_recent_monday)
+        db.session.query(User)
+        .outerjoin(
+            UserGoal,
+            (User.id == UserGoal.user_id)
+            & (UserGoal.date_completed >= most_recent_monday),
+        )
         .group_by(User.id)
         .having(db.func.count(UserGoal.goal_id) < user_goals_completed)
         .count()
     )
+
     percent_fewer_goals = (users_with_fewer_goals / total_users) * 100
     return percent_fewer_goals
 
