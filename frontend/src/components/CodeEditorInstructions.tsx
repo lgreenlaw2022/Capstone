@@ -17,6 +17,12 @@ export default function CodeEditorInstructions() {
     };
     return (
         <div className="guideContainer">
+            <p>
+                To become familiar with standard technical interview problem
+                editor tools, we recommend you solve this problem on LeetCode.
+                You can find the problem by following the LeetCode link at the
+                top of the problem description.
+            </p>
             <div className={styles.title} onClick={toggleVisibility}>
                 <h3>Why We Don't Have an Embedded Code Editor</h3>
                 <Image

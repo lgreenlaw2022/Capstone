@@ -20,7 +20,7 @@ const calculateProgressPercentage = (
 };
 
 const Quiz = ({ questions, moduleTitle, onSubmit }: QuizProps) => {
-    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);     // is the index reliable?
+    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);  // TODO: is the index reliable?
     const [numCorrectAnswers, setNumCorrectAnswers] = useState<number>(0);
 
     const currentQuestion = questions[currentQuestionIndex];

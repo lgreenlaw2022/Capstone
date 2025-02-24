@@ -1,0 +1,171 @@
+<div class="guideContainer">
+  <h1>Recognition Guide: Strings and Arrays</h1>
+  <section>
+    <p>
+      Typically you know you are working with a string or array. Use the
+      following guidelines to determine what strategies might be useful.
+    </p>
+    <br />
+    <section>
+      <h2>Two Pointers</h2>
+      <strong>Signs to use:</strong>
+      <ul>
+        <li>
+          Phrases like "find pair", "palindrome", "reverse", "meeting point"
+        </li>
+        <li>The input is a sorted array</li>
+        <li>You need to track two different positions simultaneously</li>
+        <li>Problems involving "opposite ends" or "converging"</li>
+      </ul>
+      <strong><i>Do not use if:</i></strong>
+      <ol>
+        <li>Access to random elements is required</li>
+        <li>Elements need to be compared with multiple other elements</li>
+        <li>Elements need to be compared with a different set of elements</li>
+      </ol>
+    </section>
+    <br />
+
+    <section>
+      <h2>Hash Tables</h2>
+      <strong>Signs to use:</strong>
+      <ul>
+        <li>Phrases like "frequency", "count", "unique", and "duplicate"</li>
+        <li>Need to store and retrieve data quickly</li>
+        <li>Need to check for duplicates or frequency of elements</li>
+        <li>
+          Need to store additional information about elements using key-value
+          pairs
+        </li>
+      </ul>
+      <strong><i>Do not use if:</i></strong>
+      <ol>
+        <li>Space complexity is a critical constraint</li>
+        <li>The original order of elements is important</li>
+        <li>
+          You're working with simple numeric ranges that can be tracked with
+          array indexing
+        </li>
+      </ol>
+    </section>
+    <br />
+
+    <section>
+      <h2>Sliding Window</h2>
+      <strong>Signs to use:</strong>
+      <ul>
+        <li>
+          Looking for continuous sequences of fixed or variable length that
+          satisfy a specific condition
+        </li>
+        <li>Phrases like "subarray", "substring", "consecutive sequence"</li>
+        <li>Problems involving a "shortest" or "longest" output</li>
+        <li>You need to track a running sum or average</li>
+      </ul>
+      <strong><i>Do not use if:</i></strong>
+      <ol>
+        <li>Elements don't need to be consecutive</li>
+        <li>The order of elements can be changed</li>
+      </ol>
+    </section>
+    <br />
+
+    <section>
+      <h2>Sorting</h2>
+      <strong>Signs to use:</strong>
+      <ul>
+        <li>Need to find duplicates, the median, or the kth largest element</li>
+        <li>Need to identify a subarray</li>
+        <li>Need to find the smallest or largest element</li>
+        <li>Need to process elements in ascending/descending order</li>
+      </ul>
+      <strong><i>Do not use if:</i></strong>
+      <ol>
+        <li>Order of elements needs to be maintained</li>
+        <li>Time complexity must be better than O(n log n)</li>
+        <li>
+          Problem can be solved with a single pass using another technique
+        </li>
+      </ol>
+    </section>
+    <br />
+
+    <section>
+      <h2>Multiple Traversals</h2>
+      <strong>Signs to use:</strong>
+      <ul>
+        <li>Need to compare elements or find a specific element</li>
+        <li>Phrases like "cumulative sum"</li>
+        <li>Problem requires preprocessing</li>
+      </ul>
+      <strong><i>Do not use if:</i></strong>
+      <ol>
+        <li>Real-time processing is required</li>
+        <li>Time complexity is a critical constraint</li>
+        <li>
+          Problem can be solved with a single pass using another technique
+        </li>
+      </ol>
+    </section>
+    <br />
+
+    <section>
+      <h2>Traverse from the Right</h2>
+      <strong>Signs to use:</strong>
+      <ul>
+        <li>Need to find the last element that satisfies a condition</li>
+        <li>Phrases like "last", "rightmost", "suffix"</li>
+      </ul>
+      <strong><i>Do not use if:</i></strong>
+      <ol>
+        <li>The order of processing doesn't matter</li>
+        <li>Forward traversal would work equally well</li>
+      </ol>
+    </section>
+    <br />
+
+    <section>
+      <h2>Pre-computation</h2>
+      <strong>Signs to use:</strong>
+      <ul>
+        <li>Multiple operations are required</li>
+        <li>Need to perform repeated calculations</li>
+        <li>
+          Need to calculate the sum, frequency, range, or maximum/minimum value
+        </li>
+        <li>Need O(1) query time after preprocessing</li>
+      </ul>
+      <strong><i>Do not use if:</i></strong>
+      <ol>
+        <li>Space complexity is a critical constraint</li>
+        <li>Data is dynamic</li>
+      </ol>
+    </section>
+  </section>
+  <br />
+
+  <section>
+    <h2>Common Problem Patterns</h2>
+    <ul>
+      <li>Finding pairs: Two pointers or hash table</li>
+      <li>Subarray sums: Sliding window or pre-computation</li>
+      <li>Duplicate detection: Hash table or sorting</li>
+      <li>Range queries: Pre-computation</li>
+      <li>Pattern matching: Sliding window or hash table</li>
+    </ul>
+  </section>
+  <br />
+
+  <section>
+    <h2>Questions to ask in an interview</h2>
+    <ol>
+      <li>Can the input be empty?</li>
+      <li>Can I assume all the inputs will be valid?</li>
+      <li>Are elements unique or can there be duplicates?</li>
+      <li>What is the input character set? (a-z, integers, etc)</li>
+      <li>Is the array sorted?</li>
+      <li>What's the required time and space complexity?</li>
+      <li>Does the original order of elements need to be preserved?</li>
+    </ol>
+  </section>
+</div>

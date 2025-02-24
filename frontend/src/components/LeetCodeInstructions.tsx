@@ -12,7 +12,7 @@ export default function LeetCodeInstructions() {
     };
 
     return (
-        <div className="guideContainer">
+        <div>
             <div className={styles.title} onClick={toggleVisibility}>
                 <h3>Using LeetCode for Practice </h3>
                 <Image
@@ -23,7 +23,7 @@ export default function LeetCodeInstructions() {
                 />
             </div>
             {isVisible && (
-                <>
+                <div className={styles.textBlock}>
                     <p className="boldPoint">
                         For a complete beginners guide to solving problems in
                         LeetCode, visit{" "}
@@ -71,7 +71,7 @@ export default function LeetCodeInstructions() {
                             approaches
                         </li>
                     </ol>
-                </>
+                </div>
             )}
         </div>
     );

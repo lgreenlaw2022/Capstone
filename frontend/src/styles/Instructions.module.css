@@ -5,3 +5,10 @@
     align-items: center;
     cursor: pointer;
 }
+
+.textBlock {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+}

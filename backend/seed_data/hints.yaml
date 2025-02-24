@@ -1,5 +1,5 @@
 hints:
-# Hash maps
+  # Hash maps
   - module_type: "CHALLENGE"
     module_title: "Contains Duplicate"
     hints:
@@ -7,7 +7,7 @@ hints:
         order: 1
       - text: "A hash set could be useful."
         order: 2
- 
+
   - module_type: "BONUS_CHALLENGE"
     module_title: "Longest Substring Without Repeating Characters"
     hints:
@@ -16,7 +16,7 @@ hints:
       - text: "Use a hash set to store the characters in the current window."
         order: 2
 
-# Linked Lists
+  # Linked Lists
   - module_type: "CHALLENGE"
     module_title: "Remove Nth Node From End of List"
     hints:
@@ -33,7 +33,7 @@ hints:
       - text: Consider using three pointers (prev, current, and next) to systematically reverse the list's links.
         order: 2
 
-# Binary Trees
+  # Binary Trees
   - module_type: "CHALLENGE"
     module_title: "Invert Binary Tree"
     hints:
@@ -49,7 +49,28 @@ hints:
     hints:
       - text: "Use the median element as the root of the tree."
         order: 1
-      - text: "Use a recursive approach to build the tree"
+      - text: "Use a recursive approach to build the tree."
         order: 2
       - text: "Remember to handle the base case of an empty array."
+        order: 3
+
+  # Strings and Arrays
+  - module_type: "CHALLENGE"
+    module_title: "Is Subsequence"
+    hints:
+      - text: "Use two pointers to compare the characters of the two strings."
+        order: 1
+      - text: "Move the pointer of s forward only when the characters match. Remember that the matching characters in t do not need to be contiguous."
+        order: 2
+      - text: "Return true if every character in s is matched with a character in t."
+        order: 3
+
+  - module_type: "BONUS_CHALLENGE"
+    module_title: "Product of Array Except Self"
+    hints:
+      - text: "Use the multiple passes strategy, including traversing from the array from the right."
+        order: 1
+      - text: "Consider breaking down the products into smaller parts. Can you separate the numbers that come before the current index from those that come after it?"
+        order: 2
+      - text: "Track the running products of the numbers before and after the current index in the outcome array."
         order: 3

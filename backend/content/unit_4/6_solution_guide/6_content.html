@@ -1,0 +1,101 @@
+<div class="guideContainer">
+  <h1>Solution Walkthrough: Is Subsequence</h1>
+
+  <section>
+    <h2>Understand the problem</h2>
+    <p><strong>Clarifying Questions</strong></p>
+    <dl>
+      <dt>Can <code>s</code> be longer than <code>t</code>?</dt>
+      <dd>Yes.</dd>
+    </dl>
+    <dl>
+      <dt>Can <code>s</code> and <code>t</code> be empty strings?</dt>
+      <dd>Yes.</dd>
+    </dl>
+    <dl>
+      <dt>What are the time and space complexity restrictions?</dt>
+      <dd>Time: O(n) where n is the length of <code>t</code>. Space: O(1)</dd>
+    </dl>
+  </section>
+
+  <section>
+    <p><strong>Test Cases</strong></p>
+    <p>
+      Input: <code>s = "abc", t = "ahbgdc"</code> <br />
+      Output: <code>true</code>
+    </p>
+    <p>
+      Input: <code>s = "axc", t = "ahbgdc"</code><br />
+      Output: <code>false</code>
+    </p>
+    <p>
+      Input: <code>s = "", t = ""</code><br />
+      Output: <code>true</code>
+    </p>
+    <p>
+      Input: <code>s = "abc", t = ""</code><br />
+      Output: <code>false</code>
+    </p>
+  </section>
+
+  <section>
+    <h2>Match</h2>
+    <p><strong>Common solutions to string problems:</strong></p>
+    <ol>
+      <li>
+        Hash tables: storing character frequencies wouldn't help since we need
+        to maintain sequence order.
+      </li>
+      <li>
+        Sliding Window: not suitable since characters don't need to be
+        contiguous in the main string.
+      </li>
+      <li>
+        Multiple Traversals: a single traversal is sufficient since we need to
+        check characters in order.
+      </li>
+      <li>
+        Two pointers: we can use a pointer in each string to compare characters.
+      </li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Plan</h2>
+    <p>
+      Iterate through each character in <code>t</code> to identify each
+      character in <code>s</code> in relative order. If we do not reach the end
+      of <code>s</code> at the end of <code>t</code>, the subsequence does not
+      exist.
+    </p>
+    <ol role="list" aria-label="Solution steps">
+      <li>
+        Create two pointers to represent the character positions in s and t
+      </li>
+      <li>
+        While the pointers are within the bounds of their respective strings:
+        <ol>
+          <li>
+            progress the s pointer every time a character matches with the
+            pointer t character
+          </li>
+          <li>progress pointer t every time to examine the next character</li>
+        </ol>
+      </li>
+      <li>if at the end of s, return true, otherwise return false</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Complexity Analysis</h2>
+    <p><strong>Time Complexity:</strong></p>
+    <p>
+      O(m) where m is the number of characters in t because we only need to
+      fully progress through t to check for a subsequence.
+    </p>
+    <p><strong>Space Complexity:</strong></p>
+    <p>O(1) the pointers have a constant space cost.</p>
+  </section>
+
+  <h2>Code Solution</h2>
+</div>

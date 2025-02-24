@@ -89,6 +89,7 @@ code {
     padding: 10px;
     background-color: #e6e6e6;
     border-radius: 4px;
+    width: 600px;
 }
 
 .main-content {
@@ -122,6 +123,11 @@ button:hover {
     cursor: pointer;
 }
 
+button:disabled {
+    background: #d9d9d9;
+    cursor: not-allowed;
+}
+
 .guideContainer {
     display: flex;
     flex-direction: column;
@@ -130,6 +136,7 @@ button:hover {
     width: 100%;
     max-width: 800px;
     line-height: 24px;
+    margin-bottom: 20px;
 }
 
 .guideContainer a {
