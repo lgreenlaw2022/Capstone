@@ -154,6 +154,8 @@ def get_num_goals_completed_weekly():
             UserGoal.date_completed.between(start_of_week, end_of_week),
         ).count()
 
+
+
         logger.info(f"Number of goals completed this week: {num_completed}")
         return jsonify(num_completed), 200
     except Exception as e:
@@ -181,6 +183,10 @@ def add_gems_for_newly_completed_goal(goal_id):
             logger.error("User not found")
             return jsonify({"error": "User not found"}), 404
 
+        # TODO: how to award gems for completing the weekly goal? -- not currently registered as a goal for the user, should it be? 
+            # where should I trigger the awarding of gems for completing the weekly goal?
+            # I am thinking this might be a new method and endpoint triggered by the frontend? -- need to mark on this on the backend somehow that its been gifted
+            # trigger only when the num goals == 7, although this is a bit hacky
         # validating the request
         user_goal = UserGoal.query.filter_by(user_id=user_id, goal_id=goal_id).first()
         if user_goal is None:

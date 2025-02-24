@@ -102,7 +102,7 @@ test_cases:
       - input: "s = 'aaaa', t = 'aaa'"
         outputs:
           - "false"
-  
+
   - module_type: "BONUS_CHALLENGE"
     module_title: "Product of Array Except Self"
     target_runtime: O_N
