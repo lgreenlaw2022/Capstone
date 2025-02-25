@@ -3,11 +3,15 @@
     flex-direction: column;
     /* TODO: shouldn't need to be adding this every time */
     margin: 50px;
-    width: 600px;
+    width: 100%;
     justify-content: center;
     align-items: center;
     align-content: center;
     gap: 19px;
+}
+
+.quizProgressBar {
+    width: 600px;
 }
 
 .noQuestionsContainer {

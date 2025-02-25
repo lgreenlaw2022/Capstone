@@ -5,6 +5,7 @@
     align-items: center;
     gap: 19px;
     flex-shrink: 0;
+    width: 600px;
 }
 
 .optionsContainer {
