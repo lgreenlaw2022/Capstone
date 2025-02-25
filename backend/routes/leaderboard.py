@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
 import logging
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from utils import get_most_recent_monday
 
 from models import User, db, DailyUserActivity, UserModule, UserGoal
@@ -146,8 +146,19 @@ def update_leaderboard_show():
 @jwt_required()
 def get_weekly_rankings():
     try:
+        user_id = get_jwt_identity()
+        current_user = User.query.get(user_id)
+        if not current_user:
+            return jsonify({"error": "User not found"}), 404
+        
         # Calculate the date of the most recent Monday
         most_recent_monday = get_most_recent_monday()
+        is_reward_due = False
+        reward_amount = 0
+        # Check if user should get rewards (only once per week)
+        if (current_user.last_leaderboard_reward_date is None or 
+                current_user.last_leaderboard_reward_date < most_recent_monday):
+            is_reward_due, reward_amount = check_and_award_user(current_user, most_recent_monday)
 
         # Query to get users with activity since the most recent Monday and non-zero XP
         # order by xp earned in descending order
@@ -167,11 +178,12 @@ def get_weekly_rankings():
         if not users:
             logger.error("No users found")
             return jsonify({"error": "No users found"}), 404
+
         # serialize the users data
         users_data = [
             {"username": user.username, "weekly_xp": user.weekly_xp} for user in users
         ]
-        return jsonify(users_data), 200
+        return jsonify({"users": users_data, "rewardDue": is_reward_due, "rewardAmount": reward_amount}), 200
 
     except Exception as e:
         logger.error(f"An error occurred while fetching weekly rankings: {str(e)}")
@@ -180,6 +192,45 @@ def get_weekly_rankings():
             500,
         )
 
+def check_and_award_user(user, week_start_date):
+    try:
+        # Get previous week's Monday
+        previous_week_monday = week_start_date - timedelta(days=7)
+
+        # Get top 5 users from the previous week
+        top_users = (
+            db.session.query(User.id)
+            .join(DailyUserActivity, User.id == DailyUserActivity.user_id)
+            .filter(DailyUserActivity.date >= previous_week_monday)
+            .filter(DailyUserActivity.date < week_start_date)
+            .group_by(User.id)
+            .order_by(db.func.sum(DailyUserActivity.xp_earned).desc())
+            .limit(5)
+            .all()
+        )
+        # Extract just the IDs
+        top_user_ids = [user_id for (user_id,) in top_users]
+
+        # Check if current user is in top 5
+        if user.id in top_user_ids:
+            # Award gems based on position
+            position = top_user_ids.index(user.id)
+            gems_award = [15, 10, 10, 5, 5][position]  # Award based on position
+            
+            user.gems += gems_award
+
+            today = datetime.now(timezone.utc).date()
+            user.last_leaderboard_reward_date = today
+            
+            db.session.commit()
+            logger.info(f"User {user.id} awarded {gems_award} gems for rank {position+1} in previous week")
+            return True, gems_award
+        else:
+            return False, 0
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Error checking and awarding user: {str(e)}")
+        return False, 0 # TODO: not sure if I want to return False either way
 
 @leaderboard_bp.route("/weekly-comparison", methods=["GET"])
 @jwt_required()

@@ -1,33 +1,30 @@
 import styles from "../styles/Reward.module.css";
-import { Goal } from "../types/GoalTypes";
 import Image from "next/image";
 import openGift from "../../public/assets/open-gem-gift.svg";
-import { addGoalReward } from "@/api/api";
 
-interface GoalProps {
-    goal: Goal;
-    onContinue: (goalId: number) => void;
+interface LeaderboardRewardProps {
+    gems: number;
+    onContinue: () => void;
 }
 
-export default function GoalReward({ goal, onContinue }: GoalProps) {
+export default function LeaderboardReward({ gems, onContinue }: LeaderboardRewardProps) {
     const handleContinue = async () => {
-        await addGoalReward(goal.goalId);
-        onContinue(goal.goalId);
+        onContinue();
     };
 
     return (
-        // TODO: decide if I want goal specific messaging
         <>
             <div className={styles.overlay}></div>
             <div className={styles.rewardContainer}>
-                <h2>Good Work!</h2>
+                <h2>You topped the leaderboard!</h2>
+                {/* TODO: would be nice to have their rank, but not necessary */}
                 <Image
                     src={openGift}
                     alt="gem gift box"
                     width={118}
                     height={118}
                 />
-                <p>You earned 5 gems</p>
+                <p>You earned {gems} gems</p>
                 <button onClick={handleContinue} className={styles.text}>
                     Keep it Going!
                 </button>

@@ -37,6 +37,7 @@ class User(db.Model):
     gems = db.Column(db.Integer, default=0)
     xp = db.Column(db.Integer, default=0)
     leaderboard_on = db.Column(db.Boolean, default=True)
+    last_leaderboard_reward_date = db.Column(db.Date, nullable=True)
     weekly_review_done = db.Column(db.Boolean, default=False)  # complete/incomplete
 
     __table_args__ = (

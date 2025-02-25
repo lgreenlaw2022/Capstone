@@ -8,6 +8,7 @@ import {
     setLeaderboardPreference,
 } from "@/api/api";
 import { get } from "http";
+import LeaderboardReward from "./LeaderboardReward";
 
 interface User {
     username: string;
@@ -18,6 +19,8 @@ export default function Leaderboard() {
     const [showLeaderboard, setShowLeaderboard] = useState(true);
     const [daysLeft, setDaysLeft] = useState(0);
     const [users, setUsers] = useState<User[]>([]);
+    const [rewardDue, setRewardDue] = useState(false);
+    const [rewardAmount, setRewardAmount] = useState(0);
 
     const fetchRankings = async () => {
         try {
@@ -26,7 +29,9 @@ export default function Leaderboard() {
                 getLeaderboardDaysLeft(),
                 getLeaderboardPreference(),
             ]);
-            setUsers(data);
+            setUsers(data.users);
+            setRewardDue(data.rewardDue);
+            setRewardAmount(data.rewardAmount);
             setDaysLeft(days);
             setShowLeaderboard(preference);
         } catch (error) {
@@ -37,6 +42,10 @@ export default function Leaderboard() {
     useEffect(() => {
         fetchRankings();
     }, []);
+
+    const handleContinue = () => {
+        setRewardDue(false);
+    };
 
     const updateLeaderboardPreference = async (preference: boolean) => {
         try {
@@ -64,6 +73,12 @@ export default function Leaderboard() {
 
     return (
         <div className={styles.leaderboardContainer}>
+            {rewardDue && (
+                <LeaderboardReward
+                    gems={rewardAmount}
+                    onContinue={handleContinue}
+                />
+            )}
             <div className={styles.headingContainer}>
                 <h2>Weekly Leaderboard</h2>
                 <p>Top 5 win prizes</p>
