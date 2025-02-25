@@ -36,9 +36,7 @@ class User(db.Model):
     streak = db.Column(db.Integer, default=0)
     gems = db.Column(db.Integer, default=0)
     xp = db.Column(db.Integer, default=0)
-    # TODO: uncomment once functionality is added
-    # dark_mode = db.Column(db.Boolean, default=False)  # UI preference
-    leaderboard_on = db.Column(db.Boolean, default=True)  # Show leaderboard
+    leaderboard_on = db.Column(db.Boolean, default=True)
     weekly_review_done = db.Column(db.Boolean, default=False)  # complete/incomplete
 
     __table_args__ = (
@@ -363,7 +361,9 @@ class TestCaseOutput(db.Model):
     __tablename__ = "test_case_outputs"
 
     id = db.Column(db.Integer, primary_key=True)
-    test_case_id = db.Column(db.Integer, db.ForeignKey("test_cases.id"), nullable=False, index=True)
+    test_case_id = db.Column(
+        db.Integer, db.ForeignKey("test_cases.id"), nullable=False, index=True
+    )
     output = db.Column(db.Text, nullable=False)
 
     test_case = db.relationship("TestCase", back_populates="outputs")

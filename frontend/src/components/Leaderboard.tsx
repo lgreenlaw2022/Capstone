@@ -1,7 +1,13 @@
 import styles from "../styles/Leaderboard.module.css";
 import { useEffect, useState } from "react";
 import UserRankCard from "./UserRankCard";
-import { getLeaderboard, getLeaderboardDaysLeft } from "@/api/api";
+import {
+    getLeaderboard,
+    getLeaderboardDaysLeft,
+    getLeaderboardPreference,
+    setLeaderboardPreference,
+} from "@/api/api";
+import { get } from "http";
 
 interface User {
     username: string;
@@ -15,12 +21,14 @@ export default function Leaderboard() {
 
     const fetchRankings = async () => {
         try {
-            const [data, days] = await Promise.all([
+            const [data, days, preference] = await Promise.all([
                 getLeaderboard(),
-                getLeaderboardDaysLeft()
+                getLeaderboardDaysLeft(),
+                getLeaderboardPreference(),
             ]);
             setUsers(data);
-            setDaysLeft(days);  
+            setDaysLeft(days);
+            setShowLeaderboard(preference);
         } catch (error) {
             console.error("Error fetching xp", error);
         }
@@ -30,6 +38,15 @@ export default function Leaderboard() {
         fetchRankings();
     }, []);
 
+    const updateLeaderboardPreference = async (preference: boolean) => {
+        try {
+            await setLeaderboardPreference(preference);
+            setShowLeaderboard(preference);
+        } catch (error) {
+            console.error("Error updating leaderboard preference", error);
+        }
+    };
+
     if (!showLeaderboard) {
         return (
             <div className={styles.noLeaderboardContainer}>
@@ -38,7 +55,7 @@ export default function Leaderboard() {
                     <p className={styles.emphasisText}>Want to compete?</p>
                     <p>Top 5 win prizes</p>
                 </div>
-                <button onClick={() => setShowLeaderboard(true)}>
+                <button onClick={() => updateLeaderboardPreference(true)}>
                     Show Leaderboard
                 </button>
             </div>
@@ -54,14 +71,18 @@ export default function Leaderboard() {
             </div>
             <div className={styles.rankingsContainer}>
                 {users.map((user, index) => (
-                    <UserRankCard key={user.username} user={user} index={index} />
+                    <UserRankCard
+                        key={user.username}
+                        user={user}
+                        index={index}
+                    />
                 ))}
             </div>
             <div>
                 <p>Compared to users with similar habits</p>
                 <p
                     className={styles.toggleText}
-                    onClick={() => setShowLeaderboard(false)}
+                    onClick={() => updateLeaderboardPreference(false)}
                 >
                     Hide Leaderboard
                 </p>

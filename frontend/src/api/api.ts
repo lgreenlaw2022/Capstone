@@ -374,7 +374,6 @@ export const submitUnitReviewScore = async (unitId: number, accuracy: number) =>
 
 export const getLeaderboard = async () => {
     try {
-        console.log('Fetching leaderboard');
         const response = await axiosInstance.get('/leaderboard/weekly-rankings');
         return response.data;
     } catch (error) {
@@ -386,6 +385,39 @@ export const getLeaderboard = async () => {
         throw error;
     }
 }
+
+export const getLeaderboardPreference = async () => {
+    try {
+        const response = await axiosInstance.get('/leaderboard/show-preference');
+        return response.data;
+    }
+    catch (error) {
+        if (error instanceof Error) {
+            console.error('Error fetching leaderboard preference:', error.message);
+        } else {
+            console.error('Unknown error fetching leaderboard preference:', error);
+        }
+        throw error;
+    }
+}
+
+export const setLeaderboardPreference = async (preference: boolean) => {
+    try {
+        const response = await axiosInstance.put('/leaderboard/show-preference', {
+            leaderboard_on: preference
+        });
+        return response.data;
+    }
+    catch (error) {
+        if (error instanceof Error) {
+            console.error('Error setting leaderboard preference:', error.message);
+        } else {
+            console.error('Unknown error setting leaderboard preference:', error);
+        }
+        throw error;
+    }
+}
+
 
 export const getLeaderboardDaysLeft = async () => {
     try {

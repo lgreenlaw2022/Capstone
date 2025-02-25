@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
 import logging
 from datetime import datetime, timezone
@@ -91,6 +91,55 @@ def get_days_left():
     except Exception as e:
         logger.error(f"An error occurred while fetching days left: {str(e)}")
         return jsonify({"error": "An error occurred while fetching days left"}), 500
+
+
+@leaderboard_bp.route("/show-preference", methods=["GET"])
+@jwt_required()
+def get_leaderboard_show():
+    try:
+        # get user id from jwt token
+        user_id = get_jwt_identity()
+        # get user streak, number of modules completed, number of goals completed
+        user = User.query.get(user_id)
+        if not user:
+            return jsonify({"error": "User not found"}), 404
+
+        return jsonify(user.leaderboard_on), 200
+    except Exception as e:
+        logger.error(f"An error occurred while fetching leaderboard setting: {str(e)}")
+        return (
+            jsonify({"error": "An error occurred while fetching leaderboard setting"}),
+            500,
+        )
+
+
+@leaderboard_bp.route("/show-preference", methods=["PUT"])
+@jwt_required()
+def update_leaderboard_show():
+    try:
+        # get user id from jwt token
+        user_id = get_jwt_identity()
+        # get user streak, number of modules completed, number of goals completed
+        user = User.query.get(user_id)
+        if not user:
+            return jsonify({"error": "User not found"}), 404
+
+        data = request.get_json()
+        new_preference = data.get("leaderboard_on")
+        if new_preference is None:
+            return jsonify({"error": "Invalid input"}), 400
+
+        # update the user's leaderboard preference
+        user.leaderboard_on = new_preference
+        db.session.commit()
+
+        return jsonify(user.leaderboard_on), 200
+    except Exception as e:
+        logger.error(f"An error occurred while updating leaderboard setting: {str(e)}")
+        return (
+            jsonify({"error": "An error occurred while updating leaderboard setting"}),
+            500,
+        )
 
 
 @leaderboard_bp.route("/weekly-rankings", methods=["GET"])
