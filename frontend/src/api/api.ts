@@ -549,6 +549,20 @@ export const getShouldShowPersonalGoalButton = async () => {
     }
 }
 
+export const addWeeklyCompletionGoalGems = async () => {
+    try {
+        const response = await axiosInstance.put('/goals/reward-weekly-completion-goal');
+        return response.data;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error adding weekly completion goal gems:', error.message);
+        } else {
+            console.error('Unknown error adding weekly completion goal gems:', error);
+        }
+        throw error;
+    }
+}
+
 export const getUserChallengeHints = async (moduleId: number) => {
     try {
         const response = await axiosInstance.get(`/content/hints/${moduleId}`);

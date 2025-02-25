@@ -2,12 +2,13 @@ import styles from "../styles/Reward.module.css";
 import Image from "next/image";
 import openGift from "../../public/assets/open-gem-gift.svg";
 
-interface LeaderboardRewardProps {
+interface RewardProps {
+    title: string;
     gems: number;
     onContinue: () => void;
 }
 
-export default function LeaderboardReward({ gems, onContinue }: LeaderboardRewardProps) {
+export default function Reward({ title, gems, onContinue }: RewardProps) {
     const handleContinue = async () => {
         onContinue();
     };
@@ -16,8 +17,7 @@ export default function LeaderboardReward({ gems, onContinue }: LeaderboardRewar
         <>
             <div className={styles.overlay}></div>
             <div className={styles.rewardContainer}>
-                <h2>You topped the leaderboard!</h2>
-                {/* TODO: would be nice to have their rank, but not necessary */}
+                <h2>{title}</h2>
                 <Image
                     src={openGift}
                     alt="gem gift box"

@@ -5,7 +5,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 import logging
 from datetime import datetime, timedelta, timezone
 from enums import TimePeriodType, MetricType
-from config.constants import GEMS_FOR_COMPLETING_GOAL
+from config.constants import GEMS_FOR_COMPLETING_GOAL, GEMS_FOR_WEEKLY_COMPLETION_QUOTA
 
 from models import DailyUserActivity, db, User, Goal, UserGoal
 
@@ -154,8 +154,6 @@ def get_num_goals_completed_weekly():
             UserGoal.date_completed.between(start_of_week, end_of_week),
         ).count()
 
-
-
         logger.info(f"Number of goals completed this week: {num_completed}")
         return jsonify(num_completed), 200
     except Exception as e:
@@ -182,11 +180,6 @@ def add_gems_for_newly_completed_goal(goal_id):
         if user is None:
             logger.error("User not found")
             return jsonify({"error": "User not found"}), 404
-
-        # TODO: how to award gems for completing the weekly goal? -- not currently registered as a goal for the user, should it be? 
-            # where should I trigger the awarding of gems for completing the weekly goal?
-            # I am thinking this might be a new method and endpoint triggered by the frontend? -- need to mark on this on the backend somehow that its been gifted
-            # trigger only when the num goals == 7, although this is a bit hacky
         # validating the request
         user_goal = UserGoal.query.filter_by(user_id=user_id, goal_id=goal_id).first()
         if user_goal is None:
@@ -243,7 +236,7 @@ def add_personalized_goal():
 
         if time_period is None or goal_type is None or goal_value is None:
             return jsonify({"error": "Missing required data"}), 400
-        
+
         try:
             # TODO: this feels like a hack, I don't like it
             time_period = TimePeriodType[time_period.upper()]
@@ -278,12 +271,50 @@ def should_show_personal_goal_button():
         current_date = datetime.now().date()
         if current_date.day <= 7:
             return jsonify({"showButton": True}), 200
-        
+
         return jsonify({"showButton": False}), 200
 
     except Exception as e:
-        logger.error(f"An error occurred while checking allow personalized goals, {str(e)}")
+        logger.error(
+            f"An error occurred while checking allow personalized goals, {str(e)}"
+        )
         return (
             jsonify({"error": "An error occurred while checking allow personal goals"}),
             500,
         )
+
+
+@goals_bp.route("/reward-weekly-completion-goal", methods=["PUT"])
+@jwt_required()
+def add_weekly_completion_goal_gems():
+    try:
+        user_id = get_jwt_identity()
+        user = User.query.get(user_id)
+        if user is None:
+            logger.error("User not found")
+            return jsonify({"error": "User not found"}), 404
+
+        # add gems to user DailyActivity record
+        today = datetime.now(timezone.utc).date()
+        today_activity = DailyUserActivity.query.filter_by(
+            user_id=user_id, date=today
+        ).first()
+
+        if today_activity is None:
+            logger.error("Daily user activity not found")
+            return jsonify({"error": "Daily user activity not found"}), 404
+
+        # TODO: this should also never occur
+        if today_activity.gems_earned is None:
+            today_activity.gems_earned = 0
+            logger.debug(f"today activity gems was None, set to 0")
+
+        today_activity.gems_earned += GEMS_FOR_WEEKLY_COMPLETION_QUOTA
+        user.gems += GEMS_FOR_WEEKLY_COMPLETION_QUOTA
+        db.session.commit()
+
+        logger.info("Gems for weekly quota goal added successfully")
+        return jsonify({"message": "Gems added successfully"}), 200
+    except Exception as e:
+        logger.error(f"An error occurred while finishing a goal, {str(e)}")
+        return jsonify({"error": "An error occurred while finishing a goal"}), 500

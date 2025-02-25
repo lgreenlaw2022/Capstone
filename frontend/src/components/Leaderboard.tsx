@@ -8,7 +8,7 @@ import {
     setLeaderboardPreference,
 } from "@/api/api";
 import { get } from "http";
-import LeaderboardReward from "./LeaderboardReward";
+import Reward from "./Reward";
 
 interface User {
     username: string;
@@ -74,7 +74,9 @@ export default function Leaderboard() {
     return (
         <div className={styles.leaderboardContainer}>
             {rewardDue && (
-                <LeaderboardReward
+                // TODO: add rank?
+                <Reward
+                    title="You topped the leaderboard!"
                     gems={rewardAmount}
                     onContinue={handleContinue}
                 />

@@ -150,15 +150,20 @@ def get_weekly_rankings():
         current_user = User.query.get(user_id)
         if not current_user:
             return jsonify({"error": "User not found"}), 404
-        
+
         # Calculate the date of the most recent Monday
+        # TODO: would be best to adjust these dates + times to the user's time zone
         most_recent_monday = get_most_recent_monday()
         is_reward_due = False
         reward_amount = 0
         # Check if user should get rewards (only once per week)
-        if (current_user.last_leaderboard_reward_date is None or 
-                current_user.last_leaderboard_reward_date < most_recent_monday):
-            is_reward_due, reward_amount = check_and_award_user(current_user, most_recent_monday)
+        if (
+            current_user.last_leaderboard_reward_date is None
+            or current_user.last_leaderboard_reward_date < most_recent_monday
+        ):
+            is_reward_due, reward_amount = check_and_award_user(
+                current_user, most_recent_monday
+            )
 
         # Query to get users with activity since the most recent Monday and non-zero XP
         # order by xp earned in descending order
@@ -183,7 +188,16 @@ def get_weekly_rankings():
         users_data = [
             {"username": user.username, "weekly_xp": user.weekly_xp} for user in users
         ]
-        return jsonify({"users": users_data, "rewardDue": is_reward_due, "rewardAmount": reward_amount}), 200
+        return (
+            jsonify(
+                {
+                    "users": users_data,
+                    "rewardDue": is_reward_due,
+                    "rewardAmount": reward_amount,
+                }
+            ),
+            200,
+        )
 
     except Exception as e:
         logger.error(f"An error occurred while fetching weekly rankings: {str(e)}")
@@ -191,6 +205,7 @@ def get_weekly_rankings():
             jsonify({"error": "An error occurred while fetching weekly rankings"}),
             500,
         )
+
 
 def check_and_award_user(user, week_start_date):
     try:
@@ -216,21 +231,39 @@ def check_and_award_user(user, week_start_date):
             # Award gems based on position
             position = top_user_ids.index(user.id)
             gems_award = [15, 10, 10, 5, 5][position]  # Award based on position
-            
-            user.gems += gems_award
 
+            user.gems += gems_award
             today = datetime.now(timezone.utc).date()
             user.last_leaderboard_reward_date = today
-            
+
+            # add gems to user DailyActivity record
+            # TODO: this would be a great util to extract
+            today_activity = DailyUserActivity.query.filter_by(
+                user_id=user.id, date=today
+            ).first()
+
+            if today_activity is None:
+                logger.error("Daily user activity not found")
+                return False, 0
+
+            if today_activity.gems_earned is None:
+                today_activity.gems_earned = 0
+                logger.debug(f"today activity gems was None, set to 0")
+
+            today_activity.gems_earned += gems_award
             db.session.commit()
-            logger.info(f"User {user.id} awarded {gems_award} gems for rank {position+1} in previous week")
+
+            logger.info(
+                f"User {user.id} awarded {gems_award} gems for rank {position+1} in previous week"
+            )
             return True, gems_award
         else:
             return False, 0
     except Exception as e:
         db.session.rollback()
         logger.error(f"Error checking and awarding user: {str(e)}")
-        return False, 0 # TODO: not sure if I want to return False either way
+        return False, 0  # TODO: not sure if I want to return False either way
+
 
 @leaderboard_bp.route("/weekly-comparison", methods=["GET"])
 @jwt_required()
