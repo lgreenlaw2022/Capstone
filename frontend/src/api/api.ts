@@ -255,9 +255,9 @@ export const getCodeChallengeSolution = async (moduleId: number) => {
     }
 }
 
-export const getOpenBonusCodingChallenges = async () => {
+export const getBonusCodingChallenges = async () => {
     try {
-        const response = await axiosInstance.get('/content/bonus-code-challenges/open');
+        const response = await axiosInstance.get('/content/bonus-code-challenges');
         return response.data;
     } catch (error) {
         if (error instanceof Error) {
@@ -268,6 +268,25 @@ export const getOpenBonusCodingChallenges = async () => {
         throw error;
     }
 }
+
+export const buyBonusChallenge = async (moduleId: number) => {
+    try {
+        const response = await axiosInstance.post(`/content/bonus-challenges/${moduleId}/buy`);
+        return response.data;
+    } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+            if (error.response.status === 400) {
+                // Return a message for users
+                return { error: "Not enough gems to unlock." };
+            }
+            console.error('Error buying bonus challenge:', error.response.data.error);
+        } else {
+            console.error('Unknown error buying bonus challenge:', error);
+        }
+        throw error;
+    }
+}
+
 
 export const getCompletedUserUnits = async () => {
     try {

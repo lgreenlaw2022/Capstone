@@ -7,3 +7,5 @@ GEMS_FOR_COMPLETING_GOAL = 5
 GEMS_FOR_WEEKLY_COMPLETION_QUOTA = 10
 # cost of hint in gems
 GEMS_FOR_HINT = 5
+# cost of bonus challenge in gems
+GEMS_FOR_BONUS_CHALLENGE = 10
