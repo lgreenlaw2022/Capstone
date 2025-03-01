@@ -1,4 +1,4 @@
-import styles from "../styles/GoalReward.module.css";
+import styles from "../styles/Reward.module.css";
 import { Goal } from "../types/GoalTypes";
 import Image from "next/image";
 import openGift from "../../public/assets/open-gem-gift.svg";

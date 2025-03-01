@@ -1,5 +1,6 @@
 from datetime import datetime, timezone
 from config.constants import (
+    GEMS_FOR_BONUS_CHALLENGE,
     XP_FOR_COMPLETING_MODULE,
     XP_FOR_COMPLETING_CHALLENGE,
     GEMS_FOR_HINT,
@@ -602,11 +603,9 @@ def complete_unit(unit_id, user_id):
         ).first()
         if user_module is None:
             user_module = UserModule(
-                user_id=user_id, module_id=bonus_challenge_module.id, open=True
+                user_id=user_id, module_id=bonus_challenge_module.id
             )
             db.session.add(user_module)
-        else:
-            user_module.open = True
     db.session.commit()
 
     logger.debug(f"Bonus challenges added to UserModules")
@@ -675,12 +674,11 @@ def get_user_completed_units():
         return jsonify({"error": str(e)}), 500
 
 
-@content_bp.route("/bonus-code-challenges/open", methods=["GET"])
+@content_bp.route("/bonus-code-challenges", methods=["GET"])
 @jwt_required()
 def get_bonus_challenges():
     try:
         user_id = get_jwt_identity()
-
         bonus_challenges = (
             db.session.query(UserModule, Module, Unit)
             .join(Module, UserModule.module_id == Module.id)
@@ -688,7 +686,6 @@ def get_bonus_challenges():
             .filter(
                 UserModule.user_id == user_id,
                 Module.module_type == ModuleType.BONUS_CHALLENGE,
-                UserModule.open == True,
             )
             .all()
         )
@@ -707,6 +704,47 @@ def get_bonus_challenges():
         return jsonify(bonus_challenges_data), 200
     except Exception as e:
         logger.error(f"Error fetching practice challenges: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+
+
+@content_bp.route("/bonus-challenges/<int:challenge_id>/buy", methods=["POST"])
+@jwt_required()
+def buy_bonus_challenge(challenge_id):
+    try:
+        user_id = get_jwt_identity()
+        # validate bonus challenge exists
+        module = Module.query.get(challenge_id)
+        if module is None:
+            logger.debug("Bonus challenge not found")
+            return jsonify({"error": "Bonus challenge not found"}), 404
+        if module.module_type != ModuleType.BONUS_CHALLENGE:
+            logger.debug("Module is not a bonus challenge")
+            return jsonify({"error": "Module is not a bonus challenge"}), 400
+
+        user_module = UserModule.query.filter_by(
+            user_id=user_id, module_id=challenge_id
+        ).first()
+
+        if user_module is None:
+            user_module = UserModule(user_id=user_id, module_id=challenge_id)
+        elif user_module.open:
+            logger.debug("Bonus challenge already open")
+            return jsonify({"message": "Bonus challenge already open"}), 200
+        # deduct gems for bonus challenge purchase
+        user = User.query.get(user_id)
+        if user.gems < GEMS_FOR_BONUS_CHALLENGE:
+            logger.error(f"Insufficient gems to buy bonus challenge for user {user_id}")
+            return jsonify({"error": "Insufficient gems to buy bonus challenge"}), 400
+
+        user.gems -= GEMS_FOR_BONUS_CHALLENGE
+        user_module.open = True
+        db.session.add(user_module)
+        db.session.commit()
+
+        logger.info(f"Bonus challenge {challenge_id} unlocked successfully")
+        return jsonify({"message": "Bonus challenge unlocked successfully"}), 200
+    except Exception as e:
+        logger.error(f"Error unlocking bonus challenge {challenge_id}: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
 

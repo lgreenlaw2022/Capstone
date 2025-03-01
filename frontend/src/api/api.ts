@@ -255,9 +255,9 @@ export const getCodeChallengeSolution = async (moduleId: number) => {
     }
 }
 
-export const getOpenBonusCodingChallenges = async () => {
+export const getBonusCodingChallenges = async () => {
     try {
-        const response = await axiosInstance.get('/content/bonus-code-challenges/open');
+        const response = await axiosInstance.get('/content/bonus-code-challenges');
         return response.data;
     } catch (error) {
         if (error instanceof Error) {
@@ -268,6 +268,25 @@ export const getOpenBonusCodingChallenges = async () => {
         throw error;
     }
 }
+
+export const buyBonusChallenge = async (moduleId: number) => {
+    try {
+        const response = await axiosInstance.post(`/content/bonus-challenges/${moduleId}/buy`);
+        return response.data;
+    } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+            if (error.response.status === 400) {
+                // Return a message for users
+                return { error: "Not enough gems to unlock." };
+            }
+            console.error('Error buying bonus challenge:', error.response.data.error);
+        } else {
+            console.error('Unknown error buying bonus challenge:', error);
+        }
+        throw error;
+    }
+}
+
 
 export const getCompletedUserUnits = async () => {
     try {
@@ -374,7 +393,6 @@ export const submitUnitReviewScore = async (unitId: number, accuracy: number) =>
 
 export const getLeaderboard = async () => {
     try {
-        console.log('Fetching leaderboard');
         const response = await axiosInstance.get('/leaderboard/weekly-rankings');
         return response.data;
     } catch (error) {
@@ -386,6 +404,39 @@ export const getLeaderboard = async () => {
         throw error;
     }
 }
+
+export const getLeaderboardPreference = async () => {
+    try {
+        const response = await axiosInstance.get('/leaderboard/show-preference');
+        return response.data;
+    }
+    catch (error) {
+        if (error instanceof Error) {
+            console.error('Error fetching leaderboard preference:', error.message);
+        } else {
+            console.error('Unknown error fetching leaderboard preference:', error);
+        }
+        throw error;
+    }
+}
+
+export const setLeaderboardPreference = async (preference: boolean) => {
+    try {
+        const response = await axiosInstance.put('/leaderboard/show-preference', {
+            leaderboard_on: preference
+        });
+        return response.data;
+    }
+    catch (error) {
+        if (error instanceof Error) {
+            console.error('Error setting leaderboard preference:', error.message);
+        } else {
+            console.error('Unknown error setting leaderboard preference:', error);
+        }
+        throw error;
+    }
+}
+
 
 export const getLeaderboardDaysLeft = async () => {
     try {
@@ -512,6 +563,20 @@ export const getShouldShowPersonalGoalButton = async () => {
             console.error('Error fetching personal goal button status:', error.message);
         } else {
             console.error('Unknown error fetching personal goal button status:', error);
+        }
+        throw error;
+    }
+}
+
+export const addWeeklyCompletionGoalGems = async () => {
+    try {
+        const response = await axiosInstance.put('/goals/reward-weekly-completion-goal');
+        return response.data;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error adding weekly completion goal gems:', error.message);
+        } else {
+            console.error('Unknown error adding weekly completion goal gems:', error);
         }
         throw error;
     }
