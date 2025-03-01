@@ -316,5 +316,5 @@ def add_weekly_completion_goal_gems():
         logger.info("Gems for weekly quota goal added successfully")
         return jsonify({"message": "Gems added successfully"}), 200
     except Exception as e:
-        logger.error(f"An error occurred while finishing a goal, {str(e)}")
-        return jsonify({"error": "An error occurred while finishing a goal"}), 500
+        logger.error(f"An error occurred while rewarding weekly completion goal, {str(e)}")
+        return jsonify({"error": "An error occurred while rewarding weekly completion goal"}), 500

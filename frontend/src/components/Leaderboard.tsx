@@ -7,7 +7,6 @@ import {
     getLeaderboardPreference,
     setLeaderboardPreference,
 } from "@/api/api";
-import { get } from "http";
 import Reward from "./Reward";
 
 interface User {
@@ -64,7 +63,7 @@ export default function Leaderboard() {
                     <p className={styles.emphasisText}>Want to compete?</p>
                     <p>Top 5 win prizes</p>
                 </div>
-                <button onClick={() => updateLeaderboardPreference(true)}>
+                <button type="button" onClick={() => updateLeaderboardPreference(true)}>
                     Show Leaderboard
                 </button>
             </div>

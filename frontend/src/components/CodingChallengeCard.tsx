@@ -22,7 +22,6 @@ export default function ConceptReviewCard({
     const [modalOpen, setModalOpen] = useState<boolean>(false);
 
     const handleClick = async () => {
-        console.log(open);
         if (open) {
             router.push(`/learn/challenge/${module_id}`);
         } else {

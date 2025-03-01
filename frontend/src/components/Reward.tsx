@@ -9,13 +9,9 @@ interface RewardProps {
 }
 
 export default function Reward({ title, gems, onContinue }: RewardProps) {
-    const handleContinue = async () => {
-        onContinue();
-    };
-
     return (
         <>
-            <div className={styles.overlay}></div>
+            <div className={styles.overlay} />
             <div className={styles.rewardContainer}>
                 <h2>{title}</h2>
                 <Image
@@ -25,7 +21,11 @@ export default function Reward({ title, gems, onContinue }: RewardProps) {
                     height={118}
                 />
                 <p>You earned {gems} gems</p>
-                <button onClick={handleContinue} className={styles.text}>
+                <button
+                    onClick={onContinue}
+                    type="button"
+                    className={styles.text}
+                >
                     Keep it Going!
                 </button>
             </div>

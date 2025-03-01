@@ -717,6 +717,9 @@ def buy_bonus_challenge(challenge_id):
         if module is None:
             logger.debug("Bonus challenge not found")
             return jsonify({"error": "Bonus challenge not found"}), 404
+        if module.module_type != ModuleType.BONUS_CHALLENGE:
+            logger.debug("Module is not a bonus challenge")
+            return jsonify({"error": "Module is not a bonus challenge"}), 400
 
         user_module = UserModule.query.filter_by(
             user_id=user_id, module_id=challenge_id
@@ -724,6 +727,9 @@ def buy_bonus_challenge(challenge_id):
 
         if user_module is None:
             user_module = UserModule(user_id=user_id, module_id=challenge_id)
+        elif user_module.open:
+            logger.debug("Bonus challenge already open")
+            return jsonify({"message": "Bonus challenge already open"}), 200
         # deduct gems for bonus challenge purchase
         user = User.query.get(user_id)
         if user.gems < GEMS_FOR_BONUS_CHALLENGE:

@@ -18,7 +18,7 @@ export default function WeeklyGift() {
         const data = await getNumGoalsCompletedThisWeek();
         setNumGoalsCompleted(data);
         // TODO: not an ideal trigger
-        if (numGoalsCompleted == 7) {
+        if (data == 7) {
             setShowReward(true);
         }
     };
