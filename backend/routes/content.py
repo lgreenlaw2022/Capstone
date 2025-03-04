@@ -4,6 +4,7 @@ from config.constants import (
     XP_FOR_COMPLETING_MODULE,
     XP_FOR_COMPLETING_CHALLENGE,
     GEMS_FOR_HINT,
+    QUIZ_ACCURACY_THRESHOLD,
 )
 from services.user_activity_service import update_daily_xp
 from services.badge_awarding_service import BadgeAwardingService
@@ -241,10 +242,9 @@ def submit_quiz_scores(module_id):
             return jsonify({"error": "Accuracy is required"}), 400
         if not (0 <= accuracy <= 100):
             return jsonify({"error": "Accuracy must be between 0 and 100"}), 400
-        ACCURACY_THRESHOLD = 80  # TODO Define the threshold for passing as a constant
 
         # mark module as complete if accuracy is above passing threshold
-        if accuracy >= ACCURACY_THRESHOLD:
+        if accuracy >= QUIZ_ACCURACY_THRESHOLD:
             user_id = get_jwt_identity()
             mark_module_complete_and_open_next(module_id, user_id)
 

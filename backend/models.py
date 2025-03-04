@@ -123,7 +123,6 @@ class Goal(db.Model):
         db.Integer, nullable=False
     )  # The amount required to complete the quest
     time_period = db.Column(db.Enum(TimePeriodType), nullable=False)
-    # TODO: consider marking user generated goals as such
 
     users = db.relationship("UserGoal", back_populates="goal")
 

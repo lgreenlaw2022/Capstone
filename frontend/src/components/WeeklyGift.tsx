@@ -52,7 +52,6 @@ export default function WeeklyGift() {
                 <Image src={giftLarge} alt="gift box" width={87} height={82} />
             </div>
             <div className="weeklyGiftDescription">
-                {/* TODO: will this be dynamic? -- not for MVP*/}
                 <p>Complete 7 goals</p>
                 <div>
                     <div>

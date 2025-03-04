@@ -19,7 +19,6 @@ logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG)
 
 
-# TODO: Initialize Migrate for database migrations
 def create_app():
 
     # Create and configure the Flask application

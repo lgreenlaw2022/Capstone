@@ -243,7 +243,6 @@ def submit_unit_quiz_score(unit_id):
 
         if accuracy >= QUIZ_ACCURACY_THRESHOLD:
             user_id = get_jwt_identity()
-            # TODO: reward XP
             # mark questions as practiced (assuming they got all questions correct)
             unit_questions = (
                 db.session.query(QuizQuestion)
