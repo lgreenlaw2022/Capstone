@@ -2,18 +2,24 @@ FROM node:18-slim
 
 WORKDIR /app
 
-# Install dependencies
+# Copy package files
 COPY package*.json ./
+
+# Install dependencies
 RUN npm install
 
-# Copy source
+# Copy all files
 COPY . .
 
-# Build the app
+# Build the Next.js application
 RUN npm run build
 
-# Environment setup
-ENV NODE_ENV=production
+# Expose port 3000
+EXPOSE 3000
 
-# Use shell form to allow environment variable interpolation
-CMD npm start -- -p ${PORT:-3000} 
+# Set production environment
+ENV NODE_ENV=production
+ENV PORT=3000
+
+# Start the application
+CMD ["sh", "-c", "next start -p ${PORT}"] 
