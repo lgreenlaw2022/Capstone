@@ -36,7 +36,7 @@ export default function Review() {
                 <h3>Concept Review</h3>
                 {units.length === 0 && <p>No units to review</p>}
                 <div className={styles.conceptReviewContainer}>
-                    {units.map((unit, index) => (
+                    {units.map((unit) => (
                         <ConceptReviewCard
                             key={unit.id}
                             unitId={unit.id}

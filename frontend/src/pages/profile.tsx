@@ -40,7 +40,7 @@ export default function Profile() {
             return;
         }
         try {
-            const data = await deleteUser();
+            await deleteUser();
             router.push('/register');
         } catch (error) {
             setError('Error deleting account. Please try again.');
