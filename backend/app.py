@@ -6,10 +6,10 @@ from flask_jwt_extended import JWTManager
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 import logging
+import dotenv
 
 # Load environment variables from .env file
-# from dotenv import load_dotenv
-# load_dotenv()
+dotenv.load_dotenv()
 # Initialize SQLAlchemy for database operations
 from models import db
 
@@ -30,20 +30,33 @@ def create_app():
 
     # Configure the app with necessary settings
     app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "default_secret_key")
-    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
-        "DATABASE_URL",
-        f"sqlite:///{os.path.join(app.instance_path, 'site.db')}",
-    )
+
+    # Get database URL from environment
+    database_url = os.environ.get("DATABASE_URL")
+
+    if database_url:
+        # Replace postgres:// with postgresql:// in the URL
+        if database_url.startswith("postgres://"):
+            database_url = database_url.replace("postgres://", "postgresql://", 1)
+
+        # Add SSL mode for Railway deployment
+        if "sslmode" not in database_url:
+            database_url += "?sslmode=require"
+    else:
+        # Fallback to SQLite for local development
+        database_url = f"sqlite:///{os.path.join(app.instance_path, 'site.db')}"
+
+    app.config["SQLALCHEMY_DATABASE_URI"] = database_url
     app.config["JWT_SECRET_KEY"] = os.environ.get(
         "JWT_SECRET_KEY", "default_jwt_secret_key"
-    )  # TODO Change this to a random secret key
-
+    )
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
     # Configure CORS based on environment
-    if app.config["ENV"] == "production":
+    frontend_url = os.environ.get("FRONTEND_URL")
+    if app.config["ENV"] == "production" and frontend_url:
         # In production, only allow the frontend domain
-        CORS(app, origins=[os.environ.get("FRONTEND_URL")])
+        CORS(app, origins=[frontend_url])
     else:
         # In development, allow all origins
         CORS(app)

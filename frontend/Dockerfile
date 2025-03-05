@@ -22,4 +22,6 @@ ENV NODE_ENV=production
 ENV PORT=3000
 
 # Start the application
-CMD ["sh", "-c", "next start -p ${PORT}"] 
+# 
+# Start the application using npm run start
+CMD ["npm", "run", "start"]
