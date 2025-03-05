@@ -1,10 +1,21 @@
-venv/
+# Python
 __pycache__/
-
+*.py[cod]
+*$py.class
+venv/
 instance/
+
+# Node
+node_modules/
+
+# Environment
 .env
-*.pyc
-*.pyo
+.env.local
+
+# Database
 *.db
-.env.*
-.flaskenv
+*.sqlite3
+
+# IDE
+.vscode/
+.idea/

@@ -40,8 +40,13 @@ def create_app():
 
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-    # Enable Cross-Origin Resource Sharing (CORS) for the app
-    CORS(app)
+    # Configure CORS based on environment
+    if app.config["ENV"] == "production":
+        # In production, only allow the frontend domain
+        CORS(app, origins=[os.environ.get("FRONTEND_URL")])
+    else:
+        # In development, allow all origins
+        CORS(app)
 
     # Initialize JWT Manager
     jwt = JWTManager(app)
