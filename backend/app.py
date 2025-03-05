@@ -31,7 +31,7 @@ def create_app():
     # Configure the app with necessary settings
     app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "default_secret_key")
     app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
-        "SQLALCHEMY_DATABASE_URI",
+        "DATABASE_URL",
         f"sqlite:///{os.path.join(app.instance_path, 'site.db')}",
     )
     app.config["JWT_SECRET_KEY"] = os.environ.get(
