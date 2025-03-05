@@ -24,6 +24,12 @@ badges:
     criteria_expression: "user_unit_completed == True and unit_title == 'Strings and Arrays'"
     event_type: UNIT_COMPLETION
 
+  - title: "Graphs"
+    description: "Awarded for completing the graphs unit."
+    type: CONTENT
+    criteria_expression: "user_unit_completed == True and unit_title == 'Graphs'"
+    event_type: UNIT_COMPLETION
+
 # Award Badges
   # TODO: monitor how this badge is awarded
   - title: "7 day streak"
@@ -48,4 +54,10 @@ badges:
     description: "Awarded for completing 5 modules."
     type: AWARD
     criteria_expression: "user_modules_completed >= 5"
+    event_type: COMPLETE_MODULE
+
+  - title: "Complete 25 Modules"
+    description: "Awarded for completing 25 modules."
+    type: AWARD
+    criteria_expression: "user_modules_completed >= 25"
     event_type: COMPLETE_MODULE
