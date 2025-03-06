@@ -11,6 +11,10 @@ RUN npm install
 # Copy all files
 COPY . .
 
+# Set environment variables before build
+ARG NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+
 # Build the Next.js application
 RUN npm run build
 
@@ -20,7 +24,6 @@ EXPOSE 3000
 # Set production environment
 ENV NODE_ENV=production
 ENV PORT=3000
-ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 
 # Start the application
 # 
