@@ -16,4 +16,4 @@ ENV FLASK_APP=app.py
 ENV FLASK_ENV=production
 
 # Use shell form to allow environment variable interpolation
-CMD gunicorn "app:create_app()" --timeout 180 --bind "0.0.0.0:${PORT:-5000}" --log-level debug
+flask db upgrade && flask seed && gunicorn "app:create_app()" --timeout 120 --bind "0.0.0.0:${PORT:-5000}" --log-level debug
