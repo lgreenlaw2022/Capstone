@@ -19,14 +19,16 @@ logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG)
 
 
-# TODO: Initialize Migrate for database migrations
 def create_app():
+    logger.debug("Creating app...")
 
     # Create and configure the Flask application
     app = Flask(__name__, instance_relative_config=True)
+    logger.debug("Flask app created")
 
     # Create instance folder if it doesn't exist
     os.makedirs(app.instance_path, exist_ok=True)
+    logger.debug(f"Instance path: {app.instance_path}")
 
     # Configure the app with necessary settings
     app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "default_secret_key")
@@ -34,17 +36,12 @@ def create_app():
     # Get database URL from environment
     database_url = os.environ.get("DATABASE_URL")
 
-    if database_url:
-        # Replace postgres:// with postgresql:// in the URL
-        if database_url.startswith("postgres://"):
-            database_url = database_url.replace("postgres://", "postgresql://", 1)
-
-        # Add SSL mode for Railway deployment
-        if "sslmode" not in database_url:
-            database_url += "?sslmode=require"
-    else:
+    if not database_url:
+        logger.debug("DATABASE_URL not found in environment variables")
         # Fallback to SQLite for local development
         database_url = f"sqlite:///{os.path.join(app.instance_path, 'site.db')}"
+
+    logger.debug(f"SQLALCHEMY_DATABASE_URI: {database_url}")
 
     app.config["SQLALCHEMY_DATABASE_URI"] = database_url
     app.config["JWT_SECRET_KEY"] = os.environ.get(
@@ -54,19 +51,24 @@ def create_app():
 
     # Configure CORS based on environment
     frontend_url = os.environ.get("FRONTEND_URL")
+    logger.debug(f"FRONTEND_URL: {frontend_url}")
     if app.config["ENV"] == "production" and frontend_url:
         # In production, only allow the frontend domain
+        logger.debug("Setting CORS with frontend URL because in production")
         CORS(app, origins=[frontend_url])
     else:
         # In development, allow all origins
         CORS(app)
 
     # Initialize JWT Manager
+    logger.debug("Initializing JWT Manager")
     jwt = JWTManager(app)
 
     # Initialize database and migration functionalities with the app
+    logger.debug("Initializing database and migration functionalities")
     db.init_app(app)
     migrate.init_app(app, db)
+    logger.debug("Database and migration functionalities initialized")
 
     # register blueprints
     from routes.user_info import user_bp
@@ -84,6 +86,7 @@ def create_app():
     app.register_blueprint(review_bp, url_prefix="/review")
     app.register_blueprint(leaderboard_bp, url_prefix="/leaderboard")
     app.register_blueprint(goals_bp, url_prefix="/goals")
+    logger.debug("Blueprints registered")
 
     # Create all database tables within the application context
     # custom CLI command to run the seed script
