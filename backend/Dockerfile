@@ -18,8 +18,11 @@ ENV FLASK_ENV=production
 # Create a startup script that ensures database is ready
 RUN echo '#!/bin/sh\n\
 echo "Waiting for database to be ready..."\n\
-while ! nc -z postgres.railway.internal 5432; do\n\
-  sleep 0.1\n\
+DB_HOST=$(echo $DATABASE_URL | sed -n "s/.*@\([^:]*\):.*/\1/p")\n\
+DB_PORT=$(echo $DATABASE_URL | sed -n "s/.*:\([0-9]*\)\/.*/\1/p")\n\
+echo "Checking connection to $DB_HOST:$DB_PORT"\n\
+while ! nc -z $DB_HOST $DB_PORT; do\n\
+  sleep 1\n\
 done\n\
 echo "Database is ready!"\n\
 echo "Running migrations..."\n\
