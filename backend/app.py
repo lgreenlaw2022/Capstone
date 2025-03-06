@@ -26,11 +26,9 @@ def create_app():
     # Create and configure the Flask application
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_object("config.Config")
-    logger.debug("Flask app created")
 
     # Create instance folder if it doesn't exist
     os.makedirs(app.instance_path, exist_ok=True)
-    logger.debug(f"Instance path: {app.instance_path}")
 
     # Configure the app with necessary settings
     app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "default_secret_key")
@@ -49,14 +47,12 @@ def create_app():
     app.config["JWT_SECRET_KEY"] = os.environ.get(
         "JWT_SECRET_KEY", "default_jwt_secret_key"
     )
-    logger.debug(f"JWT_SECRET_KEY: {app.config['JWT_SECRET_KEY']}")
 
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
     # Configure CORS based on environment
     frontend_url = os.environ.get("FRONTEND_URL")
     logger.debug(f"FRONTEND_URL: {frontend_url}")
-    logger.debug(f"ENV: {app.config['ENV']}")
     if app.config["ENV"] == "production" and frontend_url:
         # In production, only allow the frontend domain
         logger.debug("Setting CORS with frontend URL because in production")
@@ -66,7 +62,6 @@ def create_app():
         CORS(app)
 
     # Initialize JWT Manager with error handlers
-    logger.debug("Initializing JWT Manager")
     jwt = JWTManager(app)
 
     @jwt.invalid_token_loader
@@ -91,10 +86,8 @@ def create_app():
         return jsonify({"msg": "Token has expired", "error": "expired"}), 401
 
     # Initialize database and migration functionalities with the app
-    logger.debug("Initializing database and migration functionalities")
     db.init_app(app)
     migrate.init_app(app, db)
-    logger.debug("Database and migration functionalities initialized")
 
     # register blueprints
     from routes.user_info import user_bp
@@ -112,7 +105,6 @@ def create_app():
     app.register_blueprint(review_bp, url_prefix="/review")
     app.register_blueprint(leaderboard_bp, url_prefix="/leaderboard")
     app.register_blueprint(goals_bp, url_prefix="/goals")
-    logger.debug("Blueprints registered")
 
     # Add the home route
     @app.route("/")
