@@ -56,7 +56,6 @@ def create_app():
     logger.debug(f"ENV: {app.config['ENV']}")
     if app.config["ENV"] == "production" and frontend_url:
         # In production, only allow the frontend domain
-        # NOTE: this is not being triggered
         logger.debug("Setting CORS with frontend URL because in production")
         CORS(app, origins=[frontend_url])
     else:
