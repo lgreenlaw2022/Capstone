@@ -73,7 +73,11 @@ def login():
 
     # Check if the user exists and the password is correct
     if user and user.check_password(data["password"]):
+        logger.debug(
+            f"Creating access token for user ID: {user.id} (type: {type(user.id)})"
+        )
         access_token = create_access_token(identity=user.id)
+        logger.debug(f"Access token created successfully: {access_token[:20]}...")
         try:
             if reset_streak(user):
                 logger.info(f"User {user.id} streak reset due to inactivity")

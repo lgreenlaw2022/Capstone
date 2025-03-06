@@ -1,5 +1,5 @@
 # Import necessary modules from Flask and related extensions
-from flask import Flask
+from flask import Flask, jsonify
 from flask_cors import CORS
 import os
 from flask_jwt_extended import JWTManager
@@ -62,9 +62,30 @@ def create_app():
         # In development, allow all origins
         CORS(app)
 
-    # Initialize JWT Manager
+    # Initialize JWT Manager with error handlers
     logger.debug("Initializing JWT Manager")
     jwt = JWTManager(app)
+
+    @jwt.invalid_token_loader
+    def invalid_token_callback(error):
+        logger.error(f"Invalid token error: {str(error)}")
+        logger.error(f"Token validation failed. Error type: {type(error)}")
+        logger.error(f"Request headers: {dict(request.headers)}")
+        return jsonify({"msg": "Invalid token", "error": str(error)}), 401
+
+    @jwt.unauthorized_loader
+    def unauthorized_callback(error):
+        logger.error(f"Unauthorized error: {str(error)}")
+        logger.error(f"Request headers: {dict(request.headers)}")
+        return (
+            jsonify({"msg": "Missing Authorization Header", "error": str(error)}),
+            401,
+        )
+
+    @jwt.expired_token_loader
+    def expired_token_callback(jwt_header, jwt_payload):
+        logger.error(f"Expired token. Payload: {jwt_payload}")
+        return jsonify({"msg": "Token has expired", "error": "expired"}), 401
 
     # Initialize database and migration functionalities with the app
     logger.debug("Initializing database and migration functionalities")
