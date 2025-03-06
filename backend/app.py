@@ -16,7 +16,8 @@ from models import db
 migrate = Migrate()
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.DEBUG)
+log_level = os.environ.get("LOG_LEVEL", "DEBUG").upper()
+logging.basicConfig(level=log_level)
 
 
 def create_app():

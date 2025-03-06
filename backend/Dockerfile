@@ -14,6 +14,7 @@ COPY . .
 
 ENV FLASK_APP=app.py
 ENV FLASK_ENV=production
+ENV LOG_LEVEL=INFO
 
 # Create a startup script that ensures database is ready
 RUN echo '#!/bin/sh\n\
