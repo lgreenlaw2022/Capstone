@@ -1,5 +1,5 @@
 # Import necessary modules from Flask and related extensions
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 import os
 from flask_jwt_extended import JWTManager
@@ -48,6 +48,8 @@ def create_app():
     app.config["JWT_SECRET_KEY"] = os.environ.get(
         "JWT_SECRET_KEY", "default_jwt_secret_key"
     )
+    logger.debug(f"JWT_SECRET_KEY: {app.config['JWT_SECRET_KEY']}")
+
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
     # Configure CORS based on environment
@@ -69,14 +71,13 @@ def create_app():
     @jwt.invalid_token_loader
     def invalid_token_callback(error):
         logger.error(f"Invalid token error: {str(error)}")
-        logger.error(f"Token validation failed. Error type: {type(error)}")
-        logger.error(f"Request headers: {dict(request.headers)}")
+        logger.error(f"Request headers: {request.headers}")
         return jsonify({"msg": "Invalid token", "error": str(error)}), 401
 
     @jwt.unauthorized_loader
     def unauthorized_callback(error):
         logger.error(f"Unauthorized error: {str(error)}")
-        logger.error(f"Request headers: {dict(request.headers)}")
+        logger.error(f"Request headers: {request.headers}")
         return (
             jsonify({"msg": "Missing Authorization Header", "error": str(error)}),
             401,
@@ -85,6 +86,7 @@ def create_app():
     @jwt.expired_token_loader
     def expired_token_callback(jwt_header, jwt_payload):
         logger.error(f"Expired token. Payload: {jwt_payload}")
+        logger.error(f"Request headers: {request.headers}")
         return jsonify({"msg": "Token has expired", "error": "expired"}), 401
 
     # Initialize database and migration functionalities with the app

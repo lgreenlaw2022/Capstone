@@ -76,7 +76,7 @@ def login():
         logger.debug(
             f"Creating access token for user ID: {user.id} (type: {type(user.id)})"
         )
-        access_token = create_access_token(identity=user.id)
+        access_token = create_access_token(identity=str(user.id)) # convert to a string for the sub field
         logger.debug(f"Access token created successfully: {access_token[:20]}...")
         try:
             if reset_streak(user):
