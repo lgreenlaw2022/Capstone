@@ -24,6 +24,7 @@ def create_app():
 
     # Create and configure the Flask application
     app = Flask(__name__, instance_relative_config=True)
+    app.config.from_object("config.Config")
     logger.debug("Flask app created")
 
     # Create instance folder if it doesn't exist
@@ -52,8 +53,10 @@ def create_app():
     # Configure CORS based on environment
     frontend_url = os.environ.get("FRONTEND_URL")
     logger.debug(f"FRONTEND_URL: {frontend_url}")
+    logger.debug(f"ENV: {app.config['ENV']}")
     if app.config["ENV"] == "production" and frontend_url:
         # In production, only allow the frontend domain
+        # NOTE: this is not being triggered
         logger.debug("Setting CORS with frontend URL because in production")
         CORS(app, origins=[frontend_url])
     else:
@@ -88,6 +91,11 @@ def create_app():
     app.register_blueprint(goals_bp, url_prefix="/goals")
     logger.debug("Blueprints registered")
 
+    # Add the home route
+    @app.route("/")
+    def home():
+        return {"status": "API is running"}, 200
+
     # Create all database tables within the application context
     # custom CLI command to run the seed script
     @app.cli.command("seed")
@@ -105,7 +113,13 @@ def create_app():
 
 
 # main guard
-# port and host changed for deployment purposes
 if __name__ == "__main__":
     app = create_app()
-    app.run(debug=True, host="0.0.0.0", port=5000)
+    if app.config["ENV"] == "production":
+        logger.debug("Running in production mode")
+        # Use gunicorn in production, don't run app.run()
+        pass
+    else:
+        # Only for local development
+        logger.debug("Running in development mode")
+        app.run(debug=True, host="0.0.0.0", port=5000)

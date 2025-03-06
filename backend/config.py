@@ -8,10 +8,7 @@ class Config:
         "DATABASE_URL", "sqlite:///instance/site.db"
     )
 
-    # Replace postgresql:// with postgresql:// if present in the URL (Railway specific)
-    if SQLALCHEMY_DATABASE_URI and SQLALCHEMY_DATABASE_URI.startswith("postgres://"):
-        SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_URI.replace(
-            "postgres://", "postgresql://", 1
-        )
-
-    # Other environment variables can be added here as needed
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    JWT_SECRET_KEY = os.environ.get("JWT_SECRET_KEY", "default_jwt_secret_key")
+    ENV = os.environ.get("FLASK_ENV", "development")
+    FRONTEND_URL = os.environ.get("FRONTEND_URL")
