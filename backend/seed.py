@@ -345,28 +345,11 @@ def clear_daily_user_activity():
 
 def seed_data():
     with app.app_context():
-        # Reset user progress
-        # clear_users()
-        # clear_user_units()
-        # clear_user_modules()
-        # db.session.query(UserUnit).filter_by(user_id=1).delete()
-        # db.session.query(UserModule).filter_by(user_id=1).delete()
-        # db.session.commit()
-        # clear_user_badges()
-        # clear_daily_user_activity()
-        # db.session.query(UserGoal).delete()
-
-        logger.info("Clearing database...")
-        db.session.query(Goal).delete()
-        db.session.query(Badge).delete()
-        db.session.query(Unit).delete()
-        db.session.query(Module).delete()
-        db.session.query(QuizQuestion).delete()
-        db.session.query(QuizQuestionOption).delete()
-        db.session.query(Hint).delete()
-        db.session.query(TestCase).delete()
-        db.session.commit()
-        logger.info("Database is reset")
+        logger.info("Dropping all tables...")
+        db.drop_all()
+        logger.info("Creating all tables...")
+        db.create_all()
+        logger.info("Database reset complete")
 
         # Check if the course already exists
         course = Course.query.filter_by(title="Technical Interview Prep").first()
@@ -375,8 +358,6 @@ def seed_data():
             db.session.add(course)
             db.session.commit()
 
-        # TODO: how am I handling small changes, right now it might override all user data?
-        # maybe make patch functions, like add this here or something?
         logger.info("Seeding badges...")
         load_badges()
 

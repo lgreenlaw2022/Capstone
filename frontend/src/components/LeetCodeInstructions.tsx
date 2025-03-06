@@ -45,15 +45,15 @@ export default function LeetCodeInstructions() {
                             >
                                 leetcode.com
                             </a>{" "}
-                            if you haven't already
+                            if you haven&apos;t already
                         </li>
                         <li>
                             Use the LeetCode link at the top of this page to
                             access the problem
                         </li>
                         <li>
-                            Use LeetCode's built-in editor to write and test
-                            your solution
+                            Use LeetCode&apos;s built-in editor to write and
+                            test your solution
                         </li>
                         <li>
                             Run the provided test cases to verify your solution

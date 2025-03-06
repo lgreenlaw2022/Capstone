@@ -1,3 +1,30 @@
 {
-  "extends": ["next/core-web-vitals", "next/typescript"]
+  "extends": [
+    "next/core-web-vitals",
+    "next/typescript",
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended"
+  ],
+  "plugins": ["@typescript-eslint", "react", "react-hooks"],
+  "rules": {
+    "react/react-in-jsx-scope": "off", // Next.js handles this
+    "react/jsx-uses-react": "off", // Next.js handles this
+    "@typescript-eslint/no-explicit-any": "warn", // Encourage better typing, but not strictly enforce
+    "@typescript-eslint/explicit-module-boundary-types": "off", // For convenience, but can be enabled if needed
+    "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }], // Warn on unused vars
+    "no-console": "warn", // Warn on console logs (you can change to "error" if needed)
+    "react/prop-types": "off", // Next.js uses TypeScript, no need for prop-types
+    "react-hooks/rules-of-hooks": "error", // Ensure correct hooks usage
+    "react-hooks/exhaustive-deps": "warn" // Warn about missing dependencies in useEffect
+  },
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx"],
+      "rules": {
+        "@typescript-eslint/explicit-function-return-type": "off" // Disable function return type enforcement
+      }
+    }
+  ]
 }

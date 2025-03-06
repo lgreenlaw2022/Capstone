@@ -73,7 +73,9 @@ def login():
 
     # Check if the user exists and the password is correct
     if user and user.check_password(data["password"]):
-        access_token = create_access_token(identity=user.id)
+        access_token = create_access_token(
+            identity=str(user.id)
+        )  # convert to a string for the sub field
         try:
             if reset_streak(user):
                 logger.info(f"User {user.id} streak reset due to inactivity")

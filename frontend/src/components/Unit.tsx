@@ -11,6 +11,14 @@ interface UnitProps {
     title: string;
 }
 
+interface ApiModule {
+    id: number;
+    title: string;
+    module_type: string; // need explicit type
+    order: number;
+    isOpen: boolean;
+}
+
 interface Module {
     id: number;
     title: string;
@@ -31,7 +39,7 @@ export default function Unit({ unitId, title }: UnitProps) {
                 const data = await getModulesInUnit(Number(unitId));
                 if (data.modules) {
                     // TODO: it may be better to do a formal mapper here
-                    const mappedModules = data.modules.map((module: any) => ({
+                    const mappedModules = data.modules.map((module: ApiModule) => ({
                         ...module,
                         type: module.module_type as ModuleType, // Directly cast the string to the enum type
                     }));

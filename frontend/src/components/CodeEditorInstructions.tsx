@@ -24,7 +24,7 @@ export default function CodeEditorInstructions() {
                 top of the problem description.
             </p>
             <div className={styles.title} onClick={toggleVisibility}>
-                <h3>Why We Don't Have an Embedded Code Editor</h3>
+                <h3>Why We Don&apos;t Have an Embedded Code Editor</h3>
                 <Image
                     src={isVisible ? openedCaret : closedCaret}
                     alt="caret icon"
@@ -35,12 +35,13 @@ export default function CodeEditorInstructions() {
             {isVisible && (
                 <p>
                     Our focus is on preparing you for real technical interviews,
-                    where you'll typically use either an online coding platform
-                    like LeetCode or an IDE like VSCode. By practicing in these
-                    environments, you'll build familiarity with the tools you'll
-                    encounter during interviews. This approach ensures you're
-                    comfortable with industry-standard coding environments, not
-                    a custom editor you won't see in actual interviews.
+                    where you&apos;ll typically use either an online coding
+                    platform like LeetCode or an IDE like VSCode. By practicing
+                    in these environments, you&apos;ll build familiarity with
+                    the tools you&apos;ll encounter during interviews. This
+                    approach ensures you&apos;re comfortable with
+                    industry-standard coding environments, not a custom editor
+                    you won&apos;t see in actual interviews.
                 </p>
             )}
             <LeetCodeInstructions />
