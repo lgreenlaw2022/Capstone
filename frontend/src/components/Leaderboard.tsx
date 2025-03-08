@@ -8,6 +8,7 @@ import {
     setLeaderboardPreference,
 } from "@/api/api";
 import Reward from "./Reward";
+import Loading from "./Loading";
 
 interface User {
     username: string;
@@ -20,6 +21,7 @@ export default function Leaderboard() {
     const [users, setUsers] = useState<User[]>([]);
     const [rewardDue, setRewardDue] = useState(false);
     const [rewardAmount, setRewardAmount] = useState(0);
+    const [loading, setLoading] = useState(true);
 
     const fetchRankings = async () => {
         try {
@@ -36,9 +38,13 @@ export default function Leaderboard() {
         } catch (error) {
             console.error("Error fetching xp", error);
         }
+        finally {
+            setLoading(false);
+        }
     };
 
     useEffect(() => {
+        setLoading(true);
         fetchRankings();
     }, []);
 
@@ -68,6 +74,10 @@ export default function Leaderboard() {
                 </button>
             </div>
         );
+    }
+
+    if (loading) {
+        return <Loading />;
     }
 
     return (

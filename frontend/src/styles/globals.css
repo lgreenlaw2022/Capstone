@@ -149,6 +149,13 @@ button:disabled {
     text-decoration: underline;
 }
 
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 20vh;
+}
+
 .boldPoint {
     color: #000;
     font-size: 16px;
