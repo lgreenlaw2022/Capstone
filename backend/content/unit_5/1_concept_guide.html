@@ -1,27 +1,381 @@
 <div class="guideContainer">
-    <h1>Concept Guide: Graphs</h1>
+  <h1>Concept Guide: Graphs</h1>
+  <section>
     <p>
-        Main text
+      Graphs are a data structure consisting of vertices (or nodes) and edges
+      connecting them. Each vertex in a graph represents an entity, and edges
+      represent the relationships or connections between these entities. Unlike
+      linear data structures such as arrays or linked lists, graphs can express
+      more complex relationships between data points.
     </p>
-    <img src="/assets/figures/image-name.png" alt="image description" style="width: 650px; height: auto;"/>
-    <p class="boldPoint">An important point highlighted with a purple sidebar. </p>
+    <strong>Graph Vocabulary</strong>
+    <ul>
+      <li>
+        <strong>Vertex/Node:</strong> an entity in a graph that can store data
+        and be connected to other vertices.
+      </li>
+      <li>
+        <strong>Edge:</strong> a connection between two vertices, representing a
+        relationship.
+      </li>
+      <li>
+        <strong>Adjacent Vertices:</strong> vertices that are connected by an
+        edge.
+      </li>
+      <li>
+        <strong>Path:</strong> a sequence of vertices where each adjacent pair
+        is connected by an edge.
+      </li>
+      <li>
+        <strong>Cycle:</strong> a path that starts and ends at the same vertex.
+      </li>
+      <li>
+        <strong>Connected Graph:</strong> a graph where there is a path between
+        every pair of vertices.
+      </li>
+      <li>
+        <strong>Complete Graph:</strong> a graph where there is an edge between
+        every pair of vertices.
+      </li>
+      <li>
+        <strong>Degree:</strong> the number of edges connected to a vertex.
+      </li>
+    </ul>
     <p>
-        Main text
+      We began learning about nonlinear data structures with binary trees. Trees
+      are actually a specific type of graph with additional constraints:
     </p>
-    <p class="highlight">An important point highlighted with a surrounding gray box.</p>
+    <ul>
+      <li>Each node has at most one parent.</li>
+      <li>There are no cycles in the tree.</li>
+      <li>Trees have a hierarchical structure with a root node.</li>
+      <li>There is exactly one path between any two nodes.</li>
+    </ul>
+    <p>In contrast, graphs:</p>
+    <ul>
+      <li>Can have multiple edges between vertices.</li>
+      <li>Can have cycles.</li>
+      <li>Do not have a root node.</li>
+      <li>Can have multiple paths between nodes.</li>
+      <li>Can be directed or undirected.</li>
+      <li>
+        Can have any number of edges, up to (n(n-1))/2 for an undirected graph
+        with n vertices
+      </li>
+    </ul>
+    <img
+      src="/assets/figures/graph-tree-comparison.png"
+      alt="Image showing the differences between trees and graphs"
+      style="width: 650px; height: auto"
+    />
+
+    <strong>Real-life Example: Social Networks</strong>
+    <p>
+      A social network is a perfect example of a graph in action. In this
+      scenario:
+    </p>
+    <ul>
+      <li>Each person is a vertex.</li>
+      <li>Friendship connections are edges.</li>
+      <li>Groups of friends form clusters or subgraphs.</li>
+      <li>Information can spread through the network like a virus.</li>
+    </ul>
+    <p>
+      For instance, if Alice is friends with Bob and Charlie, and Bob and
+      Charlie are also friends with Diana, the system might suggest Diana as a
+      friend for Alice. This recommendation is essentially finding vertices that
+      are two edges away from a given vertex.
+    </p>
+    <p>Social networks often implement graph algorithms to:</p>
+    <ul>
+      <li>Recommend friends or connections.</li>
+      <li>Identify clusters or communities.</li>
+      <li>Find the shortest path between two users.</li>
+      <li>Identify influencers or key players in the network.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Types of Graphs</h2>
+    <strong>Undirected Graphs</strong>
+    <p>
+      In undirected graphs, edges have no direction. If vertex A is connected to
+      vertex B, then B is also connected to A.
+    </p>
+    <p>
+      Real-world example: Friendship on Facebook (if you're friends with
+      someone, they're friends with you)
+    </p>
+    <strong>Directed Graphs</strong>
+    <p>
+      In directed graphs (also known as digraphs), edges have a direction. If
+      vertex A is connected to vertex B, it does not imply that B is connected
+      to A.
+    </p>
+    <p>
+      Real-world example: Twitter followers (you can follow someone without them
+      following you back)
+    </p>
+    <strong>Weighted Graphs</strong>
+    <p>
+      Weighted graphs assign a numerical weight to each edge. These weights can
+      represent distances, costs, or any other value associated with the
+      connection.
+    </p>
+    <p>
+      Real-world example: A map with distances between cities (edges represent
+      roads, and weights represent the distance between cities)
+    </p>
+    <strong>Other Specialized Types</strong>
+    <ul>
+      <li>Complete Graph: Every vertex is connected to every other vertex.</li>
+      <li>
+        Bipartite Graph: Vertices can be divided into two groups such that no
+        vertices within the same group are adjacent.
+      </li>
+      <li>DAG (Directed Acyclic Graph): A directed graph with no cycles</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Graph Representations</h2>
+    <section>
+      <h3>Theoretical Representation</h3>
+      <p>Mathematically, a graph G is represented as G = (V, E), where:</p>
+      <ul>
+        <li><strong>V</strong> is the set of vertices</li>
+        <li>
+          <strong>E</strong> is the set of edges, each typically defined as a
+          pair of vertices (u, v)
+        </li>
+      </ul>
+      <p>For example, a simple undirected graph might be represented as:</p>
+      <ul>
+        <li><strong>V</strong> = {1, 2, 3, 4}</li>
+        <li><strong>E</strong> = {(1,2), (1,3), (2,3), (3,4)}</li>
+      </ul>
+      <p>
+        This denotes a graph with 4 vertices and 4 edges, where vertex 1 is
+        connected to vertices 2 and 3, vertex 2 is connected to vertices 1 and
+        3, and so on.
+      </p>
+    </section>
+    <section>
+      <h3>Practical Representations</h3>
+      <p>
+        There are several ways to represent graphs in code, each with its own
+        advantages and drawbacks.
+      </p>
+      <section>
+        <p>
+          <strong>1. Adjacency Matrix</strong>
+        </p>
+        <p>
+          An adjacency matrix is a 2D array of size V×V, where V is the number
+          of vertices. For an unweighted graph:
+        </p>
+        <ul>
+          <li>
+            matrix[i][j] = 1 if there is an edge from vertex i to vertex j
+          </li>
+          <li>matrix[i][j] = 0 if there is no edge</li>
+        </ul>
+        <p>
+          For weighted graphs, instead of 1, we store the weight of the edge.
+        </p>
+        <pre><code class="codeBlock">class AdjacencyMatrixGraph:
+    def __init__(self, num_vertices):
+        self.num_vertices = num_vertices
+        # Initialize adjacency matrix with zeros
+        self.adj_matrix = [[0 for _ in range(num_vertices)] for _ in range(num_vertices)]
+
+    def add_edge(self, u, v, weight=1):
+        # Add edge from u to v (and v to u for undirected graph)
+        self.adj_matrix[u][v] = weight
+        self.adj_matrix[v][u] = weight  # Remove this line for directed graph
+
+    def remove_edge(self, u, v):
+        self.adj_matrix[u][v] = 0
+        self.adj_matrix[v][u] = 0  # Remove this line for directed graph</code></pre>
+        <strong>Advantages</strong>
+        <ul>
+          <li>Simple and intuitive representation</li>
+          <li>Efficient for dense graphs with many connections</li>
+          <li>Constant-time edge lookup</li>
+        </ul>
+        <strong>Disadvantages</strong>
+        <ul>
+          <li>Memory-intensive for sparse graphs</li>
+          <li>Space complexity of O(V^2)</li>
+          <li>Adding or removing vertices is expensive</li>
+        </ul>
+      </section>
+      <section>
+        <p>
+          <strong>2. Adjacency List</strong>
+        </p>
+        <p>
+          An adjacency list uses an array of lists, where each list describes
+          the set of neighbors of a vertex. Adjacency lists are often expressed
+          using hash maps or a list of lists.
+        </p>
+        <pre><code class="codeBlock">class AdjacencyListGraph:
+    def __init__(self):
+        # Initialize empty dictionary
+        self.adj_dict = {}
     
-    <h2>Subsection</h2>
+    def add_vertex(self, vertex):
+        if vertex not in self.adj_dict:
+            self.adj_dict[vertex] = {}
+    
+    def add_edge(self, u, v, weight=1):
+        # Add vertices if they don't exist
+        self.add_vertex(u)
+        self.add_vertex(v)
+        
+        # Add edges with weights
+        self.adj_dict[u][v] = weight
+        self.adj_dict[v][u] = weight  # Remove for directed graph
+    
+    def remove_edge(self, u, v):
+        if u in self.adj_dict and v in self.adj_dict[u]:
+            del self.adj_dict[u][v]
+            del self.adj_dict[v][u]  # Remove for directed graph
+    
+    def remove_vertex(self, vertex):
+        # Remove all edges connected to this vertex
+        if vertex in self.adj_dict:
+            # Get all neighbors before removing
+            neighbors = list(self.adj_dict[vertex].keys())
+            # Remove edges from neighbors to this vertex
+            for neighbor in neighbors:
+                if vertex in self.adj_dict[neighbor]:
+                    del self.adj_dict[neighbor][vertex]
+            # Remove the vertex itself
+            del self.adj_dict[vertex]</code></pre>
+        <p><strong>Advantages</strong></p>
+        <ul>
+          <li>Space complexity is O(V+E), efficient for sparse graphs</li>
+          <li>Adding a vertex is easier than with adjacency matrix</li>
+          <li>Iterating over all edges of a vertex is efficient</li>
+        </ul>
+        <p><strong>Disadvantages</strong></p>
+        <ul>
+          <li>
+            Edge lookup is O(degree(V)), which can be O(V) in the worst case
+          </li>
+          <li>More complex to implement than adjacency matrix</li>
+        </ul>
+      </section>
+      <section>
+        <p>
+          <strong>3. Edge List</strong>
+        </p>
+        <p>
+          Edge list is simply a list of all edges in the graph. Where the tuple
+          (u, v) represents that vertex u has a connection with v. If the edge
+          is directed, u points to v. The weight can also be added as an
+          additional value to each edge pair.
+        </p>
+        <pre><code class="codeBlock">class EdgeListGraph:
+    def __init__(self):
+        self.edges = []
+        self.vertices = set()
+    
+    def add_edge(self, u, v, weight=1):
+        self.vertices.add(u)
+        self.vertices.add(v)
+        self.edges.append((u, v, weight))   
+      </code></pre>
+        <p><strong>Advantages</strong></p>
+        <ul>
+          <li>Simple to implement</li>
+          <li>Good for algorithms that operate on edges directly</li>
+          <li>Memory efficient for sparse graphs</li>
+        </ul>
+        <p><strong>Disadvantages</strong></p>
+        <ul>
+          <li>Finding all edges connected to a vertex is inefficient</li>
+          <li>Edge lookup requires scanning the entire list</li>
+        </ul>
+      </section>
+    </section>
+  </section>
+
+  <section>
+    <h2>Complexity</h2>
     <p>
-        Body text
+      The complexity of operations depends on which graph representation you
+      use.
     </p>
+    <p>
+      <strong>Space Complexity</strong>
+    </p>
+    <ul>
+      <li>
+        <strong>Adjacency Matrix</strong>: O(V²) space, where V is the number of
+        vertices
+      </li>
+      <li>
+        <strong>Adjacency List (Array or Hashmap)</strong>: O(V + E) space,
+        where E is the number of edges
+      </li>
+      <li>
+        <strong>Edge List</strong>: O(E) space, where E is the number of edges
+      </li>
+    </ul>
+    <p>
+      <strong>Time Complexity</strong>
+    </p>
+    <p><strong>Graph Operations</strong>:</p>
+    <ul>
+      <li>
+        <strong>Edge Lookup</strong>:
+        <ul>
+          <li>Adjacency Matrix: O(1)</li>
+          <li>
+            Adjacency List with Arrays: O(degree(v)) which can be O(V) in worst
+            case. For each vertex, the list of neighbors must be iterated over
+            to find an edge.
+          </li>
+          <li>
+            Adjacency List with Hash maps: O(1) for checking if edge exists.
+            Hash maps allow constant-time edge lookups due to efficient hashing.
+          </li>
+          <li>
+            Edge List: O(E) To check if an edge exists, the entire edge list
+            must be scanned
+          </li>
+        </ul>
+      </li>
+      <li>
+        <strong>Finding all neighbors</strong>:
+        <ul>
+          <li>
+            Adjacency Matrix: O(V), you need to check all V possible edges to
+            find its neighbors
+          </li>
+          <li>
+            Adjacency List (Array or Hashmap): O(degree(v)), you only need to
+            check the neighbors of the vertex
+          </li>
+          <li>Edge List: O(E)</li>
+        </ul>
+      </li>
+    </ul>
+  </section>
 
-    <p>Python implementation</p>
-    <pre><code class="codeBlock"># Python code snippet</code></pre>
-
+  <section>
     <h2>Key Takeaways</h2>
     <ul>
-        <li>Takeaway 1</li>
-        <li>Takeaway 2</li>
-        <li>Takeaway 3</li>
+      <li>A graph is a collection of vertices (nodes) connected by edges.</li>
+      <li>
+        Edges in a graph can be directed or undirected, weighted or unweighted.
+      </li>
+      <li>
+        There are three ways to represent a graph: an adjacency matrix, an
+        adjacency list, or an edge list.
+      </li>
     </ul>
+  </section>
 </div>

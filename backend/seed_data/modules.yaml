@@ -192,6 +192,7 @@ modules:
     title: "Graphs Concept Guide"
     order: 1
     module_type: CONCEPT_GUIDE
+    # TODO: decide if I only want one quiz
 
   - unit_title: "Graphs"
     title: "Graphs Concept Quiz"
@@ -199,13 +200,23 @@ modules:
     module_type: QUIZ
 
   - unit_title: "Graphs"
-    title: "Graphs Recognition Guide"
+    title: "Graph Traversal Concept Guide"
     order: 3
+    module_type: CONCEPT_GUIDE
+
+  - unit_title: "Graphs"
+    title: "Graphs Traversal Quiz"
+    order: 4
+    module_type: QUIZ
+
+  - unit_title: "Graphs"
+    title: "Graphs Recognition Guide"
+    order: 5
     module_type: RECOGNITION_GUIDE
 
   - unit_title: "Graphs"
     title: "Graphs Recognition Quiz"
-    order: 4
+    order: 6
     module_type: QUIZ
 
   # TODO: add challenges and bonus challenges for Graphs
