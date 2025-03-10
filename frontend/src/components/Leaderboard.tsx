@@ -21,7 +21,7 @@ export default function Leaderboard() {
     const [users, setUsers] = useState<User[]>([]);
     const [rewardDue, setRewardDue] = useState(false);
     const [rewardAmount, setRewardAmount] = useState(0);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
 
     const fetchRankings = async () => {
         try {
@@ -37,8 +37,7 @@ export default function Leaderboard() {
             setShowLeaderboard(preference);
         } catch (error) {
             console.error("Error fetching xp", error);
-        }
-        finally {
+        } finally {
             setLoading(false);
         }
     };
@@ -61,6 +60,10 @@ export default function Leaderboard() {
         }
     };
 
+    if (loading) {
+        return <Loading />;
+    }
+
     if (!showLeaderboard) {
         return (
             <div className={styles.noLeaderboardContainer}>
@@ -69,15 +72,14 @@ export default function Leaderboard() {
                     <p className={styles.emphasisText}>Want to compete?</p>
                     <p>Top 5 win prizes</p>
                 </div>
-                <button type="button" onClick={() => updateLeaderboardPreference(true)}>
+                <button
+                    type="button"
+                    onClick={() => updateLeaderboardPreference(true)}
+                >
                     Show Leaderboard
                 </button>
             </div>
         );
-    }
-
-    if (loading) {
-        return <Loading />;
     }
 
     return (

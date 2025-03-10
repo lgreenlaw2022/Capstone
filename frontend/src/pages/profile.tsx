@@ -73,7 +73,9 @@ export default function Profile() {
                     <h3>{userData?.username}</h3>
                     <p>learner since {userData?.created_date}</p>
                 </div>
-                <button onClick={handleLogout}>Logout</button>
+                <button type="button" onClick={handleLogout}>
+                    Logout
+                </button>
             </div>
             <div className={styles.detailsContainer}>
                 <h2>Account</h2>
@@ -89,7 +91,11 @@ export default function Profile() {
                         <p>{userData?.email}</p>
                     </div>
                 </div>
-                <button className={styles.deleteButton} onClick={handleDelete}>
+                <button
+                    type="button"
+                    className={styles.deleteButton}
+                    onClick={handleDelete}
+                >
                     Delete Account
                 </button>
                 <p className={styles.error}>{error}</p>

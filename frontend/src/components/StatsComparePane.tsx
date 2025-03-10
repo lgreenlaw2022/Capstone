@@ -8,7 +8,7 @@ export default function StatsComparePane() {
     const [percentShorterStreak, setPercentShorterStreak] = useState<number>(0);
     const [percentFewerModules, setPercentFewerModules] = useState<number>(0);
     const [percentFewerGoals, setPercentFewerGoals] = useState<number>(0);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
 
     const fetchData = async () => {
         try {

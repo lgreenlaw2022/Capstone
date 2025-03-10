@@ -49,10 +49,6 @@ export default function Goals() {
         fetchGoals();
     }, []);
 
-    if (loading) {
-        return <Loading />;
-    }
-
     const handleContinue = (goalId: number) => {
         setNewlyCompletedGoals((prevGoals) =>
             prevGoals.filter((goal) => goal.goalId !== goalId)
@@ -71,11 +67,18 @@ export default function Goals() {
         try {
             await addPersonalGoal(timePeriod, measure, goal);
             setShowGoalSettingModal(false);
+            setLoading(true);
             fetchGoals();
         } catch (error) {
             console.error("Failed to add goal:", error);
+        } finally {
+            setLoading(false);
         }
     };
+
+    if (loading) {
+        return <Loading />;
+    }
 
     return (
         <>
