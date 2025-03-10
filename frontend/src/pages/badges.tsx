@@ -46,7 +46,7 @@ export default function Badges() {
             <div className={styles.typeGroup}>
                 <h3>Concepts</h3>
                 <div className={styles.badgeGroup}>
-                    {conceptBadges.map((badge, index) => (
+                    {conceptBadges.map((badge) => (
                         <Badge
                             key={badge.id}
                             title={badge.title}
@@ -61,7 +61,7 @@ export default function Badges() {
             <div className={styles.typeGroup}>
                 <h3>Awards</h3>
                 <div className={styles.badgeGroup}>
-                    {awardBadges.map((badge, index) => (
+                    {awardBadges.map((badge) => (
                         <Badge
                             key={badge.id}
                             title={badge.title}
