@@ -25,7 +25,7 @@ const ChallengeSolutionPage: React.FC = () => {
         }
     };
 
-    const handleEditorDidMount: OnMount = (editor, monaco) => {
+    const handleEditorDidMount: OnMount = (editor) => {
         // here is the editor instance, store it in `useRef` for further usage
         editorRef.current = editor;
     };
@@ -44,7 +44,11 @@ const ChallengeSolutionPage: React.FC = () => {
     }, [moduleId]);
 
     if (!content) {
-        return <p>Loading...</p>;
+        return (
+            <div className={styles.container}>
+                <p>Loading...</p>
+            </div>
+        );
     }
 
     return (

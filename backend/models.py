@@ -29,7 +29,7 @@ class User(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(40), nullable=False, unique=True)
-    password = db.Column(db.String(100), nullable=False)  # hashed passwords
+    password = db.Column(db.String(255), nullable=False)  # hashed passwords
     email = db.Column(db.String(100), nullable=False, unique=True)
     created_date = db.Column(db.DateTime, default=current_datetime)  # Set upon creation
     # TODO: monitor if I want to index these
@@ -248,7 +248,7 @@ class QuizQuestion(db.Model):
     module_id = db.Column(
         db.Integer, db.ForeignKey("modules.id"), index=True, nullable=False
     )
-    title = db.Column(db.String(100), nullable=False)
+    title = db.Column(db.String(255), nullable=False)
     # TODO: add explanation?
 
     module = db.relationship("Module", back_populates="quiz_questions")

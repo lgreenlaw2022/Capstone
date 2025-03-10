@@ -24,7 +24,7 @@ const CodeChallengePage: React.FC = () => {
         useState<boolean>(false);
     const [showWarning, setShowWarning] = useState<boolean>(false);
 
-    const handleEditorDidMount: OnMount = (editor, monaco) => {
+    const handleEditorDidMount: OnMount = (editor) => {
         // here is the editor instance, store it in `useRef` for further usage
         editorRef.current = editor;
     };
@@ -94,7 +94,11 @@ const CodeChallengePage: React.FC = () => {
 
     // Show loading state until content is fetched
     if (!content) {
-        return <p>Loading...</p>;
+        return (
+            <div className={styles.container}>
+                <p>Loading...</p>
+            </div>
+        );
     }
 
     return (

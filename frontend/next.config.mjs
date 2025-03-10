@@ -12,6 +12,11 @@ const nextConfig = {
       },
     ];
   },
+
+  // Explicitly define environment variables that should be available at runtime
+  env: {
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+  },
 };
 
 export default nextConfig;
