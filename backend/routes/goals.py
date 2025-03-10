@@ -5,7 +5,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 import logging
 from datetime import datetime, timedelta, timezone
 from enums import TimePeriodType, MetricType
-from config.constants import GEMS_FOR_COMPLETING_GOAL, GEMS_FOR_WEEKLY_COMPLETION_QUOTA
+from configurations.constants import GEMS_FOR_COMPLETING_GOAL, GEMS_FOR_WEEKLY_COMPLETION_QUOTA
 
 from models import DailyUserActivity, db, User, Goal, UserGoal
 

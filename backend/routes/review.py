@@ -5,7 +5,7 @@ from models import Unit, User, db, UserModule, QuizQuestion, UserQuizQuestion, M
 import random
 from enums import ModuleType
 from services.user_activity_service import update_daily_xp
-from config.constants import XP_FOR_COMPLETING_REVIEW, QUIZ_ACCURACY_THRESHOLD
+from configurations.constants import XP_FOR_COMPLETING_REVIEW, QUIZ_ACCURACY_THRESHOLD
 
 import logging
 
