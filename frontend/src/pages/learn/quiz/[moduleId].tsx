@@ -4,12 +4,14 @@ import { useRouter } from "next/router";
 import { QuizQuestion as QuizQuestionType } from "@/types/QuestionTypes";
 import { getModuleTitle, getQuizQuestions, submitQuizScore } from "@/api/api";
 import Quiz from "@/components/Quiz";
+import Loading from "@/components/Loading";
 
 const QuizPage = () => {
     const router = useRouter();
     const { moduleId } = router.query;
     const [questions, setQuestions] = useState<QuizQuestionType[]>([]);
     const [moduleTitle, setModuleTitle] = useState<string>("");
+    const [loading, setLoading] = useState<boolean>(true);
 
     const fetchQuestions = async () => {
         try {
@@ -31,9 +33,10 @@ const QuizPage = () => {
 
     useEffect(() => {
         if (moduleId) {
-            // TODO: need a loading state
-            fetchQuestions();
-            fetchModuleDetails();
+            setLoading(true);
+            Promise.all([fetchQuestions(), fetchModuleDetails()]).finally(() => {
+                setLoading(false); // Set loading to false after data is fetched
+            });
         }
     }, [moduleId]);
 
@@ -46,6 +49,10 @@ const QuizPage = () => {
             console.error("Error submitting quiz score:", error);
         }
     };
+
+    if (loading) {
+        return <Loading />;
+    }
 
     return (
         <Quiz

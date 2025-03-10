@@ -11,6 +11,7 @@ import {
 import { Goal, MeasureEnum, TimePeriodEnum } from "../types/GoalTypes";
 import GoalReward from "@/components/GoalReward";
 import GoalSettingModal from "@/components/GoalSettingModal";
+import Loading from "@/components/Loading";
 
 export default function Goals() {
     const [dailyGoals, setDailyGoals] = useState<Goal[]>([]);
@@ -18,6 +19,7 @@ export default function Goals() {
     const [newlyCompletedGoals, setNewlyCompletedGoals] = useState<Goal[]>([]);
     const [showGoalSettingModal, setShowGoalSettingModal] = useState(false);
     const [showPersonalGoalButton, setShowPersonalGoalButton] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const fetchGoals = async () => {
         try {
@@ -36,10 +38,13 @@ export default function Goals() {
         } catch (error) {
             // TODO: these try/catch only helps debug, not the user
             console.error("Failed to fetch goals:", error);
+        } finally {
+            setLoading(false);
         }
     };
 
     useEffect(() => {
+        setLoading(true);
         fetchGoals();
     }, []);
 
@@ -57,11 +62,18 @@ export default function Goals() {
         try {
             await addPersonalGoal(timePeriod, measure, goal);
             setShowGoalSettingModal(false);
+            setLoading(true);
             fetchGoals();
         } catch (error) {
             console.error("Failed to add goal:", error);
+        } finally {
+            setLoading(false);
         }
     };
+
+    if (loading) {
+        return <Loading />;
+    }
 
     return (
         <>

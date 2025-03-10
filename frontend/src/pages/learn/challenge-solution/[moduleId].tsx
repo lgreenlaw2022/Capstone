@@ -44,7 +44,11 @@ const ChallengeSolutionPage: React.FC = () => {
     }, [moduleId]);
 
     if (!content) {
-        return <p>Loading...</p>;
+        return (
+            <div className={styles.container}>
+                <p>Loading...</p>
+            </div>
+        );
     }
 
     return (

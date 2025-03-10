@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import styles from "../styles/StatsComparePane.module.css";
 import { getComparisonStats, getUserXp } from "@/api/api";
+import Loading from "./Loading";
 
 export default function StatsComparePane() {
     const [xp, setXp] = useState<number>(0);
     const [percentShorterStreak, setPercentShorterStreak] = useState<number>(0);
     const [percentFewerModules, setPercentFewerModules] = useState<number>(0);
     const [percentFewerGoals, setPercentFewerGoals] = useState<number>(0);
+    const [loading, setLoading] = useState(false);
 
     const fetchData = async () => {
         try {
@@ -20,12 +22,19 @@ export default function StatsComparePane() {
             setPercentFewerGoals(comparisonStats["percent_fewer_goals"]);
         } catch (error) {
             console.error("Error fetching comparison stats data", error);
+        } finally {
+            setLoading(false);
         }
     };
 
     useEffect(() => {
+        setLoading(true);
         fetchData();
     }, []);
+
+    if (loading) {
+        return <Loading />;
+    }
 
     return (
         <div className={styles.compareContainer}>

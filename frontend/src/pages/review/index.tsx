@@ -6,10 +6,12 @@ import { UnitData } from "@/types/UnitType";
 
 import { useEffect, useState } from "react";
 import { getCompletedUserUnits, getWeeklyReviewStatus } from "@/api/api";
+import Loading from "@/components/Loading";
 
 export default function Review() {
     const [units, setUnits] = useState<UnitData[]>([]);
     const [weeklyReviewStatus, setWeeklyReviewStatus] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const fetchData = async () => {
         try {
@@ -21,12 +23,19 @@ export default function Review() {
             setWeeklyReviewStatus(statusData);
         } catch (error) {
             console.error("Error fetching data:", error);
+        } finally {
+            setLoading(false);
         }
     };
 
     useEffect(() => {
+        setLoading(true);
         fetchData();
     }, []);
+
+    if (loading) {
+        return <Loading />;
+    }
 
     return (
         <div className={styles.reviewContainer}>
