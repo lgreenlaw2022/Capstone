@@ -98,7 +98,7 @@ export default function VSCodeInstructions() {
                                 your solution
                             </li>
                             <li>
-                                Run your code using VSCode's integrated
+                                Run your code using VSCode&apos;s integrated
                                 terminal. For help, visit{" "}
                                 <a
                                     href="https://code.visualstudio.com/docs/terminal/basics"

@@ -25,7 +25,7 @@ const ChallengeSolutionPage: React.FC = () => {
         }
     };
 
-    const handleEditorDidMount: OnMount = (editor, monaco) => {
+    const handleEditorDidMount: OnMount = (editor) => {
         // here is the editor instance, store it in `useRef` for further usage
         editorRef.current = editor;
     };
