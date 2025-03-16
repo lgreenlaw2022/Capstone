@@ -4,10 +4,12 @@ import { useEffect, useState } from "react";
 import { getWeeklyReviewQuestions, submitWeeklyReviewScore } from "@/api/api";
 import { QuizQuestion } from "@/types/QuestionTypes";
 import styles from "../../styles/Quiz.module.css";
+import Loading from "@/components/Loading";
 
 export default function WeeklyReviewQuizPage() {
     const router = useRouter();
     const [questions, setQuestions] = useState<QuizQuestion[]>([]);
+    const [loading, setLoading] = useState(true);
 
     const fetchQuestions = async () => {
         try {
@@ -16,9 +18,13 @@ export default function WeeklyReviewQuizPage() {
         } catch (error) {
             console.error("Error fetching questions:", error);
         }
+        finally {
+            setLoading(false);
+        }
     };
 
     useEffect(() => {
+        setLoading(true);
         fetchQuestions();
     }, []);
 
@@ -27,6 +33,10 @@ export default function WeeklyReviewQuizPage() {
         await submitWeeklyReviewScore(accuracy);
         router.push("/review");
     };
+
+    if (loading) {
+        return <Loading />;
+    }
 
     return (
         <>

@@ -8,10 +8,12 @@ import {
 } from "../types/BadgeTypes";
 
 import { getBadges } from "@/api/api";
+import Loading from "@/components/Loading";
 
 export default function Badges() {
     const [conceptBadges, setConceptBadges] = useState<BadgeType[]>([]);
     const [awardBadges, setAwardBadges] = useState<BadgeType[]>([]);
+    const [loading, setLoading] = useState(true);
 
     const fetchBadges = async () => {
         try {
@@ -32,13 +34,20 @@ export default function Badges() {
             );
         } catch (error) {
             console.error("Error fetching badges:", error);
+        } finally {
+            setLoading(false);
         }
     };
 
     // Fetch badges on component mount
     useEffect(() => {
+        setLoading(true);
         fetchBadges();
     }, []);
+
+    if (loading) {
+        return <Loading />;
+    }
 
     return (
         <div className={styles.badgesContainer}>
