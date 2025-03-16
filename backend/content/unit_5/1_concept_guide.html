@@ -8,7 +8,7 @@
       linear data structures such as arrays or linked lists, graphs can express
       more complex relationships between data points.
     </p>
-    <strong>Graph Vocabulary</strong>
+    <p><strong>Graph Vocabulary</strong></p>
     <ul>
       <li>
         <strong>Vertex/Node:</strong> an entity in a graph that can store data
@@ -66,10 +66,10 @@
     <img
       src="/assets/figures/graph-tree-comparison.png"
       alt="Image showing the differences between trees and graphs"
-      style="width: 650px; height: auto"
+      style="width: 550px; height: auto"
     />
 
-    <strong>Real-life Example: Social Networks</strong>
+    <p><strong>Real-life Example: Social Networks</strong></p>
     <p>
       A social network is a perfect example of a graph in action. In this
       scenario:
@@ -97,7 +97,7 @@
 
   <section>
     <h2>Types of Graphs</h2>
-    <strong>Undirected Graphs</strong>
+    <p><strong>Undirected Graphs</strong></p>
     <p>
       In undirected graphs, edges have no direction. If vertex A is connected to
       vertex B, then B is also connected to A.
@@ -106,7 +106,7 @@
       Real-world example: Friendship on Facebook (if you're friends with
       someone, they're friends with you)
     </p>
-    <strong>Directed Graphs</strong>
+    <p><strong>Directed Graphs</strong></p>
     <p>
       In directed graphs (also known as digraphs), edges have a direction. If
       vertex A is connected to vertex B, it does not imply that B is connected
@@ -166,24 +166,19 @@
         There are several ways to represent graphs in code, each with its own
         advantages and drawbacks.
       </p>
-      <section>
-        <p>
-          <strong>1. Adjacency Matrix</strong>
-        </p>
-        <p>
-          An adjacency matrix is a 2D array of size V×V, where V is the number
-          of vertices. For an unweighted graph:
-        </p>
-        <ul>
-          <li>
-            matrix[i][j] = 1 if there is an edge from vertex i to vertex j
-          </li>
-          <li>matrix[i][j] = 0 if there is no edge</li>
-        </ul>
-        <p>
-          For weighted graphs, instead of 1, we store the weight of the edge.
-        </p>
-        <pre><code class="codeBlock">class AdjacencyMatrixGraph:
+      <p>
+        <strong>1. Adjacency Matrix</strong>
+      </p>
+      <p>
+        An adjacency matrix is a 2D array of size V×V, where V is the number of
+        vertices. For an unweighted graph:
+      </p>
+      <ul>
+        <li>matrix[i][j] = 1 if there is an edge from vertex i to vertex j</li>
+        <li>matrix[i][j] = 0 if there is no edge</li>
+      </ul>
+      <p>For weighted graphs, instead of 1, we store the weight of the edge.</p>
+      <pre><code class="codeBlock">class AdjacencyMatrixGraph:
     def __init__(self, num_vertices):
         self.num_vertices = num_vertices
         # Initialize adjacency matrix with zeros
@@ -197,29 +192,28 @@
     def remove_edge(self, u, v):
         self.adj_matrix[u][v] = 0
         self.adj_matrix[v][u] = 0  # Remove this line for directed graph</code></pre>
-        <strong>Advantages</strong>
-        <ul>
-          <li>Simple and intuitive representation</li>
-          <li>Efficient for dense graphs with many connections</li>
-          <li>Constant-time edge lookup</li>
-        </ul>
-        <strong>Disadvantages</strong>
-        <ul>
-          <li>Memory-intensive for sparse graphs</li>
-          <li>Space complexity of O(V^2)</li>
-          <li>Adding or removing vertices is expensive</li>
-        </ul>
-      </section>
-      <section>
-        <p>
-          <strong>2. Adjacency List</strong>
-        </p>
-        <p>
-          An adjacency list uses an array of lists, where each list describes
-          the set of neighbors of a vertex. Adjacency lists are often expressed
-          using hash maps or a list of lists.
-        </p>
-        <pre><code class="codeBlock">class AdjacencyListGraph:
+      <strong>Advantages</strong>
+      <ul>
+        <li>Simple and intuitive representation</li>
+        <li>Efficient for dense graphs with many connections</li>
+        <li>Constant-time edge lookup</li>
+      </ul>
+      <strong>Disadvantages</strong>
+      <ul>
+        <li>Memory-intensive for sparse graphs</li>
+        <li>Space complexity of O(V^2)</li>
+        <li>Adding or removing vertices is expensive</li>
+      </ul>
+
+      <p>
+        <strong>2. Adjacency List</strong>
+      </p>
+      <p>
+        An adjacency list uses an array of lists, where each list describes the
+        set of neighbors of a vertex. Adjacency lists are often expressed using
+        hash maps or a list of lists.
+      </p>
+      <pre><code class="codeBlock">class AdjacencyListGraph:
     def __init__(self):
         # Initialize empty dictionary
         self.adj_dict = {}
@@ -253,31 +247,30 @@
                     del self.adj_dict[neighbor][vertex]
             # Remove the vertex itself
             del self.adj_dict[vertex]</code></pre>
-        <p><strong>Advantages</strong></p>
-        <ul>
-          <li>Space complexity is O(V+E), efficient for sparse graphs</li>
-          <li>Adding a vertex is easier than with adjacency matrix</li>
-          <li>Iterating over all edges of a vertex is efficient</li>
-        </ul>
-        <p><strong>Disadvantages</strong></p>
-        <ul>
-          <li>
-            Edge lookup is O(degree(V)), which can be O(V) in the worst case
-          </li>
-          <li>More complex to implement than adjacency matrix</li>
-        </ul>
-      </section>
-      <section>
-        <p>
-          <strong>3. Edge List</strong>
-        </p>
-        <p>
-          Edge list is simply a list of all edges in the graph. Where the tuple
-          (u, v) represents that vertex u has a connection with v. If the edge
-          is directed, u points to v. The weight can also be added as an
-          additional value to each edge pair.
-        </p>
-        <pre><code class="codeBlock">class EdgeListGraph:
+      <p><strong>Advantages</strong></p>
+      <ul>
+        <li>Space complexity is O(V+E), efficient for sparse graphs</li>
+        <li>Adding a vertex is easier than with adjacency matrix</li>
+        <li>Iterating over all edges of a vertex is efficient</li>
+      </ul>
+      <p><strong>Disadvantages</strong></p>
+      <ul>
+        <li>
+          Edge lookup is O(degree(V)), which can be O(V) in the worst case
+        </li>
+        <li>More complex to implement than adjacency matrix</li>
+      </ul>
+
+      <p>
+        <strong>3. Edge List</strong>
+      </p>
+      <p>
+        Edge list is simply a list of all edges in the graph. Where the tuple
+        (u, v) represents that vertex u has a connection with v. If the edge is
+        directed, u points to v. The weight can also be added as an additional
+        value to each edge pair.
+      </p>
+      <pre><code class="codeBlock">class EdgeListGraph:
     def __init__(self):
         self.edges = []
         self.vertices = set()
@@ -287,18 +280,17 @@
         self.vertices.add(v)
         self.edges.append((u, v, weight))   
       </code></pre>
-        <p><strong>Advantages</strong></p>
-        <ul>
-          <li>Simple to implement</li>
-          <li>Good for algorithms that operate on edges directly</li>
-          <li>Memory efficient for sparse graphs</li>
-        </ul>
-        <p><strong>Disadvantages</strong></p>
-        <ul>
-          <li>Finding all edges connected to a vertex is inefficient</li>
-          <li>Edge lookup requires scanning the entire list</li>
-        </ul>
-      </section>
+      <p><strong>Advantages</strong></p>
+      <ul>
+        <li>Simple to implement</li>
+        <li>Good for algorithms that operate on edges directly</li>
+        <li>Memory efficient for sparse graphs</li>
+      </ul>
+      <p><strong>Disadvantages</strong></p>
+      <ul>
+        <li>Finding all edges connected to a vertex is inefficient</li>
+        <li>Edge lookup requires scanning the entire list</li>
+      </ul>
     </section>
   </section>
 
@@ -327,7 +319,6 @@
     <p>
       <strong>Time Complexity</strong>
     </p>
-    <p><strong>Graph Operations</strong>:</p>
     <ul>
       <li>
         <strong>Edge Lookup</strong>:

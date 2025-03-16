@@ -1212,3 +1212,495 @@ quiz_questions:
       - option_text: "When you need to calculate both prefix and suffix sums"
         is_correct: true
         option_type: CONCEPT
+
+# Graphs Concept Quiz
+  - module_title: "Graphs Concept Quiz"
+    title: "What kind of graphs are binary trees?"
+    options:
+      - option_text: "Directed graphs"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "Undirected graphs"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "Weighted graphs"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Graphs Concept Quiz"
+    title: "What is the degree of a vertex in a graph?"
+    options:
+      - option_text: "The number of edges connected to the vertex"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "The maximum distance from this vertex to any other vertex"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "The number of paths from the vertex to other vertices"
+        is_correct: false
+        option_type: CONCEPT
+  
+  - module_title: "Graphs Concept Quiz"
+    title: "What is a complete graph?"
+    options:
+      - option_text: "A graph where every vertex is connected to every other vertex"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "A graph where every vertex is connected to at least one other vertex"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "A graph where every vertex has the same degree"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Graphs Concept Quiz"
+    title: "What is a directed graph"
+    options:
+      - option_text: "A graph where edges have a direction or orientation"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "A graph where edges have weights"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "A graph where edges have a color"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Graphs Concept Quiz"
+    title: "What is the difference between a graph and a tree?"
+    options:
+      - option_text: "A tree is a type of graph with no cycles"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "A tree is a type of graph with no vertices"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "A tree is a type of graph with no edges"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "Trees can have multiple paths between nodes but graphs cannot"
+        is_correct: false
+        option_type: CONCEPT
+  
+  - module_title: "Graphs Concept Quiz"
+    title: "What is a connected graph?"
+    options:
+      - option_text: "A graph where every vertex is connected to every other vertex"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "A graph where there is a path between every pair of vertices"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "A graph where every vertex has the same degree"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Graphs Concept Quiz"
+    title: "What is an adjacency list?"
+    options:
+      - option_text: "A 2D matrix where each cell indicates whether two vertices are connected"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "A collection of tuples containing pairs of vertices that form edges"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "A data structure that maps each vertex to a collection of its neighboring vertices"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "A hash table that stores the shortest path between any two vertices"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Graphs Concept Quiz"
+    title: "Which graph representation is most space-efficient for a sparse graph (with few edges)?"
+    options:
+      - option_text: "Adjacency matrix"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "Adjacency list"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "All representations use the same amount of space"
+        is_correct: false
+        option_type: CONCEPT
+  
+  - module_title: "Graphs Concept Quiz"
+    title: "Which graph representation allows for the fastest edge lookup operations?"
+    options:
+      - option_text: "Adjacency matrix"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "Adjacency list"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "Edge list"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "All representations have the same lookup speed"
+        is_correct: false
+        option_type: CONCEPT
+    
+  - module_title: "Graphs Concept Quiz"
+    title: "What is the space complexity of an adjacency matrix for a graph with V vertices?"
+    options:
+      - option_text: "O(V)"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "O(V log V)"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "O(V^2)"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "O(V^3)"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Graphs Concept Quiz"
+    title: "What is the time complexity of checking if two vertices are connected in an adjacency matrix?"
+    options:
+      - option_text: "O(1)"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "O(log V)"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "O(V)"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "O(V^2)"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Graphs Concept Quiz"
+    title: "What is the time complexity of checking if two vertices are connected in an adjacency list?"
+    options:
+      - option_text: "O(1)"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "O(log V)"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "O(V)"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "O(V^2)"
+        is_correct: false
+        option_type: CONCEPT
+
+# Graphs Traversal Concept Quiz
+  - module_title: "Graph Traversal Quiz"
+    title: "What is Depth-First Search (DFS) in the context of graph traversal?"
+    options:
+      - option_text: "A traversal technique that visits nodes level by level"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "A traversal technique that explores as far down a branch as possible before backtracking"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "A traversal technique that visits nodes in a specific order"
+        is_correct: false
+        option_type: CONCEPT
+  
+  - module_title: "Graph Traversal Quiz"
+    title: "What is Breadth-First Search (BFS) in the context of graph traversal?"
+    options:
+      - option_text: "A traversal technique that visits nodes level by level"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "A traversal technique that explores as far down a branch as possible before backtracking"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "A traversal technique that visits nodes in a specific order"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Graph Traversal Quiz"
+    title: "What data structure is typically used to implement Breadth-First Search?"
+    options:
+      - option_text: "Stack"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "Queue"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "Heap"
+        is_correct: false
+        option_type: CONCEPT
+  
+  - module_title: "Graph Traversal Quiz"
+    title: "What data structure is typically used to implement Depth-First Search?"
+    options:
+      - option_text: "Stack"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "Queue"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "Heap"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Graph Traversal Quiz"
+    title: "What is the time complexity of DFS on a graph represented as an adjacency list?"
+    options:
+      - option_text: "O(V)"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "O(E)"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "O(V + E)"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "O(V * E)"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Graph Traversal Quiz"
+    title: "What is the time complexity of BFS on a graph represented as an adjacency list?"
+    options:
+      - option_text: "O(V + E)"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "O(V)"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "O(E)"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "O(V * E)"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Graph Traversal Quiz"
+    title: "What is the time complexity of DFS on a graph represented as an adjacency matrix?"
+    options:
+      - option_text: "O(V)"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "O(E)"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "O(V^2)"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "O(V * E)"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Graph Traversal Quiz"
+    title: "When traversing a graph, what is the purpose of marking nodes as visited?"
+    options:
+      - option_text: "To prevent revisiting nodes and avoid infinite loops"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "To ensure that all nodes are visited exactly once"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "To track the order in which nodes are visited"
+        is_correct: false
+        option_type: CONCEPT
+  
+  - module_title: "Graph Traversal Quiz"
+    title: "What traversal technique is commonly used to find the shortest path in an unweighted graph?"
+    options:
+      - option_text: "Depth-First Search (DFS)"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "Breadth-First Search (BFS)"
+        is_correct: true
+        option_type: CONCEPT
+  
+  - module_title: "Graph Traversal Quiz"
+    title: "What traversal technique is commonly used to find cycles in a graph?"
+    options:
+      - option_text: "Depth-First Search (DFS)"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "Breadth-First Search (BFS)"
+        is_correct: false
+        option_type: CONCEPT
+    
+  - module_title: "Graph Traversal Quiz"
+    title: "In a topological sort of a directed acyclic graph:"
+    options:
+      - option_text: "For every directed edge (u, v), vertex v comes before vertex u in the ordering"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "For every directed edge (u, v), vertex u comes before vertex v in the ordering"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "Vertices are ordered based on their degree"
+        is_correct: false
+        option_type: CONCEPT
+  
+  - module_title: "Graph Traversal Quiz"
+    title: "What is the time complexity of a topological sort on a graph with V vertices and E edges using an adjacency list?"
+    options:
+      - option_text: "O(V)"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "O(E)"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "O(V + E)"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "O(V * E)"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Graph Traversal Quiz"
+    title: "Topological sort can only be applied to which type of graph?"
+    options:
+      - option_text: "Directed acyclic graphs (DAGs)"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "Directed cyclic graphs"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "Undirected graphs"
+        is_correct: false
+        option_type: CONCEPT
+    
+  - module_title: "Graph Traversal Quiz"
+    title: "What graph traversal is topological sort based on?"
+    options:
+      - option_text: "Depth-First Search (DFS)"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "Breadth-First Search (BFS)"
+        is_correct: false
+        option_type: CONCEPT
+      
+# Graphs Recognition Quiz
+  - module_title: "Graphs Recognition Quiz"
+    title: "When would you choose an Adjacency Matrix over an Adjacency List?"
+    options:
+      - option_text: "When working with a sparse graph with few connections"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "When memory efficiency is a primary concern"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "When edge lookup speed is critical and the graph is dense"
+        is_correct: true
+        option_type: CONCEPT
+
+  - module_title: "Graphs Recognition Quiz"
+    title: "Which graph traversal strategy is best for finding the shortest path in an unweighted graph?"
+    options:
+      - option_text: "Depth-First Search (DFS)"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "Breadth-First Search (BFS)"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "Topological Sort"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Graphs Recognition Quiz"
+    title: "When would an Edge List be the most appropriate graph representation?"
+    options:
+      - option_text: "When you need constant-time edge lookup"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "When working with algorithms that primarily process edges and order matters"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "When you need to frequently iterate through neighbors"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Graphs Recognition Quiz"
+    title: "When is Topological Sort not applicable?"
+    options:
+      - option_text: "When working with course prerequisites"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "When resolving dependencies"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "When the graph contains cycles"
+        is_correct: true
+        option_type: CONCEPT
+
+  - module_title: "Graphs Recognition Quiz"
+    title: "When would you use DFS over BFS?"
+    options:
+      - option_text: "When finding the shortest path in an unweighted graph"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "When exploring all possible paths in a maze-like problem"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "When memory is extremely constrained but the graph is wide"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Graphs Recognition Quiz"
+    title: "Which graph representation is best suited for graphs where vertices can be dynamically added or removed?"
+    options:
+      - option_text: "Adjacency Matrix"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "Adjacency List"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "Edge List"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Graphs Recognition Quiz"
+    title: "In which scenario would BFS be a poor choice?"
+    options:
+      - option_text: "When finding the shortest path in an unweighted graph"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "When exploring nearest neighbors"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "When memory is extremely constrained and the graph is wide"
+        is_correct: true
+        option_type: CONCEPT
+
+  - module_title: "Graphs Recognition Quiz"
+    title: "What key information should you determine about a graph before selecting a representation?"
+    options:
+      - option_text: "Whether the graph is sparse or dense"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "The programming language you'll implement it in"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "How many algorithms you'll need to run on it"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Graphs Recognition Quiz"
+    title: "What characteristic makes a graph suitable for Topological Sort?"
+    options:
+      - option_text: "It must be a Directed Acyclic Graph (DAG)"
+        is_correct: true
+        option_type: CONCEPT
+      - option_text: "It must be undirected and fully connected"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "It must have weighted edges"
+        is_correct: false
+        option_type: CONCEPT
+
+  - module_title: "Graphs Recognition Quiz"
+    title: "When solving a dependency resolution problem, which strategy would you most likely use?"
+    options:
+      - option_text: "Breadth-First Search"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "Depth-First Search with cycle detection"
+        is_correct: false
+        option_type: CONCEPT
+      - option_text: "Topological Sort"
+        is_correct: true
+        option_type: CONCEPT

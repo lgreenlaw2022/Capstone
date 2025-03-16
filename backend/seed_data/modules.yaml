@@ -192,7 +192,6 @@ modules:
     title: "Graphs Concept Guide"
     order: 1
     module_type: CONCEPT_GUIDE
-    # TODO: decide if I only want one quiz
 
   - unit_title: "Graphs"
     title: "Graphs Concept Quiz"
@@ -205,7 +204,7 @@ modules:
     module_type: CONCEPT_GUIDE
 
   - unit_title: "Graphs"
-    title: "Graphs Traversal Quiz"
+    title: "Graph Traversal Quiz"
     order: 4
     module_type: QUIZ
 
@@ -219,4 +218,23 @@ modules:
     order: 6
     module_type: QUIZ
 
-  # TODO: add challenges and bonus challenges for Graphs
+  - unit_title: "Graphs"
+    title: "Number of Islands"
+    order: 7
+    module_type: CHALLENGE
+
+  - unit_title: "Graphs"
+    title: "Number of Islands Solution"
+    order: 8
+    module_type: CHALLENGE_SOLUTION
+
+  # Bonus challenges
+  - unit_title: "Graphs"
+    title: "Max Area of Island"
+    order: 1
+    module_type: BONUS_CHALLENGE
+  
+  - unit_title: "Graphs"
+    title: "Max Area of Island Solution"
+    order: 2
+    module_type: BONUS_SOLUTION

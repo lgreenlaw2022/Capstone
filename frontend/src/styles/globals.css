@@ -139,6 +139,13 @@ button:disabled {
     margin-bottom: 20px;
 }
 
+.guideContainer section {
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+    margin-bottom: 20px;
+}
+
 .guideContainer a {
     color: #3c4dff;
     text-decoration: none;

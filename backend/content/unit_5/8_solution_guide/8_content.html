@@ -1,0 +1,103 @@
+<div class="guideContainer">
+  <h1>Solution Walkthrough: Number of Islands</h1>
+
+  <section>
+    <h2>Understand the problem</h2>
+    <p><strong>Clarifying Questions</strong></p>
+    <dl>
+      <dt>What is an island?</dt>
+      <dd>
+        An island is a group of '1's connected horizontally or vertically.
+      </dd>
+    </dl>
+    <dl>
+      <dt>Can the grid be empty?</dt>
+      <dd>No.</dd>
+    </dl>
+  </section>
+
+  <section>
+    <p><strong>Test Cases</strong></p>
+    <p>Input:</p>
+    <pre><code>grid = [
+  ["1","1","1","1","0"],
+  ["1","1","0","1","0"],
+  ["1","1","0","0","0"],
+  ["0","0","0","0","0"]
+]</code></pre>
+    <p>Output: 1</p>
+    <p>Input:</p>
+    <pre><code>grid = [
+  ["1","1","0","0","0"],
+  ["1","1","0","0","0"],
+  ["0","0","1","0","0"],
+  ["0","0","0","1","1"]
+]</code></pre>
+    <p>Output: 3</p>
+  </section>
+
+  <section>
+    <h2>Match</h2>
+    <p><strong>Common solutions to graph problems:</strong></p>
+    <ol>
+      <li>
+        Depth-First Search (DFS): Effectively explores all connected cells
+        allowing us to explore each island completely.
+      </li>
+      <li>
+        Breadth-First Search (BFS): A row by row traversal would make it
+        difficult to track which cells are part of which islands.
+      </li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Plan</h2>
+    <p>Implement a DFS-based solution</p>
+    <p>
+      Note: Instead of using a separate visited set, we can modify the original
+      grid by changing '1' to '0' after visiting to save space. This approach is
+      acceptable since we're only counting islands and don't need to preserve
+      the original grid.
+    </p>
+    <ol role="list" aria-label="Solution steps">
+      <li>Iterate through each cell in the grid</li>
+      <li>
+        If the current cell is a '1' (land) and hasn't been visited
+        <ol>
+          <li>Increment the island counter</li>
+          <li>
+            Perform DFS from this cell to mark all connected land cells as
+            visited
+          </li>
+          <ol>
+            <li>Check if the current cell is out of bounds or water</li>
+            <li>Mark the current cell as visited (change '1' to '0')</li>
+            <li>Recursively call DFS on the four adjacent cells</li>
+          </ol>
+        </ol>
+      </li>
+      <li>Return the island counter</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Complexity Analysis</h2>
+    <p>
+      <strong>Time Complexity:</strong>
+    </p>
+    <p>
+      O(M x N) where M is the number of rows and N is the number of columns in
+      the grid. In the worst case, we visit each cell exactly once.
+    </p>
+    <p><strong>Space Complexity:</strong></p>
+    <p>
+      O(M x N) in the worst case for the recursion stack. This happens when the
+      grid is filled with lands and DFS goes MxN levels deep. This is the depth
+      of the recursive call stack when the entire grid is one large island with
+      a snake-like pattern.
+    </p>
+  </section>
+
+  <h2>Code Solution</h2>
+</div>
