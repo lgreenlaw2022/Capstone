@@ -69,12 +69,12 @@
           <li>
             Perform DFS from this cell to mark all connected land cells as
             visited
+            <ol>
+              <li>Check if the current cell is out of bounds or water</li>
+              <li>Mark the current cell as visited (change '1' to '0')</li>
+              <li>Recursively call DFS on the four adjacent cells</li>
+            </ol>
           </li>
-          <ol>
-            <li>Check if the current cell is out of bounds or water</li>
-            <li>Mark the current cell as visited (change '1' to '0')</li>
-            <li>Recursively call DFS on the four adjacent cells</li>
-          </ol>
         </ol>
       </li>
       <li>Return the island counter</li>

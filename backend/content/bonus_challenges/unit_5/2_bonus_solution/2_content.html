@@ -1,0 +1,110 @@
+<div class="guideContainer">
+  <h1>Solution Walkthrough: Max Area of Island</h1>
+
+  <section>
+    <h2>Understand the problem</h2>
+    <p><strong>Clarifying Questions</strong></p>
+    <dl>
+      <dt>Will there always be an island?</dt>
+      <dd>No.</dd>
+    </dl>
+    <dl>
+      <dt>Question 2 (edge case)</dt>
+      <dd>Answer.</dd>
+    </dl>
+    <dl>
+      <dt>Question 3 (edge case 2 -- optional)</dt>
+      <dd>Answer.</dd>
+    </dl>
+  </section>
+
+  <section>
+    <p><strong>Test Cases</strong></p>
+    <img
+      src="/assets/figures/unit-5-bonus-1-tc-1.png"
+      alt="test case 1 input visual of grid cell values"
+      style="width: 250px; height: auto"
+    />
+    <br />
+    <p>Input:</p>
+    <pre><code>grid = [
+  [0,0,1,0,0,0,0,1,0,0,0,0,0],
+  [0,0,0,0,0,0,0,1,1,1,0,0,0],
+  [0,1,1,0,1,0,0,0,0,0,0,0,0],
+  [0,1,0,0,1,1,0,0,1,0,1,0,0],
+  [0,1,0,0,1,1,0,0,1,1,1,0,0],
+  [0,0,0,0,0,0,0,0,0,0,1,0,0],
+  [0,0,0,0,0,0,0,1,1,1,0,0,0],
+  [0,0,0,0,0,0,0,1,1,0,0,0,0]
+]</code></pre>
+    <p>
+      Output: 6. The answer is not 11, because the island must be connected
+      4-directionally.
+    </p>
+    <p>
+      Input: <code>grid = [[0,0,0,0,0,0,0,0]]</code><br />
+      Output: 0
+    </p>
+  </section>
+
+  <section>
+    <h2>Match</h2>
+    <p><strong>Common solutions to graph problems:</strong></p>
+    <ol>
+      <li>
+        Depth-First Search (DFS): Excellent for this problem. We can use DFS to
+        explore each island completely and calculate its area.
+      </li>
+      <li>
+        Breadth-First Search (BFS): Would also work by exploring islands level
+        by level, but DFS is typically more straightforward to implement for
+        area calculation.
+      </li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Plan</h2>
+    <p>Use a DFS approach</p>
+    <ol role="list" aria-label="Solution steps">
+      <li>
+        Initialize a variable maxArea to track the maximum island area found
+      </li>
+      <li>
+        Iterate through each cell in the grid
+        <ol>
+          <li>If the current cell is a '1' (land) and hasn't been visited</li>
+          <li>Add 1 to the current islands area</li>
+          <ol>
+            Perform DFS from this cell to mark all connected land cells as
+            visited
+            <ol>
+              <li>Check if the current cell is out of bounds or water</li>
+              <li>Mark the current cell as visited (change '1' to '0')</li>
+              <li>Recursively call DFS on the four adjacent cells</li>
+              <li>Return the calculated area</li>
+            </ol>
+          </ol>
+          <li>Update the max area</li>
+        </ol>
+      </li>
+      <li>Return the max area.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Complexity Analysis</h2>
+    <p><strong>Time Complexity:</strong></p>
+    <p>
+      O(R x C) where R is the number of rows and C is the number of columns in
+      the grid. We visit each cell in the grid at most once.
+    </p>
+    <p><strong>Space Complexity:</strong></p>
+    <p>
+      O(R x C) in the worst case for the recursion stack. This happens when the
+      grid is filled with lands and DFS goes RxC levels deep.
+    </p>
+  </section>
+
+  <h2>Code Solution</h2>
+</div>

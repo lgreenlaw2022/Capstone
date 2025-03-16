@@ -74,3 +74,24 @@ hints:
         order: 2
       - text: "Track the running products of the numbers before and after the current index in the outcome array."
         order: 3
+
+  # Graphs
+  - module_type: "CHALLENGE"
+    module_title: "Number of Islands"
+    hints:
+      - text: "Use depth-first search (DFS) to traverse the grid."
+        order: 1
+      - text: "Mark the visited cells to avoid redundant counting."
+        order: 2
+      - text: "Once you find a land cell, perform DFS on its neighbors to mark all connected land cells as visited."
+        order: 3
+
+  - module_type: "BONUS_CHALLENGE"
+    module_title: "Max Area of Island"
+    hints:
+      - text: "Use depth-first search (DFS) to traverse the grid."
+        order: 1
+      - text: "Track the size of the current island as you explore it."
+        order: 2
+      - text: "Perform DFS on land cell's neighbors and sum the areas."
+        order: 3

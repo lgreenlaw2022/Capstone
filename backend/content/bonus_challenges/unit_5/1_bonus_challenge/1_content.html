@@ -1,0 +1,72 @@
+<div class="guideContainer">
+  <h1>Max Area of Island</h1>
+  <section>
+    <p>
+      <strong>LeetCode Link:</strong>
+      <a
+        href="https://leetcode.com/problems/max-area-of-island/"
+        target="_blank"
+        rel="noopener"
+        >https://leetcode.com/problems/max-area-of-island/
+      </a>
+    </p>
+    <p><strong>Difficulty:</strong> medium</p>
+    <p><strong>Description</strong></p>
+    <p>
+      You are given an <code>m x n</code> binary matrix <code>grid</code>. An
+      island is a group of <code>'1'</code>s (representing land) connected
+      4-directionally (horizontal or vertical.) You may assume all four edges of
+      the grid are surrounded by water.
+    </p>
+    <p>
+      The <strong>area</strong> of an island is the number of cells with a value
+      <code>'1'</code>
+      in the island.
+    </p>
+    <p>
+      Return the maximum area of an island in <code>grid</code>. If there is no
+      island, return <code>0</code>.
+    </p>
+  </section>
+
+  <section>
+    <p><strong>Test Cases</strong></p>
+    <img
+      src="/assets/figures/unit-5-bonus-1-tc-1.png"
+      alt="test case 1 input visual of grid cell values"
+      style="width: 250px; height: auto"
+    />
+    <br />
+    <p>Input:</p>
+    <pre><code>grid = [
+  [0,0,1,0,0,0,0,1,0,0,0,0,0],
+  [0,0,0,0,0,0,0,1,1,1,0,0,0],
+  [0,1,1,0,1,0,0,0,0,0,0,0,0],
+  [0,1,0,0,1,1,0,0,1,0,1,0,0],
+  [0,1,0,0,1,1,0,0,1,1,1,0,0],
+  [0,0,0,0,0,0,0,0,0,0,1,0,0],
+  [0,0,0,0,0,0,0,1,1,1,0,0,0],
+  [0,0,0,0,0,0,0,1,1,0,0,0,0]
+]</code></pre>
+    <p>
+      Output: 6. The answer is not 11, because the island must be connected
+      4-directionally.
+    </p>
+    <p>
+      Input: <code>grid = [[0,0,0,0,0,0,0,0]]</code><br />
+      Output: 0
+    </p>
+  </section>
+
+  <section>
+    <p>
+      <strong>Constraints</strong>
+    </p>
+    <ul>
+      <li><code>m == grid.length</code></li>
+      <li><code>n == grid[i].length</code></li>
+      <li><code>1 &lt;= m, n &lt;= 50</code></li>
+      <li><code>grid[i][j]</code> is <code>0</code> or <code>1</code>.</li>
+    </ul>
+  </section>
+</div>
