@@ -29,7 +29,6 @@ const Quiz = ({ questions, moduleTitle, onSubmit }: QuizProps) => {
         currentQuestionIndex
     );
 
-    // TODO: add feature to try missed questions again at the end of the quiz
     const handleNextQuestion = (isCorrect: boolean) => {
         // log correct answers and move to next question
         if (isCorrect) {

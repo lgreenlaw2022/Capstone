@@ -1,0 +1,275 @@
+<div class="guideContainer">
+  <h1>Concept Guide: Graph Traversal</h1>
+  <section>
+    <p>
+      Graph traversal is the process of visiting (checking and/or updating) each
+      vertex in a graph. Traversals can help search for nodes or collect data on
+      characteristics of the graph. Unlike linear data structures that have
+      exactly one logical way to traverse them, graphs can be traversed in
+      multiple ways depending on the starting vertex and traversal strategy. The
+      two primary graph traversal strategies are Depth-First Search (DFS) and
+      Breadth-First Search (BFS).
+    </p>
+  </section>
+
+  <section>
+    <h2>Depth-First Search (DFS)</h2>
+    <p>
+      Depth-First Search is a traversal algorithm that explores as deeply as
+      possible along each branch before backtracking. Think of it as exploring a
+      maze by following a path until you reach a dead end, then backtracking to
+      the last intersection to try another path.
+    </p>
+    <p>
+      <strong>How DFS Works:</strong>
+    </p>
+    <ol>
+      <li>Start at a chosen vertex (root)</li>
+      <li>Explore one of its unvisited neighbors</li>
+      <li>
+        Continue exploring deeper from that neighbor before exploring any other
+        neighbors of the original vertex
+      </li>
+      <li>
+        When reaching a vertex with no unvisited neighbors, backtrack to the
+        last vertex with unexplored paths
+      </li>
+      <li>
+        Repeat until all vertices reachable from the starting vertex are visited
+      </li>
+    </ol>
+    <p>
+      DFS is suited for detecting cycles in a graph and pathfinding. However,
+      DFS is not guaranteed to find the shortest path to a node because of its
+      depth-first approach.
+    </p>
+    <p>
+      DFS can be implemented either recursively (using the system's call stack)
+      or iteratively (using an explicit stack data structure). The recursive
+      implementation is often more elegant and easier to understand. The below
+      code shows how to traverse an adjacency matrix or an adjacency list graph
+      representation.
+    </p>
+    <p>Adjacency list:</p>
+    <pre><code class="codeBlock"># DFS implementation using adjacency list with hashmaps (recursive)
+    def dfs(graph, start, visited=None):
+        """Recursive DFS on an adjacency list"""
+        # Initialize visited set on first call
+        if visited is None:
+            visited = set()
+        
+        # Mark current vertex as visited
+        visited.add(start)
+        print(f"Visited vertex: {start}")
+        
+        # Explore all adjacent vertices
+        for neighbor in graph.adj_dict[start]:
+            if neighbor not in visited:
+                # Recursive call for unvisited neighbor
+                dfs(graph, neighbor, visited)
+        
+        return visited</code></pre>
+    <p>Adjacency matrix:</p>
+    <pre><code class="codeBlock">def traverse(matrix, i, j, visited):
+        """Recursive DFS traversal for a 2D adjacency matrix."""
+        if (i, j) in visited or matrix[i][j] == 0:  # Avoid revisiting and skip non-edges
+            return
+
+        visited.add((i, j))
+        print(f"Visited vertex: ({i}, {j})")
+
+        directions = ((0, 1), (0, -1), (1, 0), (-1, 0))  # Right, Left, Down, Up
+        for di, dj in directions:
+            next_i, next_j = i + di, j + dj
+            # ensure that the neighbor is within the matrix
+            if 0 &lt;= next_i &lt; len(matrix) and 0 &lt;= next_j &lt; len(matrix[0]):
+                traverse(matrix, next_i, next_j, visited)
+    
+    def dfs(matrix):
+        """Performs DFS on a 2D adjacency matrix."""
+        if not matrix or not matrix[0]:
+            return []
+    
+        visited = set()
+    
+        # Start DFS from the first vertex found (assuming top-left as start)
+        for i in range(len(matrix)):
+            for j in range(len(matrix[0])):
+                if matrix[i][j] == 1 and (i, j) not in visited:
+                    traverse(matrix, i, j, visited)
+    
+        return visited</code></pre>
+    <p>
+      Note that for all these traversal methods, it's important to track the
+      visited nodes to ensure you do not get caught in a cycle.
+    </p>
+  </section>
+
+  <section>
+    <h2>Breadth-First Search (BFS)</h2>
+    <p>
+      Breadth-First Search is a traversal algorithm that explores all vertices
+      at the present depth before moving on to vertices at the next depth level.
+      Think of it as exploring a maze by examining all possible paths one step
+      away, then all possible paths two steps away, and so on.
+    </p>
+    <p>
+      This approach is commonly used to find the guaranteed shortest path in
+      unweighted graphs.
+    </p>
+    <p>
+      <strong>How BFS Works:</strong>
+    </p>
+    <ol>
+      <li>Start at a chosen vertex (root)</li>
+      <li>Explore all of its neighbors</li>
+      <li>For each of those neighbors, explore their unexplored neighbors</li>
+      <li>Continue level by level, moving outward from the starting vertex</li>
+    </ol>
+    <p>BFS is typically implemented using a queue data structure:</p>
+    <p>Adjacency List:</p>
+    <pre><code class="codeBlock">from collections import deque
+  
+    def bfs(graph, start):
+        """Performs BFS on an adjacency list."""
+        visited = set([start])  # Track visited vertices
+        queue = deque([start])  # Initialize queue with starting vertex
+        
+        while queue:  # Continue while queue is not empty
+            # Dequeue a vertex from the front of the queue
+            vertex = queue.popleft()
+            print(f"Visited vertex: {vertex}")
+            
+            # Explore all adjacent vertices
+            for neighbor in graph.adj_dict[vertex]:
+                if neighbor not in visited:
+                    visited.add(neighbor)
+                    queue.append(neighbor)  # Enqueue unvisited neighbors
+        
+        return visited</code></pre>
+
+    <p>Adjacency Matrix:</p>
+    <pre><code class="codeBlock">def bfs(matrix):
+    """Performs BFS on a 2D adjacency matrix."""
+    if not matrix or not matrix[0]:
+        return []
+
+    visited = set()
+    queue = deque()
+    directions = ((0, 1), (0, -1), (1, 0), (-1, 0))  # Right, Left, Down, Up
+
+    # Start BFS from the first vertex found (assuming top-left as start)
+    for i in range(len(matrix)):
+        for j in range(len(matrix[0])):
+            if matrix[i][j] == 1 and (i, j) not in visited:
+                queue.append((i, j))
+                visited.add((i, j))
+
+                while queue:
+                    x, y = queue.popleft()
+                    print(f"Visited vertex: ({x}, {y})")
+
+                    for dx, dy in directions:
+                        next_x, next_y = x + dx, y + dy
+                        # ensure that the neighbor is within the matrix bounds
+                        if (0 &lt;= next_x &lt; len(matrix) and 0 &lt;= next_y &lt; len(matrix[0]) and 
+                            matrix[next_x][next_y] == 1 and (next_x, next_y) not in visited):
+                            queue.append((next_x, next_y))
+                            visited.add((next_x, next_y))
+
+    return visited</code></pre>
+  </section>
+
+  <section>
+    <h2>Topological Sort</h2>
+    <p>
+      Topological sorting is a specialized graph traversal applicable only to
+      Directed Acyclic Graphs (DAGs). It produces a linear ordering of the
+      vertices such that for every directed edge (u, v), vertex u comes before
+      vertex v in the ordering. See the image below for an example. If the graph
+      contains a cycle, a topological sort is impossible. Note that there can be
+      multiple valid orderings of nodes from a topological sort.
+    </p>
+    <img
+      src="/assets/figures/topological-sort.png"
+      alt="graph converted to topological sort"
+      style="width: 650px; height: auto"
+    />
+    <p>
+      The most common implementation of topological sort uses a modified DFS
+      algorithm.
+    </p>
+    <strong>How Topological Sort Works:</strong>
+    <ul>
+      <li>Perform DFS on unvisited nodes.</li>
+      <li>After visiting all neighbors of a node, push it onto a stack.</li>
+      <li>The final order is obtained by popping elements from the stack.</li>
+    </ul>
+    <pre><code class="codeBlock">def topological_sort_dfs(graph):
+    """Performs topological sort on a directed acyclic graph (DAG) using DFS."""
+    visited = set()
+    stack = []
+
+    def dfs(node):
+        """Recursive DFS function that pushes nodes onto the stack after visiting all neighbors."""
+        if node in visited:
+            return
+        visited.add(node)
+
+        for neighbor in graph.get(node, []):
+            if neighbor not in visited:
+                dfs(neighbor)
+
+        stack.append(node)  # Push to stack after visiting all neighbors
+
+    # Perform DFS from all unvisited nodes
+    for node in graph:
+        if node not in visited:
+            dfs(node)
+
+    return stack[::-1]  # Reverse stack to get topological order</code></pre>
+  </section>
+
+  <section>
+    <h2>Complexity</h2>
+    <p>
+      The complexity of operations depends on which graph representation you
+      use.
+    </p>
+    <p><strong>Adjacency List: O(V + E)</strong></p>
+    <p>
+      Each vertex is visited once, resulting in linear time complexity because,
+      in the adjacency list, you're only iterating through actual edges rather
+      than all possible vertex pairs.
+    </p>
+    <p><strong>Adjacency Matrix: O(V²)</strong></p>
+    <p>
+      In both DFS and BFS, every vertex will potentially examine all other
+      vertices, leading to quadratic time complexity.
+    </p>
+    <p><strong>Topological Sort</strong></p>
+    <p>The time complexity of topological sort is the same as DFS.</p>
+  </section>
+
+  <section>
+    <h2>Key Takeaways</h2>
+    <ul>
+      <li>
+        Depth-first traversal is a method of visiting vertices in a graph where
+        a path of nodes is explored as deeply as possible before backtracking.
+      </li>
+      <li>
+        Breadth-first traversal visits each vertex&apos;s immediate neighbors
+        before examining the vertex&apos;s at the next depth.
+      </li>
+      <li>
+        DFS is usually completed with recursion using a stack while BFS is
+        implemented iteratively using a queue.
+      </li>
+      <li>
+        Topological sort is a method of sorting DAG vertices where every vertex
+        comes before the vertices it points to in the ordering.
+      </li>
+    </ul>
+  </section>
+</div>

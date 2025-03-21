@@ -116,3 +116,32 @@ test_cases:
       - input: "[2,3,0,0,4,2]"
         outputs:
           - "[0,0,0,0,0,0]"
+
+# Graphs
+  - module_type: "CHALLENGE"
+    module_title: "Number of Islands"
+    target_runtime: O_N
+    test_cases:
+      - input: "[[1,1,1,1],[1,1,0,1],[1,1,0,0]]"
+        outputs:
+          - "1"
+      - input: "[[1,1], [1,1]]"
+        outputs:
+          - "1"
+      - input: "[[1,0,1],[0,1,0],[1,0,1]]"
+        outputs:
+          - "5"
+
+  - module_type: "BONUS_CHALLENGE"
+    module_title: "Max Area of Island"
+    target_runtime: O_N
+    test_cases:
+      - input: "[[1,1,0,0,0],[1,1,0,0,0],[0,0,0,1,1],[0,0,0,1,1]]"
+        outputs:
+          - "4"
+      - input: "[[1,1,1],[1,0,1],[1,1,1]]"
+        outputs:
+          - "8"
+      - input: "[[0,0,0],[0,0,0],[0,0,0]]"
+        outputs:
+          - "0"

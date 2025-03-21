@@ -126,7 +126,6 @@ const CodeChallengePage: React.FC = () => {
 
             <CodeEditorInstructions />
             <Hints moduleId={Number(moduleId)} />
-            {/* TODO: pass the test cases from here? */}
             <CodeCheck
                 moduleId={Number(moduleId)}
                 onTestCasesCompleted={setTestCasesCompleted}

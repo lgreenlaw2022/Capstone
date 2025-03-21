@@ -14,3 +14,7 @@ units:
   - title: "Strings and Arrays"
     order: 4
     course_id: 1
+
+  - title: "Graphs"
+    order: 5 # TODO: I may change this order later
+    course_id: 1

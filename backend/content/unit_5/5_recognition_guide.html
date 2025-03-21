@@ -1,0 +1,167 @@
+<div class="guideContainer">
+  <h1>Recognition Guide: Graphs</h1>
+
+  <section id="graph-representations">
+    <h2>Graph Representations</h2>
+    <section id="adjacency-matrix">
+      <p>
+        <strong>Adjacency Matrix</strong>
+      </p>
+      <ul>
+        <li>Use when working with dense graphs with many connections</li>
+        <li>Critical when edge lookup speed is paramount</li>
+        <li>Ideal for graphs with a small, known number of vertices</li>
+        <li>Excellent for weighted graphs where edge weights are essential</li>
+        <li>Perfect when you need to quickly check edge existence</li>
+      </ul>
+
+      <p>
+        <i>Do not use if:</i>
+      </p>
+      <ul>
+        <li>The graph is sparse with few connections</li>
+        <li>Vertices need to be dynamically added or removed</li>
+        <li>Memory is a constraint (matrix has O(V^2) complexity)</li>
+        <li>Vertices are not sequential or have complex identifiers</li>
+      </ul>
+    </section>
+
+    <section id="adjacency-list">
+      <p>
+        <strong>Adjacency List</strong>
+      </p>
+      <ul>
+        <li>Optimal for sparse graphs with few connections</li>
+        <li>Supports dynamic vertex addition</li>
+        <li>Memory-efficient with O(V+E) space complexity</li>
+        <li>Works well with non-sequential vertex identifiers</li>
+        <li>Ideal for frequent neighbor iterations</li>
+        <li>Recommended for most graph traversal problems</li>
+      </ul>
+
+      <p>
+        <i>Do not use if:</i>
+      </p>
+      <ul>
+        <li>Constant-time edge lookup is required</li>
+        <li>The graph is extremely dense</li>
+        <li>Frequent global graph operations are needed</li>
+      </ul>
+    </section>
+
+    <section id="edge-list">
+      <p>
+        <strong>Edge List</strong>
+      </p>
+      <ul>
+        <li>Best for algorithms primarily working with edges</li>
+        <li>Provides minimal memory requirements</li>
+        <li>Useful when the order of edges matters</li>
+      </ul>
+
+      <p>
+        <i>Do not use if:</i>
+      </p>
+      <ul>
+        <li>Frequent neighbor lookups are necessary</li>
+        <li>Quick edge existence checks are required</li>
+        <li>Performance is a critical concern</li>
+      </ul>
+    </section>
+  </section>
+
+  <section id="traversal-strategies">
+    <h2>Traversal Strategies</h2>
+    <section id="depth-first-search">
+      <p>
+        <strong>Depth-First Search (DFS)</strong>
+      </p>
+      <ul>
+        <li>Ideal for exploring all possible paths</li>
+        <li>Effective for cycle detection</li>
+        <li>Useful in pathfinding for complex graphs</li>
+        <li>Necessary for topological sorting</li>
+        <li>Perfect for solving maze-like problems</li>
+        <li>Beneficial when memory is limited</li>
+      </ul>
+
+      <p>
+        <i>Do not use if:</i>
+      </p>
+      <ul>
+        <li>Shortest path is the primary requirement</li>
+        <li>Exploring nearest neighbors is the goal</li>
+        <li>The graph is very deep (risk of stack overflow)</li>
+      </ul>
+    </section>
+
+    <section id="breadth-first-search">
+      <p>
+        <strong>Breadth-First Search (BFS)</strong>
+      </p>
+      <ul>
+        <li>Best for finding the shortest path in unweighted graphs</li>
+        <li>Optimal for exploring nearest neighbors</li>
+        <li>Useful for level-order traversal</li>
+        <li>Effective in detecting graph connectivity</li>
+        <li>Ideal for minimum number of steps problems</li>
+      </ul>
+
+      <p>
+        <i>Do not use if:</i>
+      </p>
+      <ul>
+        <li>Memory is extremely constrained</li>
+        <li>Exploring deep paths is more important</li>
+        <li>The graph is very wide</li>
+      </ul>
+    </section>
+
+    <section id="topological-sort">
+      <p>
+        <strong>Topological Sort</strong>
+      </p>
+      <ul>
+        <li>Essential for dependency resolution</li>
+        <li>Useful in scheduling problems</li>
+        <li>Perfect for course prerequisite planning</li>
+      </ul>
+
+      <p>
+        <i>Do not use if:</i>
+      </p>
+      <ul>
+        <li>The graph is not a Directed Acyclic Graph (DAG)</li>
+        <li>No clear dependency relationship exists</li>
+      </ul>
+    </section>
+  </section>
+
+  <section id="interview-questions">
+    <h2>Questions to Ask</h2>
+    <p><strong>Graph Structure</strong></p>
+    <ol>
+      <li>Is the graph directed or undirected?</li>
+      <li>Are there weighted edges?</li>
+      <li>Can the graph contain cycles?</li>
+      <li>Is the graph sparse or dense?</li>
+      <li>Are vertex identifiers integers or more complex?</li>
+    </ol>
+
+    <p><strong>Problem Constraints</strong></p>
+    <ol>
+      <li>What are the size limitations of the graph?</li>
+      <li>Are we looking for a specific path or all paths?</li>
+      <li>Do we need to modify the original graph?</li>
+      <li>What information do we need to track during traversal?</li>
+    </ol>
+
+    <p><strong>Algorithmic Requirements</strong></p>
+    <ol>
+      <li>What is the primary goal? (shortest path, connectivity, etc.)</li>
+      <li>Are we exploring the entire graph or just a subset?</li>
+      <li>Do we need to return a specific type of result?</li>
+      <li>Are there memory or time complexity constraints?</li>
+    </ol>
+  </section>
+</div>
