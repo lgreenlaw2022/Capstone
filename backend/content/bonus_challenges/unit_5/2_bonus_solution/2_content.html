@@ -88,12 +88,14 @@
     <p><strong>Time Complexity:</strong></p>
     <p>
       O(R x C) where R is the number of rows and C is the number of columns in
-      the grid. We visit each cell in the grid at most once.
+      the grid. We visit each cell in the grid at most once. This can also be
+      O(N) where n is the number of cells in the grid.
     </p>
     <p><strong>Space Complexity:</strong></p>
     <p>
       O(R x C) in the worst case for the recursion stack. This happens when the
-      grid is filled with lands and DFS goes RxC levels deep.
+      grid is filled with lands and DFS goes RxC levels deep. This can also be
+      O(N) where n is the number of cells in the grid.
     </p>
   </section>
 

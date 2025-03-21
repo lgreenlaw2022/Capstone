@@ -120,7 +120,6 @@ test_cases:
 # Graphs
   - module_type: "CHALLENGE"
     module_title: "Number of Islands"
-    # TODO: this doesn't work for problems with multiple variables!!
     target_runtime: O_N
     test_cases:
       - input: "[[1,1,1,1],[1,1,0,1],[1,1,0,0]]"

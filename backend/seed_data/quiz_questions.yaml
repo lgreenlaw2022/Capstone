@@ -1,5 +1,5 @@
 quiz_questions:
-  # Hash Maps Concept Quiz
+# Hash Maps Concept Quiz
   - module_title: "Hash Maps Concept Quiz"
     title: "What is a Hash Map?"
     options:
@@ -86,7 +86,7 @@ quiz_questions:
         is_correct: false
         option_type: CONCEPT
 
-  # Hash Sets Concept Quiz
+# Hash Sets Concept Quiz
   - module_title: "Hash Sets Concept Quiz"
     title: "What is the primary purpose of a hash set?"
     options:
@@ -126,7 +126,7 @@ quiz_questions:
         is_correct: false
         option_type: CONCEPT
 
-  # Hash Maps Recognition Quiz
+# Hash Maps Recognition Quiz
   - module_title: "Hash Maps Recognition Quiz"
     title: "Which scenario would benefit most from the use of a hash table?"
     options:
@@ -192,7 +192,7 @@ quiz_questions:
         is_correct: false
         option_type: CONCEPT
 
-  # Linked Lists Concept Quiz
+# Linked Lists Concept Quiz
   - module_title: "Linked Lists Concept Quiz"
     title: "What is a linked list composed of?"
     options:
@@ -374,7 +374,7 @@ quiz_questions:
         is_correct: false
         option_type: CONCEPT
 
-  # Linked Lists Recognition Quiz
+# Linked Lists Recognition Quiz
   - module_title: "Linked Lists Recognition Quiz"
     title: 'When would the "two pointers" strategy be an appropriate technique to use in a linked list problem?'
     options:
@@ -1096,7 +1096,7 @@ quiz_questions:
       - option_text: "Multiple Traversals"
         is_correct: false
         option_type: CONCEPT
-  
+
   - module_title: "Strings and Arrays Recognition Quiz"
     title: "Given the problem: 'Find the longest substring without repeating characters in a string.' Which technique would be most efficient in time and space?"
     options:
@@ -1112,7 +1112,7 @@ quiz_questions:
       - option_text: "Pre-computation"
         is_correct: false
         option_type: CONCEPT
-  
+
   - module_title: "Strings and Arrays Recognition Quiz"
     title: "Given the problem: 'Given an array, return an array where each element is the product of all numbers except the number at that index.' Which technique would be most efficient in time and space?"
     options:
@@ -1144,7 +1144,7 @@ quiz_questions:
       - option_text: "Sorting"
         is_correct: false
         option_type: CONCEPT
-  
+
   - module_title: "Strings and Arrays Recognition Quiz"
     title: "Given the problem: 'Find the maximum sum of any contiguous subarray of size k.' Which technique would be most efficient in time and space?"
     options:
@@ -1199,7 +1199,7 @@ quiz_questions:
       - option_text: "When you need to find the longest substring without repeating characters"
         is_correct: false
         option_type: CONCEPT
-  
+
   - module_title: "Strings and Arrays Recognition Quiz"
     title: "When would you consider using multiple traversals over the two pointer technique?"
     options:
@@ -1239,7 +1239,7 @@ quiz_questions:
       - option_text: "The number of paths from the vertex to other vertices"
         is_correct: false
         option_type: CONCEPT
-  
+
   - module_title: "Graphs Concept Quiz"
     title: "What is a complete graph?"
     options:
@@ -1281,7 +1281,7 @@ quiz_questions:
       - option_text: "Trees can have multiple paths between nodes but graphs cannot"
         is_correct: false
         option_type: CONCEPT
-  
+
   - module_title: "Graphs Concept Quiz"
     title: "What is a connected graph?"
     options:
@@ -1323,7 +1323,7 @@ quiz_questions:
       - option_text: "All representations use the same amount of space"
         is_correct: false
         option_type: CONCEPT
-  
+
   - module_title: "Graphs Concept Quiz"
     title: "Which graph representation allows for the fastest edge lookup operations?"
     options:
@@ -1339,7 +1339,7 @@ quiz_questions:
       - option_text: "All representations have the same lookup speed"
         is_correct: false
         option_type: CONCEPT
-    
+
   - module_title: "Graphs Concept Quiz"
     title: "What is the space complexity of an adjacency matrix for a graph with V vertices?"
     options:
@@ -1401,7 +1401,7 @@ quiz_questions:
       - option_text: "A traversal technique that visits nodes in a specific order"
         is_correct: false
         option_type: CONCEPT
-  
+
   - module_title: "Graph Traversal Quiz"
     title: "What is Breadth-First Search (BFS) in the context of graph traversal?"
     options:
@@ -1427,7 +1427,7 @@ quiz_questions:
       - option_text: "Heap"
         is_correct: false
         option_type: CONCEPT
-  
+
   - module_title: "Graph Traversal Quiz"
     title: "What data structure is typically used to implement Depth-First Search?"
     options:
@@ -1501,7 +1501,7 @@ quiz_questions:
       - option_text: "To track the order in which nodes are visited"
         is_correct: false
         option_type: CONCEPT
-  
+
   - module_title: "Graph Traversal Quiz"
     title: "What traversal technique is commonly used to find the shortest path in an unweighted graph?"
     options:
@@ -1511,7 +1511,7 @@ quiz_questions:
       - option_text: "Breadth-First Search (BFS)"
         is_correct: true
         option_type: CONCEPT
-  
+
   - module_title: "Graph Traversal Quiz"
     title: "What traversal technique is commonly used to find cycles in a graph?"
     options:
@@ -1521,7 +1521,7 @@ quiz_questions:
       - option_text: "Breadth-First Search (BFS)"
         is_correct: false
         option_type: CONCEPT
-    
+
   - module_title: "Graph Traversal Quiz"
     title: "In a topological sort of a directed acyclic graph:"
     options:
@@ -1534,7 +1534,7 @@ quiz_questions:
       - option_text: "Vertices are ordered based on their degree"
         is_correct: false
         option_type: CONCEPT
-  
+
   - module_title: "Graph Traversal Quiz"
     title: "What is the time complexity of a topological sort on a graph with V vertices and E edges using an adjacency list?"
     options:
@@ -1563,7 +1563,7 @@ quiz_questions:
       - option_text: "Undirected graphs"
         is_correct: false
         option_type: CONCEPT
-    
+
   - module_title: "Graph Traversal Quiz"
     title: "What graph traversal is topological sort based on?"
     options:
@@ -1573,7 +1573,7 @@ quiz_questions:
       - option_text: "Breadth-First Search (BFS)"
         is_correct: false
         option_type: CONCEPT
-      
+
 # Graphs Recognition Quiz
   - module_title: "Graphs Recognition Quiz"
     title: "When would you choose an Adjacency Matrix over an Adjacency List?"

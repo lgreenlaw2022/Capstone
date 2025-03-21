@@ -44,7 +44,7 @@ To set up the database and seed it with initial data, run the following commands
 
 1. Initialize the database
 
-```
+``` bash
 flask db init
 flask db migrate
 flask db upgrade
@@ -52,9 +52,9 @@ flask db upgrade
 
 2. seed the database
 
-```
+``` bash
 flask seed
-```
+``` 
 
 ## Course Content
 

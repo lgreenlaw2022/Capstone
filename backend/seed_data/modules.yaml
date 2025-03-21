@@ -233,7 +233,7 @@ modules:
     title: "Max Area of Island"
     order: 1
     module_type: BONUS_CHALLENGE
-  
+
   - unit_title: "Graphs"
     title: "Max Area of Island Solution"
     order: 2

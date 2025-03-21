@@ -89,13 +89,16 @@
     <p>
       O(M x N) where M is the number of rows and N is the number of columns in
       the grid. In the worst case, we visit each cell exactly once.
+      Alternatively, this can be expressed as O(N) where N is the number of
+      cells in the grid.
     </p>
     <p><strong>Space Complexity:</strong></p>
     <p>
       O(M x N) in the worst case for the recursion stack. This happens when the
       grid is filled with lands and DFS goes MxN levels deep. This is the depth
       of the recursive call stack when the entire grid is one large island with
-      a snake-like pattern.
+      a snake-like pattern. This can also be expressed as O(N) where N is the
+      number of cells in the grid.
     </p>
   </section>
 
