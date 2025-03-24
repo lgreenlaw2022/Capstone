@@ -5,11 +5,9 @@ from models import Unit, User, db, UserModule, QuizQuestion, UserQuizQuestion, M
 import random
 from enums import ModuleType
 from services.user_activity_service import update_daily_xp
-from configurations.constants import XP_FOR_COMPLETING_REVIEW, QUIZ_ACCURACY_THRESHOLD
-
+from constants import XP_FOR_COMPLETING_REVIEW, QUIZ_ACCURACY_THRESHOLD
 import logging
 
-# TODO: this name may be confusing because the review page also uses content endpoints
 review_bp = Blueprint("review", __name__)
 
 logger = logging.getLogger(__name__)

@@ -34,9 +34,11 @@ const QuizPage = () => {
     useEffect(() => {
         if (moduleId) {
             setLoading(true);
-            Promise.all([fetchQuestions(), fetchModuleDetails()]).finally(() => {
-                setLoading(false); // Set loading to false after data is fetched
-            });
+            Promise.all([fetchQuestions(), fetchModuleDetails()]).finally(
+                () => {
+                    setLoading(false); // Set loading to false after data is fetched
+                }
+            );
         }
     }, [moduleId]);
 

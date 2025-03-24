@@ -5,7 +5,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 import logging
 from datetime import datetime, timedelta, timezone
 from enums import TimePeriodType, MetricType
-from configurations.constants import GEMS_FOR_COMPLETING_GOAL, GEMS_FOR_WEEKLY_COMPLETION_QUOTA
+from constants import GEMS_FOR_COMPLETING_GOAL, GEMS_FOR_WEEKLY_COMPLETION_QUOTA
 
 from models import DailyUserActivity, db, User, Goal, UserGoal
 
@@ -316,5 +316,12 @@ def add_weekly_completion_goal_gems():
         logger.info("Gems for weekly quota goal added successfully")
         return jsonify({"message": "Gems added successfully"}), 200
     except Exception as e:
-        logger.error(f"An error occurred while rewarding weekly completion goal, {str(e)}")
-        return jsonify({"error": "An error occurred while rewarding weekly completion goal"}), 500
+        logger.error(
+            f"An error occurred while rewarding weekly completion goal, {str(e)}"
+        )
+        return (
+            jsonify(
+                {"error": "An error occurred while rewarding weekly completion goal"}
+            ),
+            500,
+        )

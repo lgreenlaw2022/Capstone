@@ -1,5 +1,5 @@
 from datetime import datetime, timezone
-from configurations.constants import (
+from constants import (
     GEMS_FOR_BONUS_CHALLENGE,
     XP_FOR_COMPLETING_MODULE,
     XP_FOR_COMPLETING_CHALLENGE,
