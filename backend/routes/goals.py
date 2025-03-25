@@ -27,10 +27,10 @@ def get_daily_goals():
             return jsonify({"error": "User not found"}), 404
 
         calculator = GoalProgressCalculator()
-        logger.debug("Using calculator to calculate daily goals")
         daily_goals = calculator.calculate_user_goals_progress(
             user_id, TimePeriodType.DAILY
         )
+        
         if len(daily_goals) == 0:
             logger.info("No daily goals found")
             return (
@@ -107,7 +107,6 @@ def get_monthly_goals():
             return jsonify({"error": "User not found"}), 404
 
         calculator = GoalProgressCalculator()
-        logger.debug("Using calculator to calculate monthly goals")
         monthly_goals = calculator.calculate_user_goals_progress(
             user_id, TimePeriodType.MONTHLY
         )
