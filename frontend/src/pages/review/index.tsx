@@ -22,7 +22,7 @@ export default function Review() {
             setUnits(unitsData);
             setWeeklyReviewStatus(statusData);
         } catch (error) {
-            console.error("Error fetching data:", error);
+            console.error("Error fetching review data:", error);
         } finally {
             setLoading(false);
         }

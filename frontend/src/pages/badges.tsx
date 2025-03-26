@@ -52,6 +52,7 @@ export default function Badges() {
     return (
         <div className={styles.badgesContainer}>
             <h2>Badges</h2>
+            {/* Unit completion badges */}
             <div className={styles.typeGroup}>
                 <h3>Concepts</h3>
                 <div className={styles.badgeGroup}>
@@ -67,6 +68,7 @@ export default function Badges() {
                     )}
                 </div>
             </div>
+            {/* Award badges */}
             <div className={styles.typeGroup}>
                 <h3>Awards</h3>
                 <div className={styles.badgeGroup}>
