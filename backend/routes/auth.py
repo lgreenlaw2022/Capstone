@@ -9,7 +9,7 @@ import logging
 
 from app import db
 from models import User
-from services.user_activity_service import reset_streak
+from services.user_activity_service import UserActivityService
 from services.goals_service import GoalService
 
 auth_bp = Blueprint("auth", __name__)
@@ -19,6 +19,7 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
 goal_service = GoalService()
+user_activity_service = UserActivityService()
 
 
 @auth_bp.route("/register", methods=["POST"])
@@ -77,7 +78,7 @@ def login():
             identity=str(user.id)
         )  # convert to a string for the sub field
         try:
-            if reset_streak(user):
+            if user_activity_service.reset_streak(user):
                 logger.info(f"User {user.id} streak reset due to inactivity")
         except Exception as e:
             logger.error(f"Error resetting streak for user {user.id}: {str(e)}")

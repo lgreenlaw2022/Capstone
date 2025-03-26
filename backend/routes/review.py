@@ -4,7 +4,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from models import Unit, User, db, UserModule, QuizQuestion, UserQuizQuestion, Module
 import random
 from enums import ModuleType
-from services.user_activity_service import update_daily_xp
+from services.user_activity_service import UserActivityService
 from constants import XP_FOR_COMPLETING_REVIEW, QUIZ_ACCURACY_THRESHOLD
 import logging
 
@@ -12,6 +12,8 @@ review_bp = Blueprint("review", __name__)
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
+
+user_activity_service = UserActivityService()
 
 
 @review_bp.route("/weekly-review/questions", methods=["GET"])
@@ -174,7 +176,7 @@ def submit_weekly_review():
             user_id = get_jwt_identity()
             user = User.query.get(user_id)
             user.weekly_review_done = True
-            update_daily_xp(user_id, XP_FOR_COMPLETING_REVIEW)
+            user_activity_service.update_daily_xp(user_id, XP_FOR_COMPLETING_REVIEW)
             db.session.commit()
 
         logger.debug(f"Submitting weekly review data for user {user_id}")
@@ -249,7 +251,7 @@ def submit_unit_quiz_score(unit_id):
                 .all()
             )
             update_quiz_questions_practiced_date(user_id, unit_questions)
-            update_daily_xp(user_id, XP_FOR_COMPLETING_REVIEW)
+            user_activity_service.update_daily_xp(user_id, XP_FOR_COMPLETING_REVIEW)
 
             return (
                 jsonify({"message": "Submitted unit review complete successfully"}),

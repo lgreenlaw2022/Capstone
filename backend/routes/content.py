@@ -6,7 +6,7 @@ from constants import (
     GEMS_FOR_HINT,
     QUIZ_ACCURACY_THRESHOLD,
 )
-from services.user_activity_service import update_daily_xp
+from services.user_activity_service import UserActivityService
 from services.badge_awarding_service import BadgeAwardingService
 from enums import EventType, ModuleType, RuntimeValues
 from flask import Blueprint, request, jsonify, send_file, abort
@@ -19,7 +19,6 @@ from models import (
     UserHint,
     UserQuizQuestion,
     UserTestCase,
-    UserUnit,
     db,
     Unit,
     Course,
@@ -38,6 +37,7 @@ content_bp = Blueprint("content", __name__)
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
+user_activity_service = UserActivityService()
 
 @content_bp.route("/courses/<int:course_id>/units", methods=["GET"])
 @jwt_required()
@@ -316,8 +316,13 @@ def mark_module_complete_and_open_next(module_id, user_id):
                 module_id=module_id,
                 user_id=user_id,
             )
-            # TODO: add UserUnit here?
             db.session.add(user_module)
+
+        # Create a UserUnit entry if it does not exist
+        user_unit = UserUnit.query.filter_by(unit_id=unit_id, user_id=user_id).first()
+        if user_unit is None:
+            user_unit = UserUnit(unit_id=unit_id, user_id=user_id)
+            db.session.add(user_unit)
 
         # Update the user's daily XP
         if current_module.module_type not in [
@@ -328,7 +333,7 @@ def mark_module_complete_and_open_next(module_id, user_id):
         else:  # Bonus and practice challenges have different XP values
             earned_xp = XP_FOR_COMPLETING_CHALLENGE
         logger.debug(f"User {user_id} earned {earned_xp} XP for completing a module")
-        update_daily_xp(user_id, earned_xp)
+        user_activity_service.update_daily_xp(user_id, earned_xp)
 
         if current_module.module_type == ModuleType.BONUS_CHALLENGE:
             # mark the bonus challenge as complete
@@ -571,6 +576,7 @@ def is_unit_newly_completed(unit_id, user_id):
 
 
 def complete_unit(unit_id, user_id):
+    # mark the unit as complete for the user
     user_unit = UserUnit.query.filter_by(unit_id=unit_id, user_id=user_id).first()
     if user_unit is None:
         user_unit = UserUnit(unit_id=unit_id, user_id=user_id, completed=True)
@@ -579,7 +585,6 @@ def complete_unit(unit_id, user_id):
         user_unit.completed = True
     db.session.commit()
 
-    # TODO: these events shouldn't need to be triggered if the unit is already marked as complete?
     # Trigger the UNIT_COMPLETION event to award badges
     unit = Unit.query.filter_by(id=unit_id).first()
     badge_awarding_service = BadgeAwardingService(user_id)
@@ -588,7 +593,6 @@ def complete_unit(unit_id, user_id):
         user_unit_completed=user_unit.completed,
         unit_title=unit.title,
     )
-    logger.debug(f"Badges checked for unit {unit_id} completion")
 
     # add bonus challenge questions to the user's modules
     bonus_challenge_modules = (
@@ -608,7 +612,7 @@ def complete_unit(unit_id, user_id):
             db.session.add(user_module)
     db.session.commit()
 
-    logger.debug(f"Bonus challenges added to UserModules")
+    logger.info(f"Bonus challenges added to UserModules")
     return {"message": "Unit marked as complete"}
 
 
