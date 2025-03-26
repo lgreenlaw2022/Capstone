@@ -1,40 +1,181 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# AlgoArena Frontend
 
-## Getting Started
+## Technologies Used
 
-First, run the development server:
+-   React
+-   Next.js
+-   TypeScript
+-   CSS
+-   Axios for API requests
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Project Structure
+
+```
+frontend/
+│
+├── public/assets/          # icons and images
+│   └── ... (icons)
+├── src/
+│   ├── api/
+│   │   ├── api.ts         # Main API service
+│   │   └── axiosInstance.ts  # Axios configuration
+│   ├── components/        # Reusable React components
+│   │   └── ... (components)
+│   ├── pages/              # application pages
+│   │   ├── learn/
+│   │   │   ├── challenge/
+│   │   │   ├── challenge-solution/
+│   │   │   ├── concept-guide/
+│   │   │   ├── quiz/
+│   │   │   └── index.tsx
+│   │   ├── review/
+│   │   │   ├── [unitld].tsx
+│   │   │   ├── index.tsx
+│   │   │   └── weekly.tsx
+│   │   ├── _app.tsx
+│   │   ├── _document.tsx
+│   │   ├── badges.tsx
+│   │   ├── goals.tsx
+│   │   ├── index.tsx
+│   │   ├── login.tsx
+│   │   ├── profile.tsx
+│   │   ├── register.tsx
+│   │   └── stats.tsx
+│   ├── styles/             # CSS modules
+│   ├── types/             # TypeScript type definitions
+│   └── utils/             # Utility functions and helpers
+│
+└── ...configuration files
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Key Pages
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+### Authentication
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+`/login`: User authentication interface
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+-   Allows users to sign in with email and password
+-   Handles JWT token generation and storage
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+`/register`: New user registration
 
-## Learn More
+-   Collects user information
+-   Creates new user account
+-   Redirects to login after successful registration
 
-To learn more about Next.js, take a look at the following resources:
+### User Profile
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+`/profile`: User profile management
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+-   View personal information and account details
 
-## Deploy on Vercel
+### Learning Paths
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+`/learn/index.tsx`
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+-   Landing page of the app
+-   Directory of units and their modules
+-   Open modules from this page
+
+`/learn/challenge/[moduleId.tsx]`
+
+-   Presents a coding challenge
+-   Provides hints
+-   Test cases check completion
+
+`/learn/challenge-solution/[moduleId].tsx`
+
+-   View detailed solution guides for a challenge
+
+`/learn/concept-guide.[moduleId.tsx]`
+
+-   Loads in-depth technical concept explanations (eg. Linked Lists)
+-   Alternatively displays a recognition guide with techniques for recognizing problem strategies
+
+`/learn/quiz/[moduleId].tsx`
+
+-   Runs a quiz with multiple choice questions for the designated concept guide or recognition guide
+
+### Review and Practice Material
+
+`/review`:
+
+-   Includes base page, [unitId] subpage, and weekly review subpage page
+-   `index.tsx` displays options for a weekly review quiz, unit review quizzes, and bonus challenges
+-   `[unitId].tsx` opens a review quiz for selected unit
+-   `weekly.tsx` opens a quiz with questions from all practiced units, updates weekly
+
+### Badges
+
+`/badges.tsx`:
+
+-   Display earned achievement and unit completion badges
+
+### Goals
+
+`/goals.tsx`:
+
+-   Track progress towards daily and monthly goals
+-   Set personalized goals
+-   Earn gems for completed goals
+
+### Stats
+
+`stats/tsx`:
+
+-   Optionally join and track ranking on a weekly XP leaderboard
+-   View total XP earned
+-   Compare practice habits against other users
+
+## Making API requests
+
+We use Axios for centralized API management. All API interactions are configured in `src/api/axiosInstance.ts`
+
+### Basic Request Pattern
+
+```typescript
+// Example API GET call structure
+export const getDailyGoals = async () => {
+    try {
+        const response = await axiosInstance.get('/goals/daily');
+        return response.data;
+    } catch (error) {
+        // Log and rethrow error
+        console.error('Error fetching goals', error);
+        throw error;
+    }
+}
+
+// Example API POST call structure
+export const addGoalReward = async (goalId: number) => {
+    try {
+        const response = await axiosInstance.post(`/goals/${goalId}/add-gems`);
+        return response.data;
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error fetching goal reward:', error.message);
+        } else {
+            console.error('Unknown error fetching goal reward:', error);
+        throw error;
+    }
+}
+```
+
+### Using API calls
+
+```typescript
+import { getDailyGoals, addGoalReward } from "@/api/api";
+
+// GET
+const dailyData = await getDailyGoals();
+// POST
+await addGoalReward(goal.goalId);
+```
+
+## Authentication
+
+The application uses JWT for authentication:
+
+-   Token stored in localStorage
+-   Frontend validation checks token expiration
+-   Protected routes redirect to login if unauthorized
