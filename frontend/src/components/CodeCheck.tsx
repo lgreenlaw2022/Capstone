@@ -174,7 +174,7 @@ export default function CodeCheck({
                 <p
                     className={
                         runtimeFeedback === "Submitted."
-                            ? // TODO: don't love it being green because its possible a lower runtime than the target is impossible
+                            ?
                               styles.correctFeedback
                             : styles.incorrectFeedback
                     }

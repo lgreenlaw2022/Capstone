@@ -23,7 +23,7 @@
 
 .challengeCard p {
     color: #3c4dff;
-    font-weight: 500; /* TODO: after loading fonts this should be 600 weight */
+    font-weight: 500;
     font-size: 14px;
 }
 

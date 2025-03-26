@@ -31,7 +31,6 @@ badges:
     event_type: UNIT_COMPLETION
 
 # Award Badges
-  # TODO: monitor how this badge is awarded
   - title: "7 day streak"
     description: "Awarded for reaching a 7 day streak."
     type: AWARD

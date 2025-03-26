@@ -14,6 +14,7 @@ interface ModuleProps {
 // load correct icon based on module type and open status
 const getModuleIcon = (type: ModuleType, isOpen: boolean) => {
     switch (type) {
+        // conditionally render the open or closed icon
         case ModuleType.CONCEPT_GUIDE:
             return isOpen
                 ? "/assets/concept-guide-open.svg"
@@ -42,13 +43,14 @@ const getModuleIcon = (type: ModuleType, isOpen: boolean) => {
 };
 
 const getModulePath = (type: ModuleType, id: number): string => {
+    // return the correct page path based on the module type
     switch (type) {
         case ModuleType.CONCEPT_GUIDE:
             return `/learn/concept-guide/${id}`;
         case ModuleType.PYTHON_GUIDE:
             return `/learn/python-guide/${id}`;
         case ModuleType.RECOGNITION_GUIDE:
-            return `/learn/concept-guide/${id}`; // TODO: recognition guide is the same as concept guide, this creates an issue of the appearance while loading
+            return `/learn/concept-guide/${id}`;
         case ModuleType.QUIZ:
             return `/learn/quiz/${id}`;
         case ModuleType.CHALLENGE:
@@ -66,10 +68,11 @@ export default function Module({ id, type, isOpen }: ModuleProps) {
     const iconSrc = getModuleIcon(type, isOpen);
     const router = useRouter();
 
-    // only allow click if module is open
     const handleClick = (): void => {
+        // only allow click if module is open
         if (isOpen) {
             try {
+                // navigate to the correct module page
                 const path = getModulePath(type, id);
                 router.push(path);
             } catch (error) {
@@ -81,6 +84,7 @@ export default function Module({ id, type, isOpen }: ModuleProps) {
 
     return (
         <div
+            // conditionally apply the open or closed styles
             className={`${styles.module} ${isOpen ? styles.open : styles.closed}`}
             onClick={handleClick}
             role="button"

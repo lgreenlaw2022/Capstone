@@ -18,7 +18,6 @@ export default function Learn() {
             try {
                 const units = await getUnitsInPrepCourse();
                 setUnits(units);
-                console.log('Units in prep course:', units);
             } catch (error) {
                 console.error('Error fetching units:', error);
             }

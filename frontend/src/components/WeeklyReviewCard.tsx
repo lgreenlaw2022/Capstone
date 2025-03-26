@@ -17,7 +17,6 @@ export default function WeeklyReviewCard({completed}: WeeklyReviewCardProps) {
     };
 
     return (
-        // TODO: conditional styling
         <div className={styles.weeklyCard} onClick={handleClick} role="button">
             <div className={styles.checkbox}>
                 {completed && (

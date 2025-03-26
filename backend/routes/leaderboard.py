@@ -152,7 +152,6 @@ def get_weekly_rankings():
             return jsonify({"error": "User not found"}), 404
 
         # Calculate the date of the most recent Monday
-        # TODO: would be best to adjust these dates + times to the user's time zone
         most_recent_monday = get_most_recent_monday()
         is_reward_due = False
         reward_amount = 0

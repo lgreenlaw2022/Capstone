@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import {useRouter} from 'next/router';
-import styles from '../styles/Form.module.css';
+import React, { useState } from "react";
+import { useRouter } from "next/router";
+import styles from "../styles/Form.module.css";
 
-import { loginUser } from '../api/api';
+import { loginUser } from "../api/api";
 
 interface FormData {
     usernameOrEmail: string;
@@ -18,8 +18,8 @@ interface Errors {
 export default function LoginForm() {
     const router = useRouter();
     const [formData, setFormData] = useState<FormData>({
-        usernameOrEmail: '',
-        password: '',
+        usernameOrEmail: "",
+        password: "",
     });
 
     const [errors, setErrors] = useState<Errors>({});
@@ -29,7 +29,7 @@ export default function LoginForm() {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
         // clear the error when the user types again
-        setErrors({ ...errors, [name]: '' });
+        setErrors({ ...errors, [name]: "" });
     };
 
     const validateForm = (): boolean => {
@@ -37,12 +37,12 @@ export default function LoginForm() {
         let isValid = true;
 
         if (!formData.usernameOrEmail) {
-            newErrors.usernameOrEmail = 'Username or Email is required';
+            newErrors.usernameOrEmail = "Username or Email is required";
             isValid = false;
         }
 
         if (!formData.password) {
-            newErrors.password = 'Password is required';
+            newErrors.password = "Password is required";
             isValid = false;
         }
 
@@ -55,12 +55,14 @@ export default function LoginForm() {
         e.preventDefault();
         if (validateForm()) {
             try {
-                const data = await loginUser(formData.usernameOrEmail, formData.password);
-                console.log('User logged in:', data);
-                router.push('/learn')
+                await loginUser(formData.usernameOrEmail, formData.password);
+                router.push("/learn");
             } catch (error) {
-                console.error('Login failed:', error);
-                setErrors({ ...errors, form: 'Login failed. Please check your credentials and try again.' });
+                console.error("Login failed:", error);
+                setErrors({
+                    ...errors,
+                    form: "Login failed. Please check your credentials and try again.",
+                });
             }
         }
     };
@@ -70,7 +72,9 @@ export default function LoginForm() {
             <div className={styles.title}>Sign in</div>
             <form className={styles.formFields} onSubmit={handleSubmit}>
                 <div className={styles.formGroup}>
-                    <label htmlFor="usernameOrEmail" className={styles.label}>Username or Email</label>
+                    <label htmlFor="usernameOrEmail" className={styles.label}>
+                        Username or Email
+                    </label>
                     <input
                         type="text"
                         id="usernameOrEmail"
@@ -87,7 +91,9 @@ export default function LoginForm() {
                 </div>
 
                 <div className={styles.formGroup}>
-                    <label htmlFor="password" className={styles.label}>Password</label>
+                    <label htmlFor="password" className={styles.label}>
+                        Password
+                    </label>
                     <input
                         type="password"
                         id="password"
@@ -97,13 +103,15 @@ export default function LoginForm() {
                         className={styles.input}
                     />
                     {errors.password && (
-                        <span className={styles.error}>
-                            {errors.password}
-                        </span>
+                        <span className={styles.error}>{errors.password}</span>
                     )}
                 </div>
-                {errors.form && <div className={styles.error}>{errors.form}</div>}
-                <button type="submit" className={styles.submitButton}>Login</button>
+                {errors.form && (
+                    <div className={styles.error}>{errors.form}</div>
+                )}
+                <button type="submit" className={styles.submitButton}>
+                    Login
+                </button>
             </form>
         </div>
     );

@@ -25,13 +25,11 @@
     padding: 0 8px;
 }
 
-/* TODO: this is a bit of a hack */
 .userInput button {
     margin: 0px;
     height: 34px;
 }
 
-/* this only applies to the dropdown for runtime, confusing? */
 .userInput select {
     border-radius: 8px;
     border: 2px solid #d9d9d9;

@@ -1,4 +1,3 @@
-// TODO: consider importing these assets
 const icons: { [key: string]: string } = {
     "Hash Maps": "/assets/unit-icons/hash-maps.svg",
     "Linked Lists": "/assets/unit-icons/linked-lists.svg",

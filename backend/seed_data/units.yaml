@@ -16,5 +16,5 @@ units:
     course_id: 1
 
   - title: "Graphs"
-    order: 5 # TODO: I may change this order later
+    order: 5
     course_id: 1
