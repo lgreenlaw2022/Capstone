@@ -7,6 +7,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 import logging
 import dotenv
+from datetime import timedelta
 
 # Load environment variables from .env file
 dotenv.load_dotenv()
@@ -30,33 +31,13 @@ def create_app():
     # Create instance folder if it doesn't exist
     os.makedirs(app.instance_path, exist_ok=True)
 
-    # Configure the app with necessary settings
-    app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "default_secret_key")
-
-    # Get database URL from environment
-    database_url = os.environ.get("DATABASE_URL")
-
-    if not database_url:
-        logger.debug("DATABASE_URL not found in environment variables")
-        # Fallback to SQLite for local development
-        database_url = f"sqlite:///{os.path.join(app.instance_path, 'site.db')}"
-
-    logger.debug(f"SQLALCHEMY_DATABASE_URI: {database_url}")
-
-    app.config["SQLALCHEMY_DATABASE_URI"] = database_url
-    app.config["JWT_SECRET_KEY"] = os.environ.get(
-        "JWT_SECRET_KEY", "default_jwt_secret_key"
-    )
-
-    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-
-    # Configure CORS based on environment
-    frontend_url = os.environ.get("FRONTEND_URL")
-    logger.debug(f"FRONTEND_URL: {frontend_url}")
-    if app.config["ENV"] == "production" and frontend_url:
+    logger.debug(f"SQLALCHEMY_DATABASE_URI: {app.config['SQLALCHEMY_DATABASE_URI']}")
+    logger.debug(f"FRONTEND_URL: {app.config['FRONTEND_URL']}")
+    
+    if app.config["ENV"] == "production" and app.config['FRONTEND_URL']:
         # In production, only allow the frontend domain
         logger.debug("Setting CORS with frontend URL because in production")
-        CORS(app, origins=[frontend_url])
+        CORS(app, origins=[app.config['FRONTEND_URL']])
     else:
         # In development, allow all origins
         CORS(app)
