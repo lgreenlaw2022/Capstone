@@ -186,7 +186,6 @@ def submit_weekly_review():
         return jsonify({"error": str(e)}), 500
 
 
-# TODO: maybe this should be a content route?
 @review_bp.route("/unit-review/<int:unit_id>/questions", methods=["GET"])
 def get_unit_review_questions(unit_id):
     try:
@@ -266,7 +265,6 @@ def submit_unit_quiz_score(unit_id):
         return jsonify({"error": str(e)}), 500
 
 
-# TODO: duplicate function from content.py
 def update_quiz_questions_practiced_date(user_id, questions):
     for question in questions:
         # create UserQuizQuestion record if it does not exist
