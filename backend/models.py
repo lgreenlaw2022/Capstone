@@ -128,8 +128,6 @@ class Goal(db.Model):
 
 
 class UserGoal(db.Model):
-    # need to decide when I may want to reap goals, maybe after 1 month
-    # to do this I'll need some delete/cascade rules
     __tablename__ = "user_goals"
 
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), primary_key=True)
@@ -156,9 +154,7 @@ class Unit(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     course_id = db.Column(db.Integer, db.ForeignKey("courses.id"), nullable=False)
     title = db.Column(db.String(255), nullable=False)
-    order = db.Column(
-        db.Integer, nullable=False
-    )  # order in course
+    order = db.Column(db.Integer, nullable=False)  # order in course
 
     course = db.relationship("Course", back_populates="units")
     modules = db.relationship("Module", back_populates="unit")
@@ -189,7 +185,6 @@ class Module(db.Model):
         db.Enum(RuntimeValues), nullable=True
     )  # Only for challenges
 
-    # TODO: figure out what delete to use here
     unit = db.relationship("Unit", back_populates="modules")
     users = db.relationship(
         "UserModule", back_populates="module", cascade="all, delete-orphan"
@@ -270,8 +265,6 @@ class QuizQuestionOption(db.Model):
     )
     option_text = db.Column(db.Text, nullable=False)
     is_correct = db.Column(db.Boolean, nullable=False, default=False)
-    # TODO: should this be stored in QuizQuestion
-    # TODO: it doesn't make sense that this is using the QuizType enum
     option_type = db.Column(db.Enum(QuizType), nullable=False)
 
     question = db.relationship("QuizQuestion", back_populates="options")

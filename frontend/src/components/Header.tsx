@@ -55,7 +55,7 @@ export default function Header({ showSignUpButton = false, showSignInButton = fa
 
         fetchUserStats();
         // triggering based on router is an imperfect solution, 
-        // revisit as I build use cases for fetching user stats
+        // TODO: revisit as I build use cases for fetching user stats
     }, [router]);
 
     return (
@@ -83,7 +83,6 @@ export default function Header({ showSignUpButton = false, showSignInButton = fa
                         <Image src="/assets/gem.svg" height={26} width={26} alt="gem" />
                         <h3>{userData?.gems}</h3>
                     </div>
-                    {/* Not sure if this is the best div to add the ref too */}
                     <div className={styles.profileContainer} ref={dropdownRef}>
                         <h3 className={styles.profileLink} onClick={toggleDropdown}>
                             {userData?.username}

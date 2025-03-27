@@ -17,7 +17,6 @@ def calculate_percent_shorter_streak(user_streak):
     total_users = User.query.count() - 1  # subtract 1 to exclude the current user
     if total_users < 1:
         return 100.0  # If the user is the only one, they are ahead of 100% of users
-    # TODO: consider adding index to streak column
     users_with_shorter_streak = User.query.filter(User.streak < user_streak).count()
 
     percent_shorter_streak = (users_with_shorter_streak / total_users) * 100

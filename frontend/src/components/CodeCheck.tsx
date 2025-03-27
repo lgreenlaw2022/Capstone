@@ -77,7 +77,7 @@ export default function CodeCheck({
             setTestCaseFeedback(initialTestCaseFeedback);
 
             setTargetRuntime(data.runtime.target);
-            setPriorSubmittedRuntime(data.runtime.prior); // TODO: tried removing the null case, see if this breaks anything
+            setPriorSubmittedRuntime(data.runtime.prior);
             if (data.runtime.prior) {
                 setRuntimeFeedback("Submitted.");
             }

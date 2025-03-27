@@ -3,7 +3,6 @@ import Unit from '../../components/Unit';
 
 import { getUnitsInPrepCourse } from '../../api/api';
 
-// Define the type for the unit data
 interface UnitData {
     id: number;
     title: string;

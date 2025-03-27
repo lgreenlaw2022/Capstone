@@ -28,7 +28,6 @@
 }
 
 .quizScoreContainer button {
-    /* TODO: don't like how I am having to hard set these button widths when they are in flexbox */
     width: 140px;
     align-self: center;
 }

@@ -41,7 +41,6 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({
         <div className={styles.quizQuestionContainer}>
             <h2>{question.title}</h2>
             <div className={styles.optionsContainer}>
-                {/* TODO: shuffle order of questions */}
                 {question.options.map((option) => (
                     <QuizOption
                         key={option.id}

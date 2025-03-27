@@ -14,7 +14,6 @@ export default function ConceptReviewCard({
     const router = useRouter();
     const iconSrc = icons[unitTitle] || "/assets/award-icons/flame.svg"; // Fallback to a default icon if not found
 
-    console.log("unit title", unitTitle);
     const handleClick = () => {
         router.push(`/review/${unitId}`);
     };

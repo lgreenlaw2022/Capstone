@@ -8,7 +8,6 @@ interface WeeklyReviewCardProps {
 export default function WeeklyReviewCard({completed}: WeeklyReviewCardProps) {
     const router = useRouter();
 
-    // add an onClick function to send user to quiz
     const handleClick = () => {
         if (!completed) {
             // redirect to quiz

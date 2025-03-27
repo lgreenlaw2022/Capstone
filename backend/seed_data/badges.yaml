@@ -4,13 +4,13 @@ badges:
     description: "Awarded for completing the hash tables unit."
     type: CONTENT
     criteria_expression: "user_unit_completed == True and unit_title == 'Hash Maps'"
-    event_type: UNIT_COMPLETION # NOTE: new challenge, need to convert enums
+    event_type: UNIT_COMPLETION
 
   - title: "Linked Lists"
     description: "Awarded for completing the linked lists unit."
     type: CONTENT
     criteria_expression: "user_unit_completed == True and unit_title == 'Linked Lists'"
-    event_type: UNIT_COMPLETION # NOTE: new challenge, need to convert enums
+    event_type: UNIT_COMPLETION
 
   - title: "Binary Trees"
     description: "Awarded for completing the binary trees unit."
