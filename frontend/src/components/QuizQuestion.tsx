@@ -3,7 +3,6 @@ import QuizOption from "./QuizOption";
 import styles from "../styles/QuizQuestion.module.css";
 import { QuizQuestion as QuizQuestionType } from "../types/QuestionTypes";
 
-// TODO: make quiz question a type
 interface QuizQuestionProps {
     question: QuizQuestionType;
     handleNextQuestion: (isCorrect: boolean) => void;

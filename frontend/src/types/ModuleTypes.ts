@@ -1,7 +1,6 @@
 export interface UserModule {
     moduleId: string;
     type: ModuleType;
-    // TODO: do I want to also add a completed field to the schema?
     isOpen: boolean;
 }
 

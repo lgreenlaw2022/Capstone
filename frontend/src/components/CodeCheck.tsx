@@ -14,7 +14,6 @@ interface CodeCheckProps {
     onTestCasesCompleted: (completed: boolean) => void;
 }
 
-// TODO: use this for all?
 interface TestCase {
     testCaseId: number;
     input: string;

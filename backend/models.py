@@ -32,7 +32,6 @@ class User(db.Model):
     password = db.Column(db.String(255), nullable=False)  # hashed passwords
     email = db.Column(db.String(100), nullable=False, unique=True)
     created_date = db.Column(db.DateTime, default=current_datetime)  # Set upon creation
-    # TODO: monitor if I want to index these
     streak = db.Column(db.Integer, default=0)
     gems = db.Column(db.Integer, default=0)
     xp = db.Column(db.Integer, default=0)

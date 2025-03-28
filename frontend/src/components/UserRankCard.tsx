@@ -4,7 +4,6 @@ import styles from "../styles/UserRankCard.module.css";
 import giftIcon from "../../public/assets/gift-small.svg";
     
 interface UserRankProps {
-    // TODO: make this a type?
     user: {
         username: string;
         weekly_xp: number;

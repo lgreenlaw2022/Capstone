@@ -3,7 +3,6 @@ import styles from "../styles/QuizOption.module.css";
 import classNames from "classnames";
 
 interface QuizOptionProps {
-    // TODO: make option a type?
     option: {
         id: number;
         option_text: string;

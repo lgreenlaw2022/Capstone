@@ -205,7 +205,6 @@ def add_personalized_goal():
             return jsonify({"error": "Missing required data"}), 400
 
         try:
-            # TODO: this feels like a hack, I don't like it
             time_period = TimePeriodType[time_period.upper()]
             goal_type = MetricType[goal_type.upper()]
         except KeyError:
