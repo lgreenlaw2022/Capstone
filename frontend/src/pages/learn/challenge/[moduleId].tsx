@@ -25,7 +25,6 @@ const CodeChallengePage: React.FC = () => {
     const [showWarning, setShowWarning] = useState<boolean>(false);
 
     const handleEditorDidMount: OnMount = (editor) => {
-        // here is the editor instance, store it in `useRef` for further usage
         editorRef.current = editor;
     };
 
@@ -41,21 +40,31 @@ const CodeChallengePage: React.FC = () => {
         }
     };
 
+    const fetchSolutionData = async (moduleId: number) => {
+        try {
+            const solutionData = await getCodeChallengeSolution(moduleId);
+            return solutionData;
+        } catch (error) {
+            console.error("Error fetching solution data:", error);
+            throw error;
+        }
+    };
+
     useEffect(() => {
         fetchContent();
     }, [moduleId]);
 
     const handleComplete = async () => {
         try {
+            // allow user to mark module as complete only if test cases are completed
             if (testCasesCompleted) {
                 await submitCompleteModule(Number(moduleId));
-                const solutionData = await getCodeChallengeSolution(
-                    Number(moduleId)
-                );
+                const solutionData = await fetchSolutionData(Number(moduleId));
+                // if the module is a bonus challenge, redirect to the review page
                 if (solutionData.moduleType === "BONUS_CHALLENGE") {
-                    // TODO: not sure about enum use here
                     router.push("/review");
                 } else {
+                    // otherwise, the module is a normal challenge, redirect to the learn page
                     router.push("/learn");
                 }
             }
@@ -69,11 +78,10 @@ const CodeChallengePage: React.FC = () => {
             if (!testCasesCompleted) {
                 setShowWarning(true);
             } else {
+                // if the user has completed the test cases, make sure to mark the module as complete
                 await submitCompleteModule(Number(moduleId));
-                // TODO: better to call this twice as needed? or should I call it when the component mounts?
-                const solutionData = await getCodeChallengeSolution(
-                    Number(moduleId)
-                );
+                const solutionData = await fetchSolutionData(Number(moduleId));
+                // then redirect to the solution guide
                 const solutionModuleId = solutionData.solutionId;
                 router.push(`/learn/challenge-solution/${solutionModuleId}`);
             }
@@ -86,9 +94,11 @@ const CodeChallengePage: React.FC = () => {
         router.push("/learn");
     };
 
-    const handleWarningContinue = () => {
+    const handleWarningContinue = async () => {
+        // redirect the user to the solution guide without marking the module as complete
         setShowWarning(false);
-        const solutionModuleId = Number(moduleId) + 1;
+        const solutionData = await fetchSolutionData(Number(moduleId));
+        const solutionModuleId = solutionData.solutionId;
         router.push(`/learn/challenge-solution/${solutionModuleId}`);
     };
 

@@ -1,4 +1,5 @@
 from datetime import datetime, timezone
+from typing import Dict, Optional, Tuple
 from constants import (
     GEMS_FOR_BONUS_CHALLENGE,
     XP_FOR_COMPLETING_MODULE,
@@ -38,6 +39,7 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
 user_activity_service = UserActivityService()
+
 
 @content_bp.route("/courses/<int:course_id>/units", methods=["GET"])
 @jwt_required()
@@ -103,6 +105,8 @@ def get_modules_in_unit(unit_id):
 
 
 def calculate_completion_percentage(total_modules, completed_modules):
+    # calculates the unit completion percentage based on the number of completed modules
+    # and the total number of modules in the unit
     return (completed_modules / total_modules) * 100 if total_modules > 0 else 0
 
 
@@ -136,6 +140,7 @@ def get_module_content(module_id):
             logger.error(f"Recognition guide file not found: {file_path}")
             return jsonify({"error": "Content not found"}), 404
         return send_file(file_path, mimetype="text/html")
+    # ensures that the module type is one with code and content
     if module_type in [
         ModuleType.CHALLENGE,
         ModuleType.CHALLENGE_SOLUTION,
@@ -152,10 +157,8 @@ def get_module_content(module_id):
         elif module_type == ModuleType.BONUS_SOLUTION:
             sub_dir = f"{order}_bonus_solution"
             base_content_dir = os.path.join(base_content_dir, "bonus_challenges")
-            logger.debug(
-                f"base_content_dir: {base_content_dir}, sub_dir: {sub_dir}, order: {order}"
-            )
-
+        
+        # build the complete content and code file paths
         content_file_path = os.path.join(
             base_content_dir, f"unit_{unit_id}", sub_dir, f"{order}_content.html"
         )
@@ -167,7 +170,18 @@ def get_module_content(module_id):
         return jsonify({"error": "Unsupported module type"}), 400
 
 
-def get_code_and_content(code_file_path, content_file_path):
+def get_code_and_content(code_file_path: str, content_file_path: str) -> Dict[str, str]:
+    """
+    Retrieves the code and content from the specified files. If either file does not exist,
+    it returns a 404 error. If both files are found, it reads their content and returns it in JSON format.
+    
+    Args: 
+        code_file_path (str): Path to the code file.
+        content_file_path (str): Path to the HTML content file.
+    
+    Returns:
+        JSON response containing the code and HTML content, or an error message if files are not found.
+    """
     try:
         # Check if the text file exists
         if not os.path.exists(code_file_path):
@@ -186,7 +200,7 @@ def get_code_and_content(code_file_path, content_file_path):
             code_content = code_file.read()
             html_content = html_file.read()
 
-        logger.debug(f"Code and content retrieved successfully for module")
+        logger.info(f"Code and content retrieved successfully for module")
         return jsonify({"html": html_content, "code": code_content}), 200
 
     except Exception as e:
@@ -267,8 +281,8 @@ def submit_quiz_scores(module_id):
         )
         return jsonify({"error": str(e)}), 500
 
-
 def update_quiz_questions_practiced_date(user_id, questions):
+    # update the last practiced date for each question to today when the quiz is completed
     for question in questions:
         # create UserQuizQuestion record if it does not exist
         user_question = UserQuizQuestion.query.filter_by(
@@ -295,7 +309,22 @@ def complete_module(module_id):
         return jsonify({"error": str(e)}), 500
 
 
-def mark_module_complete_and_open_next(module_id, user_id):
+def mark_module_complete_and_open_next(module_id: int, user_id: int) -> Dict[str, str]:
+    """
+    Marks a module as complete for a specific user and awards XP based on the module type. 
+    It opens the next module(s) in the unit. If applicable, it marks the unit as 
+    complete and adds bonus challenges for the unit to the user's modules.
+    It also checks for badge awards based on the user's progress.
+    This function handles the logic for both regular and bonus challenges.
+
+    Args:
+        module_id (int): The ID of the module to mark as complete.
+        user_id (int): The ID of the user completing the module.
+
+    Returns:
+        dict: A message indicating the result of the operation, such as whether the module
+              was marked as complete, the unit was completed, or the next modules were opened.
+    """
     try:
         # Get the current module's order and unit_id
         current_module = Module.query.filter_by(id=module_id).first()
@@ -309,12 +338,11 @@ def mark_module_complete_and_open_next(module_id, user_id):
             module_id=module_id, user_id=user_id
         ).first()
 
-        # TODO: refactoring -- if I create the user_module here, I do not need to keep checking for it later
         if user_module is None:
-            logger.debug(f"Adding first module {module_id} to UserModule table")
             user_module = UserModule(
                 module_id=module_id,
                 user_id=user_id,
+                open=True,
             )
             db.session.add(user_module)
 
@@ -330,7 +358,7 @@ def mark_module_complete_and_open_next(module_id, user_id):
             ModuleType.CHALLENGE,
         ]:
             earned_xp = XP_FOR_COMPLETING_MODULE
-        else:  # Bonus and practice challenges have different XP values
+        else:  # Bonus and practice challenges have a different XP value
             earned_xp = XP_FOR_COMPLETING_CHALLENGE
         logger.debug(f"User {user_id} earned {earned_xp} XP for completing a module")
         user_activity_service.update_daily_xp(user_id, earned_xp)
@@ -353,9 +381,6 @@ def mark_module_complete_and_open_next(module_id, user_id):
                 user_id=user_id, module_id=solution_module.id
             ).first()
             if user_solution_module is None:
-                logger.debug(
-                    f"UserModule not found for solution module {solution_module.id}, adding it"
-                )
                 user_solution_module = UserModule(
                     user_id=user_id, module_id=solution_module.id, open=True
                 )
@@ -443,7 +468,21 @@ def mark_module_complete_and_open_next(module_id, user_id):
         raise
 
 
-def get_solution_module_for_challenge(module_id):
+def get_solution_module_for_challenge(module_id: int) -> Tuple[Optional[Module], Optional[str], int]:
+    """
+    This function identifies the corresponding solution module for a challenge or bonus challenge
+    based on the module's type and order. It ensures that the solution module exists and belongs
+    to the same unit as the challenge module.
+
+    Args:
+        module_id (int): The ID of the challenge module for which the solution module is being retrieved.
+
+    Returns:
+        Tuple[Optional[Module], Optional[str], int]: A tuple containing:
+            - The solution module object if found, otherwise None.
+            - An error message if applicable, otherwise None.
+            - An HTTP status code indicating the result (200 for success, 404 for not found, 400 for invalid input, 500 for errors).
+    """
     try:
         module = Module.query.filter_by(id=module_id).first()
         if module is None:
@@ -523,6 +562,8 @@ def get_challenge_solution(module_id):
 
 
 def get_num_modules_completed(user_id):
+    # count the number of modules completed by the user
+    # filter by user_id and completed status
     completed_modules_count = (
         db.session.query(UserModule)
         .filter(
@@ -536,9 +577,6 @@ def get_num_modules_completed(user_id):
 
 
 def are_all_unit_modules_completed(unit_id, user_id):
-    logger.debug(
-        f"Checking if all modules are completed for unit {unit_id} and user {user_id}"
-    )
     # check if all modules are completed by comparing the count of completed modules with the total modules
     total_modules = (
         db.session.query(Module)
@@ -575,7 +613,18 @@ def is_unit_newly_completed(unit_id, user_id):
     return False
 
 
-def complete_unit(unit_id, user_id):
+def complete_unit(unit_id: int, user_id: int) -> Dict[str, str]:
+    """
+    This function updates the user's progress by marking the unit as completed,
+    awarding any relevant badges, and adding bonus challenges for the unit to the user's modules.
+
+    Args:
+        unit_id (int): The ID of the unit to mark as complete.
+        user_id (int): The ID of the user completing the unit.
+
+    Returns:
+        dict: A message indicating the unit has been marked as complete, to be used by the endpoint.
+    """
     # mark the unit as complete for the user
     user_unit = UserUnit.query.filter_by(unit_id=unit_id, user_id=user_id).first()
     if user_unit is None:
@@ -703,7 +752,6 @@ def get_bonus_challenges():
             }
             for user_module, module, unit in bonus_challenges
         ]
-        logger.debug(f"Bonus challenges data: {bonus_challenges_data}")
 
         return jsonify(bonus_challenges_data), 200
     except Exception as e:
@@ -719,10 +767,10 @@ def buy_bonus_challenge(challenge_id):
         # validate bonus challenge exists
         module = Module.query.get(challenge_id)
         if module is None:
-            logger.debug("Bonus challenge not found")
+            logger.error("Bonus challenge not found")
             return jsonify({"error": "Bonus challenge not found"}), 404
         if module.module_type != ModuleType.BONUS_CHALLENGE:
-            logger.debug("Module is not a bonus challenge")
+            logger.error("Module is not a bonus challenge")
             return jsonify({"error": "Module is not a bonus challenge"}), 400
 
         user_module = UserModule.query.filter_by(

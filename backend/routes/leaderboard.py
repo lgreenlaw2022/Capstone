@@ -1,3 +1,4 @@
+from typing import Tuple
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
 import logging
@@ -76,6 +77,8 @@ def calculate_percent_fewer_goals(user_id, most_recent_monday):
 
 
 def get_days_until_next_sunday():
+    # based on the current date, calculate the number of days until the next Sunday
+    # If today is Sunday, return 0
     today = datetime.now(timezone.utc).date()
     days_until_sunday = (6 - today.weekday()) % 7
     return days_until_sunday
@@ -205,7 +208,25 @@ def get_weekly_rankings():
         )
 
 
-def check_and_award_user(user, week_start_date):
+def check_and_award_user(user: User, week_start_date: datetime) -> Tuple[bool, int]:
+    """
+    This function calculates the leaderboard's top 5 users based on XP earned during the previous week.
+    If the given user is in the top 5, they are awarded gems. The user's `last_leaderboard_reward_date` 
+    and their daily activity record gem count are updated accordingly.
+
+    Args:
+        user (User): The user object to check and potentially award gems to.
+        week_start_date (datetime): The start date of the current week (Monday).
+
+    Returns:
+        Tuple[bool, int]: A tuple containing:
+            - A boolean indicating whether the user was awarded gems.
+            - The number of gems awarded (0 if no gems were awarded).
+
+    Raises:
+        Exception: If an error occurs during the database operation, the exception is logged
+                   and re-raised after rolling back the session.
+    """
     try:
         # Get previous week's Monday
         previous_week_monday = week_start_date - timedelta(days=7)
@@ -234,19 +255,17 @@ def check_and_award_user(user, week_start_date):
             today = datetime.now(timezone.utc).date()
             user.last_leaderboard_reward_date = today
 
-            # add gems to user DailyActivity record
-            # TODO: this would be a great util to extract
+            # add gems to today's DailyUserActivity record
             today_activity = DailyUserActivity.query.filter_by(
                 user_id=user.id, date=today
             ).first()
 
             if today_activity is None:
-                logger.error("Daily user activity not found")
-                return False, 0
+                today_activity = DailyUserActivity(user_id=user.id, date=today)
+                db.session.add(today_activity)
 
             if today_activity.gems_earned is None:
                 today_activity.gems_earned = 0
-                logger.debug(f"today activity gems was None, set to 0")
 
             today_activity.gems_earned += gems_award
             db.session.commit()
@@ -259,8 +278,8 @@ def check_and_award_user(user, week_start_date):
             return False, 0
     except Exception as e:
         db.session.rollback()
-        logger.error(f"Error checking and awarding user: {str(e)}")
-        return False, 0  # TODO: not sure if I want to return False either way
+        logger.exception(f"Error checking and awarding user: {str(e)}")
+        raise
 
 
 @leaderboard_bp.route("/weekly-comparison", methods=["GET"])
