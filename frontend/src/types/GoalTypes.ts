@@ -4,7 +4,7 @@ export interface Goal {
     currentValue: number;
     targetValue: number;
     progressPercentage: number;
-    timePeriod: string; /* TODO: change this to an enum */
+    timePeriod: string;
     completed: boolean;
 }
 

@@ -54,9 +54,7 @@ export default function Header({ showSignUpButton = false, showSignInButton = fa
         };
 
         fetchUserStats();
-        // triggering based on router is an imperfect solution, 
-        // TODO: revisit as I build use cases for fetching user stats
-    }, [router]);
+    }, [router, userData]);
 
     return (
         <div className={styles.header}>

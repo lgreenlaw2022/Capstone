@@ -5,7 +5,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 import logging
 from datetime import datetime, timedelta, timezone
 from enums import TimePeriodType, MetricType
-from constants import GEMS_FOR_COMPLETING_GOAL, GEMS_FOR_WEEKLY_COMPLETION_QUOTA
+from constants import GEMS_FOR_COMPLETING_DAILY_GOAL, GEMS_FOR_COMPLETING_MONTHLY_GOAL, GEMS_FOR_WEEKLY_COMPLETION_QUOTA
 
 from models import DailyUserActivity, db, User, Goal, UserGoal
 
@@ -165,9 +165,6 @@ def add_gems_for_newly_completed_goal(goal_id):
             logger.error("User goal not found")
             return jsonify({"error": "User goal not found"}), 404
 
-        # TODO: use different amount for daily vs. monthly goals?
-        user.gems += GEMS_FOR_COMPLETING_GOAL
-
         # add gems to user DailyActivity record
         today = datetime.now(timezone.utc).date()
         today_activity = DailyUserActivity.query.filter_by(
@@ -178,7 +175,13 @@ def add_gems_for_newly_completed_goal(goal_id):
             today_activity = DailyUserActivity(user_id=user_id, date=today)
             db.session.add(today_activity)
 
-        today_activity.gems_earned += GEMS_FOR_COMPLETING_GOAL
+        # add gems to user record and today activity record
+        if user_goal.goal.time_period == TimePeriodType.DAILY:
+            user.gems += GEMS_FOR_COMPLETING_DAILY_GOAL
+            today_activity.gems_earned += GEMS_FOR_COMPLETING_DAILY_GOAL
+        elif user_goal.goal.time_period == TimePeriodType.MONTHLY:
+            user.gems += GEMS_FOR_COMPLETING_MONTHLY_GOAL
+            today_activity.gems_earned += GEMS_FOR_COMPLETING_MONTHLY_GOAL
 
         db.session.commit()
 
