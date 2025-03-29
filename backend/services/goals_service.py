@@ -430,6 +430,7 @@ class GoalService:
             logger.error("User not found")
             return {"error": "User not found"}, 404
 
+        # check the goal requirements are valid
         if not self._is_goal_req_in_range(type, time_period, requirement):
             return {"error": "Invalid goal requirement"}, 400
 
@@ -486,7 +487,7 @@ class GoalService:
             db.session.delete(goal_to_remove)
             db.session.commit()
 
-        # Assign the goal to the user
+        # Assign the new custom goal to the user
         user_goal = UserGoal(
             user_id=user_id,
             goal_id=goal.id,

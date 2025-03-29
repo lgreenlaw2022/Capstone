@@ -6,7 +6,12 @@ import random
 from typing import List, Dict, Any
 from enums import ModuleType
 from services.user_activity_service import UserActivityService
-from constants import XP_FOR_COMPLETING_REVIEW, QUIZ_ACCURACY_THRESHOLD
+from constants import (
+    XP_FOR_COMPLETING_REVIEW,
+    QUIZ_ACCURACY_THRESHOLD,
+    MOST_RECENT_QUESTIONS_REVIEW_PERCENT,
+    TOTAL_WEEKLY_REVIEW_QUESTIONS,
+)
 import logging
 
 review_bp = Blueprint("review", __name__)
@@ -15,7 +20,6 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
 user_activity_service = UserActivityService()
-
 
 
 @review_bp.route("/weekly-review/questions", methods=["GET"])
@@ -27,7 +31,12 @@ def get_weekly_review():
         return jsonify(weekly_review_questions), 200
     except Exception as e:
         logger.error(f"An error occurred while fetching weekly review data: {str(e)}")
-        return jsonify({"error": str(e)}), 500
+        return (
+            jsonify(
+                {"An internal error occurred while fetching weekly review questions."}
+            ),
+            500,
+        )
 
 
 def pick_weekly_review_questions(user_id: int) -> List[Dict[str, Any]]:
@@ -46,33 +55,46 @@ def pick_weekly_review_questions(user_id: int) -> List[Dict[str, Any]]:
         List[Dict[str, Any]]: A list of serialized question data, including question ID, title,
                               and options (with IDs, text, and correctness).
     """
-    TOTAL_QUESTIONS = 10
-    MOST_RECENT_QUESTIONS_PERCENT = 0.65
-
     # Get the current date and the date 3 months ago
     current_date = datetime.now()
     three_months_ago = current_date - timedelta(days=90)
 
-    # Fetch all questions the user has practiced within the past 3 months
-    practiced_questions = fetch_practiced_questions(user_id, three_months_ago)
-
-    # Identify the most recently completed quiz module
-    most_recent_module = (
-        db.session.query(UserModule)
-        .join(Module, UserModule.module_id == Module.id)
-        .filter(
-            UserModule.user_id == user_id,
-            UserModule.completed == True,
-            Module.module_type == ModuleType.QUIZ,
+    try:
+        # Fetch all questions the user has practiced within the past 3 months
+        practiced_questions = fetch_practiced_questions(user_id, three_months_ago)
+        if not practiced_questions:
+            # user has not practiced any question to review
+            logger.debug("User does not have any questions to review")
+            return []
+    except Exception as e:
+        logger.exception(
+            f"An error occurred while fetching practiced questions: {str(e)}"
         )
-        .order_by(UserModule.completed_date.desc())
-        .first()
-    )
+        raise
 
-    if not most_recent_module:
-        # user has not practiced any question to review
-        logger.debug("User does not have any questions to review")
-        return []
+    try:
+        # Identify the most recently completed quiz module
+        most_recent_module = (
+            db.session.query(UserModule)
+            .join(Module, UserModule.module_id == Module.id)
+            .filter(
+                UserModule.user_id == user_id,
+                UserModule.completed == True,
+                Module.module_type == ModuleType.QUIZ,
+            )
+            .order_by(UserModule.completed_date.desc())
+            .first()
+        )
+        # if they have practiced questions but no completed quiz module, then there is a db issue
+        if not most_recent_module:
+            raise Exception(
+                "No completed quiz module found for the user despite having practiced questions."
+            )
+    except Exception as e:
+        logger.exception(
+            f"An error occurred while fetching the most recent module: {str(e)}"
+        )
+        raise
 
     most_recent_unit_id = most_recent_module.module.unit_id
 
@@ -82,12 +104,14 @@ def pick_weekly_review_questions(user_id: int) -> List[Dict[str, Any]]:
     ]
     # Sort by the last practiced date (ascending) to prioritize less fresh questions
     diff_unit_questions.sort(key=lambda q: q["last_practiced_date"])
-    num_diff_unit_questions = int((1 - MOST_RECENT_QUESTIONS_PERCENT) * TOTAL_QUESTIONS)
+    num_diff_unit_questions = int(
+        (1 - MOST_RECENT_QUESTIONS_REVIEW_PERCENT) * TOTAL_WEEKLY_REVIEW_QUESTIONS
+    )
     selected_questions = diff_unit_questions[:num_diff_unit_questions]
 
     # If there are not enough questions from other units, adjust the number of remaining questions
     num_diff_unit_selected = len(selected_questions)
-    num_remaining_questions = TOTAL_QUESTIONS - num_diff_unit_selected
+    num_remaining_questions = TOTAL_WEEKLY_REVIEW_QUESTIONS - num_diff_unit_selected
 
     # Fill the remaining questions with randomly selected questions from the most recently practiced unit
     most_recent_unit_questions = [
