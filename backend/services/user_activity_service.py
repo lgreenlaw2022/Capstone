@@ -41,9 +41,6 @@ class UserActivityService:
                 user_id=user_id, date=current_date
             ).first()
             if not activity:
-                logger.debug(
-                    f"Creating new activity for user {user_id} on {current_date}"
-                )
                 activity = DailyUserActivity(
                     user_id=user_id, date=current_date, xp_earned=xp
                 )

@@ -111,7 +111,9 @@ def get_monthly_goals():
 
 
 def get_newly_completed_goals(goals):
-    """Return a list of goals that have been completed for the first time."""
+    """
+    Return a list of goals that have been completed for the first time.
+    """
     newly_completed_goals = []
     for goal in goals:
         if goal["is_newly_completed"]:

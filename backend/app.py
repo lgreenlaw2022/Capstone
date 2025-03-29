@@ -22,8 +22,6 @@ logging.basicConfig(level=log_level)
 
 
 def create_app():
-    logger.debug("Creating app...")
-
     # Create and configure the Flask application
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_object("config.Config")
@@ -36,7 +34,6 @@ def create_app():
     
     if app.config["ENV"] == "production" and app.config['FRONTEND_URL']:
         # In production, only allow the frontend domain
-        logger.debug("Setting CORS with frontend URL because in production")
         CORS(app, origins=[app.config['FRONTEND_URL']])
     else:
         # In development, allow all origins
