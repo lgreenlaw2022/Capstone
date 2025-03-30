@@ -42,7 +42,6 @@ export default function StatsComparePane() {
             <p>
                 Total XP: <span className={styles.boldText}>{xp}</span>
             </p>
-            {/* <p> "x" other people are also learning right now</p> */}
             <div className={styles.compareList}>
                 <div>
                     <h3>Streak</h3>

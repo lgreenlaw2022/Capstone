@@ -99,9 +99,7 @@ def get_days_left():
 @jwt_required()
 def get_leaderboard_show():
     try:
-        # get user id from jwt token
         user_id = get_jwt_identity()
-        # get user streak, number of modules completed, number of goals completed
         user = User.query.get(user_id)
         if not user:
             return jsonify({"error": "User not found"}), 404
@@ -119,9 +117,7 @@ def get_leaderboard_show():
 @jwt_required()
 def update_leaderboard_show():
     try:
-        # get user id from jwt token
         user_id = get_jwt_identity()
-        # get user streak, number of modules completed, number of goals completed
         user = User.query.get(user_id)
         if not user:
             return jsonify({"error": "User not found"}), 404
@@ -249,7 +245,7 @@ def check_and_award_user(user: User, week_start_date: datetime) -> Tuple[bool, i
         if user.id in top_user_ids:
             # Award gems based on position
             position = top_user_ids.index(user.id)
-            gems_award = [15, 10, 10, 5, 5][position]  # Award based on position
+            gems_award = [15, 10, 10, 5, 5][position]
 
             user.gems += gems_award
             today = datetime.now(timezone.utc).date()
@@ -286,7 +282,6 @@ def check_and_award_user(user: User, week_start_date: datetime) -> Tuple[bool, i
 @jwt_required()
 def get_weekly_comparison_stats():
     try:
-        # get user id from jwt token
         user_id = get_jwt_identity()
         # get user streak, number of modules completed, number of goals completed
         user = User.query.get(user_id)

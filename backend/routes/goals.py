@@ -5,9 +5,13 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 import logging
 from datetime import datetime, timedelta, timezone
 from enums import TimePeriodType, MetricType
-from constants import GEMS_FOR_COMPLETING_DAILY_GOAL, GEMS_FOR_COMPLETING_MONTHLY_GOAL, GEMS_FOR_WEEKLY_COMPLETION_QUOTA
+from constants import (
+    GEMS_FOR_COMPLETING_DAILY_GOAL,
+    GEMS_FOR_COMPLETING_MONTHLY_GOAL,
+    GEMS_FOR_WEEKLY_COMPLETION_QUOTA,
+)
 
-from models import DailyUserActivity, db, User, Goal, UserGoal
+from models import DailyUserActivity, db, User, UserGoal
 
 goals_bp = Blueprint("goals", __name__)
 

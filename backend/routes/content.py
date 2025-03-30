@@ -157,7 +157,7 @@ def get_module_content(module_id):
         elif module_type == ModuleType.BONUS_SOLUTION:
             sub_dir = f"{order}_bonus_solution"
             base_content_dir = os.path.join(base_content_dir, "bonus_challenges")
-        
+
         # build the complete content and code file paths
         content_file_path = os.path.join(
             base_content_dir, f"unit_{unit_id}", sub_dir, f"{order}_content.html"
@@ -174,11 +174,11 @@ def get_code_and_content(code_file_path: str, content_file_path: str) -> Dict[st
     """
     Retrieves the code and content from the specified files. If either file does not exist,
     it returns a 404 error. If both files are found, it reads their content and returns it in JSON format.
-    
-    Args: 
+
+    Args:
         code_file_path (str): Path to the code file.
         content_file_path (str): Path to the HTML content file.
-    
+
     Returns:
         JSON response containing the code and HTML content, or an error message if files are not found.
     """
@@ -281,6 +281,7 @@ def submit_quiz_scores(module_id):
         )
         return jsonify({"error": str(e)}), 500
 
+
 def update_quiz_questions_practiced_date(user_id, questions):
     # update the last practiced date for each question to today when the quiz is completed
     for question in questions:
@@ -311,8 +312,8 @@ def complete_module(module_id):
 
 def mark_module_complete_and_open_next(module_id: int, user_id: int) -> Dict[str, str]:
     """
-    Marks a module as complete for a specific user and awards XP based on the module type. 
-    It opens the next module(s) in the unit. If applicable, it marks the unit as 
+    Marks a module as complete for a specific user and awards XP based on the module type.
+    It opens the next module(s) in the unit. If applicable, it marks the unit as
     complete and adds bonus challenges for the unit to the user's modules.
     It also checks for badge awards based on the user's progress.
     This function handles the logic for both regular and bonus challenges.
@@ -358,7 +359,7 @@ def mark_module_complete_and_open_next(module_id: int, user_id: int) -> Dict[str
             ModuleType.CHALLENGE,
         ]:
             earned_xp = XP_FOR_COMPLETING_MODULE
-        else:  # Bonus and practice challenges have a different XP value
+        else:  # Bonus challenges and practice challenges are worth more XP
             earned_xp = XP_FOR_COMPLETING_CHALLENGE
         logger.debug(f"User {user_id} earned {earned_xp} XP for completing a module")
         user_activity_service.update_daily_xp(user_id, earned_xp)
@@ -468,7 +469,9 @@ def mark_module_complete_and_open_next(module_id: int, user_id: int) -> Dict[str
         raise
 
 
-def get_solution_module_for_challenge(module_id: int) -> Tuple[Optional[Module], Optional[str], int]:
+def get_solution_module_for_challenge(
+    module_id: int,
+) -> Tuple[Optional[Module], Optional[str], int]:
     """
     This function identifies the corresponding solution module for a challenge or bonus challenge
     based on the module's type and order. It ensures that the solution module exists and belongs

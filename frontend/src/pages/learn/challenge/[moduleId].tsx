@@ -116,7 +116,7 @@ const CodeChallengePage: React.FC = () => {
             <div>
                 <div dangerouslySetInnerHTML={{ __html: content }} />
                 <Editor
-                    height="25vh"
+                    height="30vh"
                     width="100%"
                     defaultLanguage="python"
                     value={code}
