@@ -55,7 +55,7 @@ const ChallengeSolutionPage: React.FC = () => {
         <div className={styles.container}>
             <div dangerouslySetInnerHTML={{ __html: content }} />
             <Editor
-                height="30vh" // TODO: this height will need to be variable
+                height="60vh"
                 width="100%"
                 defaultLanguage="python"
                 value={code}

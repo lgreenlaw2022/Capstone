@@ -14,7 +14,6 @@ interface CodeCheckProps {
     onTestCasesCompleted: (completed: boolean) => void;
 }
 
-// TODO: use this for all?
 interface TestCase {
     testCaseId: number;
     input: string;
@@ -77,7 +76,7 @@ export default function CodeCheck({
             setTestCaseFeedback(initialTestCaseFeedback);
 
             setTargetRuntime(data.runtime.target);
-            setPriorSubmittedRuntime(data.runtime.prior); // TODO: tried removing the null case, see if this breaks anything
+            setPriorSubmittedRuntime(data.runtime.prior);
             if (data.runtime.prior) {
                 setRuntimeFeedback("Submitted.");
             }
@@ -174,7 +173,7 @@ export default function CodeCheck({
                 <p
                     className={
                         runtimeFeedback === "Submitted."
-                            ? // TODO: don't love it being green because its possible a lower runtime than the target is impossible
+                            ?
                               styles.correctFeedback
                             : styles.incorrectFeedback
                     }

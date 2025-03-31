@@ -35,6 +35,7 @@ badge_schema = BadgeSchema(many=True)
 def get_badges():
     try:
         user_id = get_jwt_identity()
+        # Fetch all badges for the user
         user_badges = (
             db.session.query(Badge)
             .join(UserBadge)

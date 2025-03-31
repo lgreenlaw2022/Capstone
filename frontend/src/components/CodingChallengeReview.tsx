@@ -38,6 +38,7 @@ export default function CodingChallengeReview() {
     return (
         <div className={styles.challengesContainer}>
             <h3>Bonus Coding Challenges </h3>
+            {/* Incomplete challenges list */}
             <div>
                 <p>Earn gems to unlock bonus code challenges</p>
                 <div className={styles.challengeList}>
@@ -57,6 +58,7 @@ export default function CodingChallengeReview() {
                 </div>
             </div>
             <div>
+                {/* Completed challenges list */}
                 <h4>Completed</h4>
                 <div className={styles.challengeList}>
                     {completedChallenges.length > 0 ? (

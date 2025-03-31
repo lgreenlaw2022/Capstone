@@ -51,7 +51,7 @@ def load_goals():
             time_period=TimePeriodType[goal["time_period"]],
         )
         db.session.add(new_goal)
-    db.session.commit()  # NOTE: can optimize to bulk inserts if efficiency becomes a problem
+    db.session.commit()
     logger.info("Goals loaded successfully.")
 
 
@@ -212,99 +212,6 @@ def load_code_checks():
     db.session.bulk_save_objects(test_case_outputs_to_add)
     db.session.commit()
     logger.info("Code checks loaded successfully.")
-
-
-# this function can be used if I want to manually seed the user's progress in the unit
-def add_hashmap_modules_to_user(user_id, unit_id):
-    if user_id:
-        # Fetch the modules
-        concept_guide_module = Module.query.filter_by(
-            title="Hash Maps", unit_id=unit_id
-        ).first()
-        quiz_module = Module.query.filter_by(
-            title="Hash Maps Quiz", unit_id=unit_id
-        ).first()
-
-        # Create UserModule entries
-        # add concept guide
-        user_modules_to_add = []
-        if concept_guide_module:
-            user_modules_to_add.append(
-                UserModule(
-                    user_id=user_id,
-                    module_id=concept_guide_module.id,
-                )
-            )
-
-        # add quiz module
-        if quiz_module:
-            user_modules_to_add.append(
-                UserModule(
-                    user_id=user_id,
-                    module_id=quiz_module.id,
-                )
-            )
-
-    return user_modules_to_add
-
-
-def add_user_badges(user_id):
-    # Fetch the badges
-    hash_table_badge = Badge.query.filter_by(title="Hash Tables").first()
-    streak_badge = Badge.query.filter_by(title="30 day streak").first()
-
-    # Create UserBadge entries
-    user_badges_to_add = []
-    if hash_table_badge:
-        user_badges_to_add.append(
-            UserBadge(
-                user_id=user_id,
-                badge_id=hash_table_badge.id,
-            )
-        )
-
-    if streak_badge:
-        user_badges_to_add.append(
-            UserBadge(
-                user_id=user_id,
-                badge_id=streak_badge.id,
-            )
-        )
-
-    return user_badges_to_add
-
-
-def add_user_goals():
-    # Query the goals back to get their IDs
-    goals = Goal.query.all()
-
-    if not goals:
-        print("No goals found.")
-        return
-
-    # Assign goals to a user
-    users = User.query.limit(3).all()
-    if not users:
-        user = User(
-            username="testuser", email="testuser@example.com", password="password"
-        )
-        db.session.add(user)
-        db.session.commit()
-
-    user_goals_to_add = []
-    for user in users:
-        for goal in goals:
-            user_goal = UserGoal(
-                user_id=user.id,
-                goal_id=goal.id,
-                date_assigned=datetime.now(timezone.utc).date(),
-            )
-            user_goals_to_add.append(user_goal)
-
-    db.session.bulk_save_objects(user_goals_to_add)
-    db.session.commit()
-
-    print("User goals added successfully.")
 
 
 def bulk_insert(objects_to_add):

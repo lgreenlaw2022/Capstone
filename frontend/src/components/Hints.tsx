@@ -21,7 +21,6 @@ export default function Hints({ moduleId }: { moduleId: number }) {
     const fetchHints = async () => {
         try {
             const data = await getUserChallengeHints(moduleId);
-            // order the hints by order
             setLockedHints(data.filter((hint: Hint) => !hint.unlocked));
             setUnlockedHints(data.filter((hint: Hint) => hint.unlocked));
         } catch (error) {
@@ -61,12 +60,13 @@ export default function Hints({ moduleId }: { moduleId: number }) {
     return (
         <div className={styles.hintsContainer}>
             <h3>Hints</h3>
+            {/* display all purchased hints */}
             {unlockedHints.map((hint) => (
                 <div key={hint.hintId} className={styles.hint}>
                     <p>{hint.hint}</p>
                 </div>
             ))}
-            {/* hide hints text button */}
+            {/* modal for buying hints */}
             {lockedHints.length > 0 &&
                 (isModalOpen ? (
                     <div className={styles.modal}>

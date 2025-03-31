@@ -16,7 +16,6 @@ export default function GoalReward({ goal, onContinue }: GoalProps) {
     };
 
     return (
-        // TODO: decide if I want goal specific messaging
         <>
             <div className={styles.overlay}></div>
             <div className={styles.rewardContainer}>
@@ -27,7 +26,10 @@ export default function GoalReward({ goal, onContinue }: GoalProps) {
                     width={118}
                     height={118}
                 />
-                <p>You earned 5 gems</p>
+                <div>
+                    <p>{goal.title}</p>
+                    <p>You earned 5 gems</p>
+                </div>
                 <button onClick={handleContinue} className={styles.text}>
                     Keep it Going!
                 </button>

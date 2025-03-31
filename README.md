@@ -4,6 +4,8 @@
 
 This repo is a senior capstone project for Minerva University. It will be completed in Spring 2025.
 
+**Deployed App** (on Railway): [https://capstone-production-e274.up.railway.app/login](https://capstone-production-e274.up.railway.app/login)
+
 ## Project Abstract
 
 Technical interviews are a critical step in securing a software engineering role. However, technical interview preparation resources are often fragmented and narrowly focused, lacking an effective and cohesive program. This fragmentation leads to inefficient study practices and decreased motivation among users. Further, practice resources like LeetCode questions typically focus on memorizing problem solutions and do not promote deep strategy-based learning. This web application addresses these issues by centralizing study resources—including practice questions, coding challenges, and topic study guides—into a comprehensive curriculum. The website will utilize the principles of science of learning to foster deep and transferable knowledge. By integrating learning techniques such as spaced practice and interleaving, and incorporating gamification elements like points, leaderboards, and badges, the application aims to enhance user engagement and motivation. These feature choices are supported by research demonstrating that well-designed gamification elements increase user engagement and motivation to learn. The deliverable is a full-stack website with an asynchronous learning journey that allows users to track their progress and maximize their time with increased enjoyment. The ultimate goal is to elevate the efficacy and appeal of technical interview preparation through a scientifically grounded, gamified learning experience.

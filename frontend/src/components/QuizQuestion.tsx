@@ -3,7 +3,6 @@ import QuizOption from "./QuizOption";
 import styles from "../styles/QuizQuestion.module.css";
 import { QuizQuestion as QuizQuestionType } from "../types/QuestionTypes";
 
-// TODO: make quiz question a type
 interface QuizQuestionProps {
     question: QuizQuestionType;
     handleNextQuestion: (isCorrect: boolean) => void;
@@ -41,7 +40,6 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({
         <div className={styles.quizQuestionContainer}>
             <h2>{question.title}</h2>
             <div className={styles.optionsContainer}>
-                {/* TODO: shuffle order of questions */}
                 {question.options.map((option) => (
                     <QuizOption
                         key={option.id}

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Quiz from "@/components/Quiz";
 import styles from "../../styles/Quiz.module.css";
-
 import {
     getUnitQuestions,
     getUnitTitle,
@@ -19,10 +18,12 @@ const UnitQuizPage = () => {
 
     const fetchQuestions = async () => {
         try {
-            const data = await getUnitQuestions(Number(unitId));
-            setQuestions(data);
-            const unit_data = await getUnitTitle(Number(unitId));
-            setQuizTitle(unit_data.title);
+            const [questionsData, unitData] = await Promise.all([
+                getUnitQuestions(Number(unitId)),
+                getUnitTitle(Number(unitId)),
+            ]);
+            setQuestions(questionsData);
+            setQuizTitle(unitData.title);
         } catch (error) {
             console.error("Error fetching questions:", error);
         } finally {
@@ -36,6 +37,7 @@ const UnitQuizPage = () => {
     }, [unitId]);
 
     const handleSubmit = async (numCorrectAnswers: number) => {
+        // calculate accuracy percent and submit the score
         const accuracy = (numCorrectAnswers / questions.length) * 100;
         await submitUnitReviewScore(Number(unitId), accuracy);
         router.push("/review");

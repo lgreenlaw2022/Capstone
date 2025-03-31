@@ -34,7 +34,7 @@ export default function TestCase({
                 <p>Output:</p>
                 <input
                     type="text"
-                    value={verified ? outputs[0] : userOutput} // TODO: this default might not actually match what they submitted
+                    value={verified ? outputs[0] : userOutput}
                     onChange={handleChange}
                     placeholder="Enter your output"
                     disabled={verified}

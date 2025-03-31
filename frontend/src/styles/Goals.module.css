@@ -24,6 +24,5 @@
     flex-direction: column;
     justify-content: center;
     gap: 16px;
-    /* TODO: UX design: exactly how should this align with the daily goals? */
     margin-top: 32px;
 }

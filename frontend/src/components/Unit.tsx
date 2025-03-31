@@ -14,7 +14,7 @@ interface UnitProps {
 interface ApiModule {
     id: number;
     title: string;
-    module_type: string; // need explicit type
+    module_type: string;
     order: number;
     isOpen: boolean;
 }
@@ -35,13 +35,12 @@ export default function Unit({ unitId, title }: UnitProps) {
     const fetchModules = async (unitId: number) => {
         try {
             if (unitId) {
-                console.log("Fetching modules for unit:", unitId);
                 const data = await getModulesInUnit(Number(unitId));
                 if (data.modules) {
-                    // TODO: it may be better to do a formal mapper here
+                    // Map the module_type string to the ModuleType enum
                     const mappedModules = data.modules.map((module: ApiModule) => ({
                         ...module,
-                        type: module.module_type as ModuleType, // Directly cast the string to the enum type
+                        type: module.module_type as ModuleType,
                     }));
                     setModules(mappedModules);
                 } else {
@@ -72,6 +71,7 @@ export default function Unit({ unitId, title }: UnitProps) {
                 <div className={styles.unitCompletion}>
                     {completionPercentage}% completed
                 </div>
+                {/* Show unit review button for completed units */}
                 {completionPercentage === 100 && (
                     <button
                         type="button"

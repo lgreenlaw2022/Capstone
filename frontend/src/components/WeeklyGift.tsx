@@ -15,10 +15,10 @@ export default function WeeklyGift() {
     const [showReward, setShowReward] = useState(false);
 
     const fetchData = async () => {
-        const data = await getNumGoalsCompletedThisWeek();
-        setNumGoalsCompleted(data);
-        // TODO: not an ideal trigger
-        if (data == 7) {
+        // Reward as soon as 7 goals are completed
+        const numGoals = await getNumGoalsCompletedThisWeek();
+        setNumGoalsCompleted(numGoals);
+        if (numGoals === 7) {
             setShowReward(true);
         }
     };

@@ -3,7 +3,6 @@ import Unit from '../../components/Unit';
 
 import { getUnitsInPrepCourse } from '../../api/api';
 
-// Define the type for the unit data
 interface UnitData {
     id: number;
     title: string;
@@ -18,7 +17,6 @@ export default function Learn() {
             try {
                 const units = await getUnitsInPrepCourse();
                 setUnits(units);
-                console.log('Units in prep course:', units);
             } catch (error) {
                 console.error('Error fetching units:', error);
             }

@@ -36,7 +36,6 @@ export default function Goals() {
             ]);
             setShowPersonalGoalButton(showButton.showButton);
         } catch (error) {
-            // TODO: these try/catch only helps debug, not the user
             console.error("Failed to fetch goals:", error);
         } finally {
             setLoading(false);

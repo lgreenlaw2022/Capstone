@@ -29,6 +29,7 @@ export default function WeeklyReviewQuizPage() {
     }, []);
 
     const handleSubmit = async (numCorrectAnswers: number) => {
+        // Calculate accuracy percent and submit the score
         const accuracy = (numCorrectAnswers / questions.length) * 100;
         await submitWeeklyReviewScore(accuracy);
         router.push("/review");
@@ -40,6 +41,7 @@ export default function WeeklyReviewQuizPage() {
 
     return (
         <>
+            {/* Only create the quiz if there are questions to test */}
             {questions.length !== 0 ? (
                 <Quiz
                     questions={questions}

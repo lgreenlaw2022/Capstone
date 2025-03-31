@@ -1,3 +1,4 @@
+from typing import Tuple
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
 import logging
@@ -17,7 +18,6 @@ def calculate_percent_shorter_streak(user_streak):
     total_users = User.query.count() - 1  # subtract 1 to exclude the current user
     if total_users < 1:
         return 100.0  # If the user is the only one, they are ahead of 100% of users
-    # TODO: consider adding index to streak column
     users_with_shorter_streak = User.query.filter(User.streak < user_streak).count()
 
     percent_shorter_streak = (users_with_shorter_streak / total_users) * 100
@@ -77,6 +77,8 @@ def calculate_percent_fewer_goals(user_id, most_recent_monday):
 
 
 def get_days_until_next_sunday():
+    # based on the current date, calculate the number of days until the next Sunday
+    # If today is Sunday, return 0
     today = datetime.now(timezone.utc).date()
     days_until_sunday = (6 - today.weekday()) % 7
     return days_until_sunday
@@ -97,9 +99,7 @@ def get_days_left():
 @jwt_required()
 def get_leaderboard_show():
     try:
-        # get user id from jwt token
         user_id = get_jwt_identity()
-        # get user streak, number of modules completed, number of goals completed
         user = User.query.get(user_id)
         if not user:
             return jsonify({"error": "User not found"}), 404
@@ -117,9 +117,7 @@ def get_leaderboard_show():
 @jwt_required()
 def update_leaderboard_show():
     try:
-        # get user id from jwt token
         user_id = get_jwt_identity()
-        # get user streak, number of modules completed, number of goals completed
         user = User.query.get(user_id)
         if not user:
             return jsonify({"error": "User not found"}), 404
@@ -152,7 +150,6 @@ def get_weekly_rankings():
             return jsonify({"error": "User not found"}), 404
 
         # Calculate the date of the most recent Monday
-        # TODO: would be best to adjust these dates + times to the user's time zone
         most_recent_monday = get_most_recent_monday()
         is_reward_due = False
         reward_amount = 0
@@ -207,7 +204,25 @@ def get_weekly_rankings():
         )
 
 
-def check_and_award_user(user, week_start_date):
+def check_and_award_user(user: User, week_start_date: datetime) -> Tuple[bool, int]:
+    """
+    This function calculates the leaderboard's top 5 users based on XP earned during the previous week.
+    If the given user is in the top 5, they are awarded gems. The user's `last_leaderboard_reward_date` 
+    and their daily activity record gem count are updated accordingly.
+
+    Args:
+        user (User): The user object to check and potentially award gems to.
+        week_start_date (datetime): The start date of the current week (Monday).
+
+    Returns:
+        Tuple[bool, int]: A tuple containing:
+            - A boolean indicating whether the user was awarded gems.
+            - The number of gems awarded (0 if no gems were awarded).
+
+    Raises:
+        Exception: If an error occurs during the database operation, the exception is logged
+                   and re-raised after rolling back the session.
+    """
     try:
         # Get previous week's Monday
         previous_week_monday = week_start_date - timedelta(days=7)
@@ -230,25 +245,23 @@ def check_and_award_user(user, week_start_date):
         if user.id in top_user_ids:
             # Award gems based on position
             position = top_user_ids.index(user.id)
-            gems_award = [15, 10, 10, 5, 5][position]  # Award based on position
+            gems_award = [15, 10, 10, 5, 5][position]
 
             user.gems += gems_award
             today = datetime.now(timezone.utc).date()
             user.last_leaderboard_reward_date = today
 
-            # add gems to user DailyActivity record
-            # TODO: this would be a great util to extract
+            # add gems to today's DailyUserActivity record
             today_activity = DailyUserActivity.query.filter_by(
                 user_id=user.id, date=today
             ).first()
 
             if today_activity is None:
-                logger.error("Daily user activity not found")
-                return False, 0
+                today_activity = DailyUserActivity(user_id=user.id, date=today)
+                db.session.add(today_activity)
 
             if today_activity.gems_earned is None:
                 today_activity.gems_earned = 0
-                logger.debug(f"today activity gems was None, set to 0")
 
             today_activity.gems_earned += gems_award
             db.session.commit()
@@ -261,15 +274,14 @@ def check_and_award_user(user, week_start_date):
             return False, 0
     except Exception as e:
         db.session.rollback()
-        logger.error(f"Error checking and awarding user: {str(e)}")
-        return False, 0  # TODO: not sure if I want to return False either way
+        logger.exception(f"Error checking and awarding user: {str(e)}")
+        raise
 
 
 @leaderboard_bp.route("/weekly-comparison", methods=["GET"])
 @jwt_required()
 def get_weekly_comparison_stats():
     try:
-        # get user id from jwt token
         user_id = get_jwt_identity()
         # get user streak, number of modules completed, number of goals completed
         user = User.query.get(user_id)

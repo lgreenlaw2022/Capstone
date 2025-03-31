@@ -8,7 +8,6 @@ interface WeeklyReviewCardProps {
 export default function WeeklyReviewCard({completed}: WeeklyReviewCardProps) {
     const router = useRouter();
 
-    // add an onClick function to send user to quiz
     const handleClick = () => {
         if (!completed) {
             // redirect to quiz
@@ -17,7 +16,6 @@ export default function WeeklyReviewCard({completed}: WeeklyReviewCardProps) {
     };
 
     return (
-        // TODO: conditional styling
         <div className={styles.weeklyCard} onClick={handleClick} role="button">
             <div className={styles.checkbox}>
                 {completed && (

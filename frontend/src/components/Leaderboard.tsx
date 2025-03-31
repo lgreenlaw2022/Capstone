@@ -85,7 +85,6 @@ export default function Leaderboard() {
     return (
         <div className={styles.leaderboardContainer}>
             {rewardDue && (
-                // TODO: add rank?
                 <Reward
                     title="You topped the leaderboard!"
                     gems={rewardAmount}
