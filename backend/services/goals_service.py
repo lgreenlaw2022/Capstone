@@ -79,6 +79,9 @@ class GoalProgressCalculator:
         if time_period == TimePeriodType.DAILY:
             current_date = datetime.now(timezone.utc).date()
             goals = goals.filter(UserGoal.date_assigned == current_date)
+        elif time_period == TimePeriodType.MONTHLY:
+            current_date = datetime.now(timezone.utc).date().replace(day=1)
+            goals = goals.filter(UserGoal.date_assigned == current_date)
 
         active_goals = goals.all()
 
@@ -393,7 +396,7 @@ class GoalService:
         ).first():
             self.populate_monthly_goals(user_id)
 
-        logger.info("New goals populated successfully")
+        logger.info("Goals populated successfully")
 
     def initialize_user_goals(self, user_id: int) -> None:
         """
@@ -450,7 +453,7 @@ class GoalService:
             db.session.commit()
 
         # Check if the user already has this goal assigned
-        date_assigned = self._get_time_period_start(
+        date_assigned = GoalProgressCalculator()._get_time_period_start(
             datetime.now(timezone.utc).date(), time_period
         )
         user_goal = UserGoal.query.filter_by(
@@ -544,9 +547,9 @@ class GoalService:
                 return requirement == 1
         if time_period == TimePeriodType.MONTHLY:
             if type == MetricType.COMPLETE_MODULES:
-                return 20 <= requirement <= 50
+                return 15 <= requirement <= 50
             if type == MetricType.EARN_GEMS:
                 return 30 <= requirement <= 100
             if type == MetricType.EXTEND_STREAK:
-                return 2 <= requirement <= 30
+                return 5 <= requirement <= 30
         return False

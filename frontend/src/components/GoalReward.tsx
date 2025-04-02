@@ -1,3 +1,4 @@
+import { useState } from "react";
 import styles from "../styles/Reward.module.css";
 import { Goal } from "../types/GoalTypes";
 import Image from "next/image";
@@ -10,12 +11,22 @@ interface GoalProps {
 }
 
 export default function GoalReward({ goal, onContinue }: GoalProps) {
+    const [isProcessing, setIsProcessing] = useState(false);
+
     const handleContinue = async () => {
-        await addGoalReward(goal.goalId);
-        onContinue(goal.goalId);
+        // Check if already processing to prevent multiple requests
+        if (isProcessing) return;
+        setIsProcessing(true);
+        try {
+            await addGoalReward(goal.goalId);
+            onContinue(goal.goalId);
+        }
+        finally {
+            setIsProcessing(false);
+        }
     };
 
-    return (
+    return (    
         <>
             <div className={styles.overlay}></div>
             <div className={styles.rewardContainer}>
@@ -30,8 +41,8 @@ export default function GoalReward({ goal, onContinue }: GoalProps) {
                     <p>{goal.title}</p>
                     <p>You earned 5 gems</p>
                 </div>
-                <button onClick={handleContinue} className={styles.text}>
-                    Keep it Going!
+                <button onClick={handleContinue} className={styles.text} disabled={isProcessing}>
+                    {isProcessing ? "Processing..." : "Keep it Going!"}
                 </button>
             </div>
         </>

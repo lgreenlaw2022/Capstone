@@ -220,7 +220,8 @@ def add_personalized_goal():
             return jsonify({"error": f"Invalid data: {str(e)}"}), 400
 
         # GoalService handles creating the goal and assigning it to the user
-        response, status_code = GoalService.add_personalized_goal(
+        goal_service = GoalService()
+        response, status_code = goal_service.add_personalized_goal(
             user_id, time_period, goal_type, goal_value
         )
         return jsonify(response), status_code

@@ -45,10 +45,14 @@ const QuizPage = () => {
     const handleContinue = async (numCorrectAnswers: number) => {
         const accuracy = (numCorrectAnswers / questions.length) * 100;
         try {
+            setLoading(true); // Set loading to true while submitting
             await submitQuizScore(Number(moduleId), accuracy);
             router.push("/learn");
         } catch (error) {
             console.error("Error submitting quiz score:", error);
+        }
+        finally {
+            setLoading(false);
         }
     };
 
