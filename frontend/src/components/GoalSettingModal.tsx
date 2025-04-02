@@ -25,11 +25,11 @@ const getSuggestedRangeLimits = (
         }
     } else if (timePeriod === TimePeriodEnum.Monthly) {
         if (measure === MeasureEnum.ModulesCompleted) {
-            return [20, 50];
+            return [15, 50];
         } else if (measure === MeasureEnum.GemsEarned) {
             return [30, 100];
         } else if (measure === MeasureEnum.ExtendStreak) {
-            return [2, 30];
+            return [5, 30];
         }
     }
     return [0, Number.POSITIVE_INFINITY];
